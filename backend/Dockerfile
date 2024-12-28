@@ -16,5 +16,8 @@ COPY . .
 # Expose the port that the backend will run on
 EXPOSE 5000
 
-# Command to run the app
+# Set environment variable for development
+ENV NODE_ENV=development
+
+# Start the application with `npm start` or `npm run dev` (depending on your setup)
 CMD ["npm", "start"]

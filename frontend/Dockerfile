@@ -13,17 +13,8 @@ RUN npm install
 # Copy the entire app's source code into the container
 COPY . .
 
-# Build the React app for production
-RUN npm run build
+# Expose port 3000 for React's dev server (the default port)
+EXPOSE 3000
 
-# Step 2: Use an Nginx image to serve the built React app
-FROM nginx:alpine
-
-# Copy the build files from the previous build stage
-COPY --from=build /app/build /usr/share/nginx/html
-
-# Expose port 80 (for the web server)
-EXPOSE 80
-
-# Start Nginx to serve the React app
-CMD ["nginx", "-g", "daemon off;"]
+# Start the React development server for hot reloading
+CMD ["npm", "start"]
