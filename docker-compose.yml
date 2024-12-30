@@ -17,8 +17,8 @@ services:
       - "5000:5000"  # Expose backend API on port 5000
     volumes:
       - ./backend:/app  # Mount the backend code for live development
-    environment:
-      - NODE_ENV=development  # Set the app to development mode
+    env_file:
+      - .env
     depends_on:
       - mongo
 
