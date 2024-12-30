@@ -51,11 +51,6 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-// Basic route
-app.get('/', (req, res) => {
-    res.send('Backend API is running!');
-});
-
 // Linking the routes within userRoutes
 app.use('/api/user-Auth', userRoutes) // Routes for authorised users - once the account has been created
 app.use('/api/user-unAuth', unAuthRoutes) // Routes for unauthorised users
