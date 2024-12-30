@@ -14,7 +14,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: [process.env.FRONTEND_URL, 'https://apprise-marketplace.vercel.app'], // Frontend URL
+  origin: [process.env.FRONTEND_URL, 'https://apprise-marketplace.vercel.app', 'http://192.168.1.75:3000'], // Frontend URL
   credentials: true, // Allow cookies to be sent
 }));
 

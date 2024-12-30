@@ -4,6 +4,9 @@ const MarketplaceNavigationBar = ({ title, subtitle}) => {
     const location = useLocation(); // Get the current location (URL path)
     const navigate = useNavigate();
 
+    // Defining the environment variables
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
     // Function that compares the buttons path url and the current url
     // Used to improve user-feedback as if the url's match, the button is indigo rather than grey
     const getButtonClass = (path) => {
@@ -17,7 +20,7 @@ const MarketplaceNavigationBar = ({ title, subtitle}) => {
     const handleLogOut = async () => {
         try {
             // need to adjust the backend env variables - these are not used
-            const response = await fetch(`/api/customer/customer-Logout`, {
+            const response = await fetch(`${backendUrl}/api/user-Auth/user-logout`, {
                 method: 'GET',
                 headers: {'Content-Type': 'application/json'},
                 credentials: 'include',

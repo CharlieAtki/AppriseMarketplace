@@ -77,7 +77,7 @@ const CustomerLoginFrom = () => {
 
         try {
             // Ternary operator to switch the API URL depending on the button pressed
-            const APIEndPoint = buttonType === 'signUp' ? `${backendUrl}/api/user-Auth/add-user` : `${backendUrl}/api/user-Auth/user-login`;
+            const APIEndPoint = buttonType === 'signUp' ? `${backendUrl}/api/user-unAuth/add-user` : `${backendUrl}/api/user-unAuth/user-login`;
             // Ternary operator to switch between the different webpages depending on the button pressed
             const UIEndPoint = buttonType !== 'signUp' ? `${frontendUrl}/marketplace` : `${frontendUrl}/customerAccountManagement`;
 

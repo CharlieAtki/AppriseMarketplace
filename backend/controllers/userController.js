@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs'; // instead of 'bcrypt' - Had incompatibility errors with docker
 
 // Num of times the hashing algorithm is applied
 const saltRounds = 10;
@@ -66,6 +66,42 @@ export const userLogin = async (req, res) => {
                 message: "Invalid Credentials"
             })
         }
+    } catch (error) {
+        return res.status(400).send({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+export const userLogout = async (req, res) => {
+    try {
+        // checks is the session exists
+        if (!req.session) {
+            return res.status(401).send({
+                success: false,
+                message: "No session present"
+            });
+        }
+
+        // Convert callback-based session.destroy() to Promise
+        await new Promise((resolve, reject) => { // Creates a new promise
+            // Calling session.destroy() which expects a callback
+            req.session.destroy(error => {
+                // If errors exist, reject the Promise with error
+                // If no error, resolve the Promise with no value
+                error ? reject(error) : resolve()
+            });
+        });
+
+        // Clear session cookie
+        res.clearCookie('connect.sid');
+
+        // Send successful response
+        return res.status(200).send({
+            success: true,
+            message: "Logout successful"
+        });
     } catch (error) {
         return res.status(400).send({
             success: false,

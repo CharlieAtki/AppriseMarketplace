@@ -5,9 +5,33 @@ import singaporeImg from '../../assets/Singapore.jpg';
 import romeImg from '../../assets/Rome.jpg';
 import bahamasImg from '../../assets/Bahamas.jpg';
 import toronto from '../../assets/Toronto.jpg';
+import {useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 
 
 const Shop = () => {
+    const navigate = useNavigate();
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+            try {
+                const response = await fetch(`${backendUrl}/api/user-unAuth/auth-check`, {
+                    credentials: 'include',
+                });
+                const result = await response.json();
+
+                if (!result || !result.success) {
+                    navigate('/customerAccountManagement');
+                }
+            } catch (error) {
+                navigate('/customerAccountManagement');
+            }
+        };
+
+        checkLoginStatus();
+    }, [navigate]);
+
 
     // An array of objects, which represent individual locations. This array is mapped to create the components dynamically
     const destinations = [
