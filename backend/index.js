@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
+import userRoutes from "./routes/userRoutes.js";
+import unAuthRoutes from "./routes/unAuthRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -53,3 +55,7 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
     res.send('Backend API is running!');
 });
+
+// Linking the routes within userRoutes
+app.use('/api/user-Auth', userRoutes) // Routes for authorised users - once the account has been created
+app.use('/api/user-unAuth', unAuthRoutes) // Routes for unauthorised users
