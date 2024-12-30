@@ -36,7 +36,7 @@ app.use(session({
     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
     httpOnly: true, // Prevents JavaScript access to cookies
     maxAge: 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 day)
-    sameSite: 'strict', // Protects against CSRF attacks
+    sameSite: 'none', // Protects against CSRF attacks & allows cross-origin cookies in production
   },
 }));
 
