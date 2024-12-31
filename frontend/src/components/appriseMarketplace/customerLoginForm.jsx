@@ -103,7 +103,10 @@ const CustomerLoginFrom = () => {
                 // Defining that the method is POST (sending data),
                 // Headers are telling the server that JSON is being sent
                 method: "POST",
-                headers: { "Content-Type": "application/json" }, // telling the server what data type is being sent
+                headers: {
+                    "Content-Type": "application/json",  // telling the server what data type is being sent
+                    "Accept": "application/json"
+                },
                 credentials: 'include', // Allows cookie exchange
                 body: JSON.stringify(input) // converts the JS object into a JSON string, making it ready for HTTP transmission
             });

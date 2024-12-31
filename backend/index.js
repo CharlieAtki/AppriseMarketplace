@@ -14,10 +14,10 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: [process.env.FRONTEND_URL, 'https://apprise-marketplace.vercel.app', 'http://192.168.1.75:3000'], // Frontend URL
+  origin: process.env.FRONTEND_URL, // Frontend URL
   credentials: true, // Allow cookies to be sent
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: ['Authorization', 'Content-Type', 'Accept'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 // Middleware to parse JSON data
@@ -29,26 +29,26 @@ app.use(session({
   secret: process.env.SECRET_KEY,
   resave: false, // Prevents unnecessary session updates
   saveUninitialized: false, // Only save sessions when they are initialized
+  proxy: true, // Used in render hosting
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URI, // MongoDB connection URL
     collectionName: 'sessions', // Collection to store session data
     ttl: 24 * 60 * 60, // Session expiration in seconds (e.g., 1 day)
   }),
-  proxy: true,
   cookie: {
     secure: true, // Use secure cookies in production
     httpOnly: true, // Prevents JavaScript access to cookies
-    maxAge: 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 day)
     sameSite: 'none', // Protects against CSRF attacks & allows cross-origin cookies in production
+    maxAge: 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 day)
     path: '/',
-    domain: '.onrender.com'
   },
 }));
 
-// Add this middleware to debug session/cookie issues
+// Add this debug middleware temporarily
 app.use((req, res, next) => {
-  console.log('Session:', req.session);
-  console.log('Cookies:', req.cookies);
+  console.log('Request origin:', req.headers.origin);
+  console.log('Request cookies:', req.cookies);
+  console.log('Request session:', req.session);
   next();
 });
 

@@ -54,6 +54,7 @@ export const userLogin = async (req, res) => {
                 await new Promise((resolve, reject) => {
                     req.session.save((error) => {
                         if (error) {
+                            console.error('Session save error:', error);
                             reject(error);
                         } else {
                             resolve();
@@ -61,26 +62,20 @@ export const userLogin = async (req, res) => {
                     });
                 });
 
-                res.header('Access-Control-Allow-Origin', 'true');
-
-                return res.status(200).send({
+                return res.status(200).json({
                     success: true,
                     message: "Login successful"
                 });
-            } else {
-                return res.status(401).send({
-                    success: false,
-                    message: "Invalid Credentials"
-                });
             }
-        } else {
-            return res.status(401).send({
-                success: false,
-                message: "Invalid Credentials"
-            });
         }
+
+        return res.status(401).json({
+            success: false,
+            message: "Invalid Credentials"
+        });
     } catch (error) {
-        return res.status(400).send({
+        console.error('Login error:', error);
+        return res.status(500).json({
             success: false,
             message: error.message
         });
