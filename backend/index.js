@@ -16,6 +16,8 @@ const app = express();
 app.use(cors({
   origin: [process.env.FRONTEND_URL, 'https://apprise-marketplace.vercel.app', 'http://192.168.1.75:3000'], // Frontend URL
   credentials: true, // Allow cookies to be sent
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Authorization', 'Content-Type', 'Accept'],
 }));
 
 // Middleware to parse JSON data
@@ -32,13 +34,14 @@ app.use(session({
     collectionName: 'sessions', // Collection to store session data
     ttl: 24 * 60 * 60, // Session expiration in seconds (e.g., 1 day)
   }),
+  proxy: true,
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+    secure: true, // Use secure cookies in production
     httpOnly: true, // Prevents JavaScript access to cookies
     maxAge: 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 day)
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Protects against CSRF attacks & allows cross-origin cookies in production
+    sameSite: 'none', // Protects against CSRF attacks & allows cross-origin cookies in production
     path: '/',
-    domain: process.env.NODE_ENV === 'production' ? 'apprise-marketplace.vercel.app' : undefined,
+    domain: '.onrender.com'
   },
 }));
 
@@ -46,6 +49,12 @@ app.use(session({
 app.use((req, res, next) => {
   console.log('Session:', req.session);
   console.log('Cookies:', req.cookies);
+  next();
+});
+
+// Add this header middleware
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', 'true');
   next();
 });
 

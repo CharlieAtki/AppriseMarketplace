@@ -21,15 +21,15 @@ const Shop = () => {
                     credentials: 'include',
                     headers: {
                         'content-type': 'application/json',
-                    },
+                        'Accept': 'application/json',
+                    }
                 });
 
-                if (!response.ok) {
-                    console.error('Authentication failed');
-                }
-
+                console.log('Auth check response:', response);
                 const result = await response.json();
-                if (!result.success) {
+                console.log('Auth check result:', result);
+
+                if (!result || !result.success) {
                     navigate('/customerAccountManagement');
                 }
             } catch (error) {

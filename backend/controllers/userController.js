@@ -42,6 +42,7 @@ export const userLogin = async (req, res) => {
         if (searchedUser) {
             const match = await bcrypt.compare(passwordString, searchedUser.hashedPassword);
             if (match) {
+                // Set session
                 req.session.user = {
                     id: searchedUser._id,
                     email: req.body.email,
@@ -50,27 +51,39 @@ export const userLogin = async (req, res) => {
                     isVerified: searchedUser.isVerified // signifying whether the email has been verified
                 };
 
+                await new Promise((resolve, reject) => {
+                    req.session.save((error) => {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve();
+                        }
+                    });
+                });
+
+                res.header('Access-Control-Allow-Origin', 'true');
+
                 return res.status(200).send({
                     success: true,
                     message: "Login successful"
-                })
+                });
             } else {
                 return res.status(401).send({
                     success: false,
                     message: "Invalid Credentials"
-                })
+                });
             }
         } else {
             return res.status(401).send({
                 success: false,
                 message: "Invalid Credentials"
-            })
+            });
         }
     } catch (error) {
         return res.status(400).send({
             success: false,
             message: error.message
-        })
+        });
     }
 }
 
