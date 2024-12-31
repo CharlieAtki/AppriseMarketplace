@@ -17,20 +17,29 @@ const Shop = () => {
         const checkLoginStatus = async () => {
             try {
                 const response = await fetch(`${backendUrl}/api/user-unAuth/auth-check`, {
+                    method: 'GET',
                     credentials: 'include',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
                 });
-                const result = await response.json();
 
-                if (!result || !result.success) {
+                if (!response.ok) {
+                    console.error('Authentication failed');
+                }
+
+                const result = await response.json();
+                if (!result.success) {
                     navigate('/customerAccountManagement');
                 }
             } catch (error) {
+                console.error('Auth check error:', error);
                 navigate('/customerAccountManagement');
             }
         };
 
         checkLoginStatus();
-    }, [navigate]);
+    }, [navigate, backendUrl]);
 
 
     // An array of objects, which represent individual locations. This array is mapped to create the components dynamically

@@ -24,7 +24,7 @@ app.use(cookieParser());
 
 // Session Configuration
 app.use(session({
-  secret: process.env.SECRET_KEY, // Replace with a strong, random secret key
+  secret: process.env.SECRET_KEY,
   resave: false, // Prevents unnecessary session updates
   saveUninitialized: false, // Only save sessions when they are initialized
   store: MongoStore.create({
@@ -37,8 +37,17 @@ app.use(session({
     httpOnly: true, // Prevents JavaScript access to cookies
     maxAge: 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 day)
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Protects against CSRF attacks & allows cross-origin cookies in production
+    path: '/',
+    domain: process.env.NODE_ENV === 'production' ? 'apprise-marketplace.vercel.app' : undefined,
   },
 }));
+
+// Add this middleware to debug session/cookie issues
+app.use((req, res, next) => {
+  console.log('Session:', req.session);
+  console.log('Cookies:', req.cookies);
+  next();
+});
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
