@@ -16,8 +16,10 @@ const app = express();
 app.use(cors({
   origin: process.env.FRONTEND_URL, // Frontend URL
   credentials: true, // Allow cookies to be sent
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Set-Cookie'],
+  preflightContinue: true,
 }));
 
 // Middleware to parse JSON data
@@ -41,20 +43,30 @@ app.use(session({
     sameSite: 'none', // Protects against CSRF attacks & allows cross-origin cookies in production
     maxAge: 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 day)
     path: '/',
+    domain: undefined // Domain as undefined results in the browser automatically handling the cookie based on the server's response origin.
   },
+  name: 'sessionId', // Session cookie name
 }));
 
-// Add this debug middleware temporarily
+// Enhanced security headers middleware
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
+
+// Debug middleware (consider removing in production)
 app.use((req, res, next) => {
   console.log('Request origin:', req.headers.origin);
   console.log('Request cookies:', req.cookies);
   console.log('Request session:', req.session);
-  next();
-});
-
-// Add this header middleware
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Credentials', 'true');
   next();
 });
 
