@@ -31,8 +31,8 @@ app.use(cookieParser());
 // Session Configuration
 app.use(session({
   secret: process.env.SECRET_KEY,
-  resave: true, // Prevents unnecessary session updates
-  saveUninitialized: true, // Only save sessions when they are initialized
+  resave: false, // Prevents unnecessary session updates
+  saveUninitialized: false, // Only save sessions when they are initialized
   proxy: true, // Used in render hosting
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URI, // MongoDB connection URL
