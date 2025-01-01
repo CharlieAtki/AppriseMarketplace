@@ -102,8 +102,14 @@ export const userLogout = async (req, res) => {
             });
         });
 
-        // Clear session cookie
-        res.clearCookie('connect.sid');
+        // Clear cookie with matching settings
+        res.clearCookie('connect.sid', {
+            path: '/',
+            secure: true,
+            httpOnly: true,
+            sameSite: 'none',
+            domain: undefined
+        });
 
         // Send successful response
         return res.status(200).send({
@@ -114,6 +120,6 @@ export const userLogout = async (req, res) => {
         return res.status(400).send({
             success: false,
             message: error.message
-        })
+        });
     }
-}
+};

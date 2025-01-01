@@ -13,6 +13,9 @@ dotenv.config();
 
 const app = express();
 
+// Trust proxy setting before other middleware
+app.set('trust proxy', 1);
+
 app.use(cors({
   origin: process.env.FRONTEND_URL, // Frontend URL
   credentials: true, // Allow cookies to be sent
@@ -45,7 +48,7 @@ app.use(session({
     path: '/',
     domain: undefined // Domain as undefined results in the browser automatically handling the cookie based on the server's response origin.
   },
-  name: 'sessionId', // Session cookie name
+  name: 'connect.sid', // Session cookie name
 }));
 
 // Enhanced security headers middleware
@@ -54,8 +57,9 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+  res.header('Cross-Origin-Opener-Policy', 'same-origin');
 
-  // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
