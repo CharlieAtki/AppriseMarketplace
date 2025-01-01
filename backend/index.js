@@ -22,7 +22,6 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
   exposedHeaders: ['Set-Cookie'],
-  preflightContinue: true,
 }));
 
 // Middleware to parse JSON data
@@ -32,8 +31,8 @@ app.use(cookieParser());
 // Session Configuration
 app.use(session({
   secret: process.env.SECRET_KEY,
-  resave: false, // Prevents unnecessary session updates
-  saveUninitialized: false, // Only save sessions when they are initialized
+  resave: true, // Prevents unnecessary session updates
+  saveUninitialized: true, // Only save sessions when they are initialized
   proxy: true, // Used in render hosting
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URI, // MongoDB connection URL
@@ -68,10 +67,12 @@ app.use((req, res, next) => {
 
 // Debug middleware (consider removing in production)
 app.use((req, res, next) => {
-  console.log('Request origin:', req.headers.origin);
-  console.log('Request cookies:', req.cookies);
-  console.log('Request session:', req.session);
-  next();
+    console.log('Detailed Session Debug:');
+    console.log('Session ID:', req.sessionID);
+    console.log('Session:', req.session);
+    console.log('Is Session New?:', req.session.isNew);
+    console.log('Headers:', req.headers);
+    next();
 });
 
 // MongoDB Connection
