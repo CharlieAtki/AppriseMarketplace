@@ -53,14 +53,14 @@ export const userLogin = async (req, res) => {
 
                 await new Promise((resolve, reject) => {
                     req.session.save((error) => {
-                        if (error) {
-                            console.error('Session save error:', error);
-                            reject(error);
-                        } else {
-                            resolve();
-                        }
+                        if (error) reject(error);
+                        resolve();
                     });
                 });
+
+                // Setting Headers for Safari
+                res.setHeader('Access-Control-Allow-Credentials', 'true');
+                res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
 
                 return res.status(200).json({
                     success: true,

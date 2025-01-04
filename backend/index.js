@@ -22,6 +22,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
   exposedHeaders: ['Set-Cookie'],
+  optionsSuccessStatus: 200
 }));
 
 // Middleware to parse JSON data
@@ -45,7 +46,8 @@ app.use(session({
     sameSite: 'none', // Protects against CSRF attacks & allows cross-origin cookies in production
     maxAge: 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 day)
     path: '/',
-    domain: undefined // Domain as undefined results in the browser automatically handling the cookie based on the server's response origin.
+    domain: undefined, // Domain as undefined results in the browser automatically handling the cookie based on the server's response origin.
+    partitioned: true,
   },
   name: 'connect.sid', // Session cookie name
 }));
