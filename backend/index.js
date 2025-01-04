@@ -22,6 +22,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
   exposedHeaders: ['Set-Cookie'],
+  maxAge: 600,
   optionsSuccessStatus: 200
 }));
 
@@ -48,23 +49,20 @@ app.use(session({
     path: '/',
     domain: undefined, // Domain as undefined results in the browser automatically handling the cookie based on the server's response origin.
     partitioned: true,
+    priority: 'high',
+    secrets: [process.env.SECRET_KEY],
   },
   name: 'connect.sid', // Session cookie name
 }));
 
 // Enhanced security headers middleware
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
-  res.header('Cross-Origin-Opener-Policy', 'same-origin');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  next();
+    res.header('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+    res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+    // New headers for Safari Technology Preview
+    res.header('Access-Control-Allow-Private-Network', 'true');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
 });
 
 // Debug middleware (consider removing in production)
