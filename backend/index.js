@@ -62,7 +62,7 @@ app.use((req, res, next) => {
     res.header('Cross-Origin-Resource-Policy', 'cross-origin');
 
     // CORS Headers
-    res.header('Access-Control-Allow-Origin', 'https://your-frontend-domain.com'); // Set your frontend URL
+    res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL); // Set your frontend URL
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
