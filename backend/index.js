@@ -21,7 +21,7 @@ app.use(cors({
   credentials: true, // Allow cookies to be sent
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
-  exposedHeaders: ['Set-Cookie'],
+  exposedHeaders: ['Set-Cookie', 'Content-Type'],
   maxAge: 600,
   optionsSuccessStatus: 200
 }));
@@ -47,23 +47,17 @@ app.use(session({
     sameSite: 'none', // Protects against CSRF attacks & allows cross-origin cookies in production
     maxAge: 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 day)
     path: '/',
-    domain: undefined, // Domain as undefined results in the browser automatically handling the cookie based on the server's response origin.
-    partitioned: true,
-    priority: 'high',
-    secrets: [process.env.SECRET_KEY],
   },
   name: 'connect.sid', // Session cookie name
 }));
 
-// Enhanced security headers middleware
+// Security headers middleware
 app.use((req, res, next) => {
-    res.header('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-    res.header('Cross-Origin-Resource-Policy', 'cross-origin');
-    // New headers for Safari Technology Preview
-    res.header('Access-Control-Allow-Private-Network', 'true');
     res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
     next();
 });
+
 
 // Debug middleware (consider removing in production)
 app.use((req, res, next) => {
