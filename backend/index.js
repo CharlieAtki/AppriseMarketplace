@@ -54,22 +54,9 @@ app.use(session({
     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Allow cross-origin in production
     maxAge: 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 day)
     path: '/',
-    partitioned: true,
-    priority: 'high',
-    secrets: [process.env.SECRET_KEY],
   },
   name: 'connect.sid', // Session cookie name
 }));
-
-// Debug middleware (consider removing in production)
-app.use((req, res, next) => {
-    console.log('Detailed Session Debug:');
-    console.log('Session ID:', req.sessionID);
-    console.log('Session:', req.session);
-    console.log('Is Session New?:', req.session.isNew);
-    console.log('Headers:', req.headers);
-    next();
-});
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
