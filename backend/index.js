@@ -17,9 +17,7 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? 'https://apprise-marketplace.vercel.app'  // Your frontend production URL
-    : 'http://localhost:3000',  // Your local frontend
+  origin: process.env.FRONTEND_URL, // Frontend URL
   credentials: true, // Allow cookies to be sent
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
@@ -57,13 +55,9 @@ app.use(session({
   name: 'connect.sid', // Session cookie name
 }));
 
-// Corresponding middleware
+// Enhanced security headers middleware
 app.use((req, res, next) => {
-    const allowedOrigin = process.env.NODE_ENV === 'production'
-      ? 'https://apprise-marketplace.vercel.app'
-      : 'http://localhost:3000';
-
-    res.header('Access-Control-Allow-Origin', allowedOrigin);
+    res.header('Access-Control-Allow-Origin', 'https://apprise-marketplace.vercel.app'); // Replace with your frontend domain
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -71,11 +65,7 @@ app.use((req, res, next) => {
 });
 
 app.options('*', (req, res) => {
-    const allowedOrigin = process.env.NODE_ENV === 'production'
-      ? 'https://apprise-marketplace.vercel.app'
-      : 'http://localhost:3000';
-
-    res.header('Access-Control-Allow-Origin', allowedOrigin);
+    res.header('Access-Control-Allow-Origin', 'https://apprise-marketplace.vercel.app'); // Replace with your frontend domain
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
