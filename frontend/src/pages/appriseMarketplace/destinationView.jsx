@@ -1,6 +1,6 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
 
 const DestinationView = () => {
