@@ -20,7 +20,8 @@ app.set('trust proxy', 1);
 const allowedOrigins = [
     'http://localhost:3000',                // Local frontend (dev)
     process.env.FRONTEND_URL,               // Frontend URL from environment variable (prod)
-]
+    'https://apprise-marketplace.vercel.app', // Your Vercel frontend
+];
 
 app.use(cors({
   origin: allowedOrigins, // Allow these origins
@@ -53,7 +54,7 @@ app.use(session({
     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Allow cross-origin in production
     maxAge: 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 day)
     path: '/',
-    domain: process.env.NODE_ENV === 'production' ? '.apprise-marketplace.vercel.app' : undefined,  // Ensure cookies are available for subdomains in production
+    domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined,  // Ensure cookies are available for subdomains in production
   },
   name: 'connect.sid', // Session cookie name
 }));
