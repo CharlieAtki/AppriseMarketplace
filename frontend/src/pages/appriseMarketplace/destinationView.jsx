@@ -46,13 +46,14 @@ const DestinationView = () => {
             <h1>
                 {destination.name}
             </h1>
-            <img src={destination.image} alt={`Image of ${destination.name}`} />
+            <img src={destination.image} alt={destination.name} />
             <p>{destination.description}</p>
             <ul>
-                {destination.highlights.map((highlight, index) => {
+                {destination.highlights.map((highlight, index) => (
                     <li key={index}>{highlight}</li>
-                })}
+                ))}
             </ul>
+
         </div>
     );
 };
