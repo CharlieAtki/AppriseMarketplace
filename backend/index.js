@@ -16,11 +16,14 @@ const app = express();
 // Trust proxy setting before other middleware
 app.set('trust proxy', 1);
 
+// List of allowed origins, meaning more than one origin can be used to make requests (for dev and prod)
+const allowedOrigins = [
+    'http://localhost:3000',                // Local frontend (dev)
+    process.env.FRONTEND_URL,               // Frontend URL from environment variable (prod)
+]
+
 app.use(cors({
-  origin: [
-      'http://localhost:3000',
-      process.env.FRONTEND_URL,
-  ],
+  origin: allowedOrigins, // Allow these origins
   credentials: true, // Allow cookies to be sent
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
@@ -57,35 +60,6 @@ app.use(session({
   },
   name: 'connect.sid', // Session cookie name
 }));
-
-const allowedOrigins = [
-    'http://localhost:3000',
-    process.env.FRONTEND_URL,
-]
-
-// Enhanced security headers middleware
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.header('Access-Control-Allow-Origin', origin);
-    }
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
-
-app.options('*', (req, res) => {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.header('Access-Control-Allow-Origin', origin);
-    }
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.sendStatus(200);
-});
-
 
 // Debug middleware (consider removing in production)
 app.use((req, res, next) => {
