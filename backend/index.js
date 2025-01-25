@@ -17,7 +17,9 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL, // Frontend URL
+  origin: process.env.NODE_ENV === 'production'
+    ? 'https://apprisemarketplacebackend.onrender.com'
+    : ['http://localhost:3000', 'http://192.168.1.75:3000'],
   credentials: true, // Allow cookies to be sent
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
@@ -55,9 +57,16 @@ app.use(session({
   name: 'connect.sid', // Session cookie name
 }));
 
-// Enhanced security headers middleware
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://apprise-marketplace.vercel.app'); // Replace with your frontend domain
+    const allowedOrigins = process.env.NODE_ENV === 'production'
+        ? ['https://apprisemarketplacebackend.onrender.com']
+        : ['http://localhost:3000', 'http://192.168.1.75:3000'];
+
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+    }
+
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -65,7 +74,15 @@ app.use((req, res, next) => {
 });
 
 app.options('*', (req, res) => {
-    res.header('Access-Control-Allow-Origin', 'https://apprise-marketplace.vercel.app'); // Replace with your frontend domain
+    const allowedOrigins = process.env.NODE_ENV === 'production'
+        ? ['https://apprisemarketplacebackend.onrender.com']
+        : ['http://localhost:3000', 'http://192.168.1.75:3000'];
+
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+    }
+
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
