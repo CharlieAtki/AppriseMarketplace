@@ -41,7 +41,6 @@ const DestinationView = () => {
     }
 
     return (
-        // html / JSX code
         <div>
             <h1>
                 {destination.name}
