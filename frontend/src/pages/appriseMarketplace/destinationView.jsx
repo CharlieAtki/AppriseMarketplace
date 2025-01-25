@@ -51,7 +51,7 @@ const DestinationView = () => {
     }
 
     return (
-        <div className="p-6">
+        <div className="p-24">
             <MarketplaceNavigationBar title="Apprise Marketplace" subtitle="Destination Details" />
 
             <div className="py-6 px-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow duration-300">
@@ -62,11 +62,11 @@ const DestinationView = () => {
                             {name}
                         </h2>
                         <button
-                            onClick={() => navigate("/shop")}
+                            onClick={() => navigate("/marketplace")}
                             className="text-gray-600 hover:text-indigo-700 flex items-center"
                         >
                             <ArrowLeft size={20} className="mr-2" />
-                            Back to Shop
+                            Back to Marketplace
                         </button>
                     </div>
 
