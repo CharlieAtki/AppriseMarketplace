@@ -18,8 +18,8 @@ app.set('trust proxy', 1);
 
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
-    ? 'https://apprisemarketplacebackend.onrender.com'
-    : ['http://localhost:3000', 'http://192.168.1.75:3000'],
+    ? 'https://apprise-marketplace.vercel.app'  // Your frontend production URL
+    : 'http://localhost:3000',  // Your local frontend
   credentials: true, // Allow cookies to be sent
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
@@ -57,16 +57,13 @@ app.use(session({
   name: 'connect.sid', // Session cookie name
 }));
 
+// Corresponding middleware
 app.use((req, res, next) => {
-    const allowedOrigins = process.env.NODE_ENV === 'production'
-        ? ['https://apprisemarketplacebackend.onrender.com']
-        : ['http://localhost:3000', 'http://192.168.1.75:3000'];
+    const allowedOrigin = process.env.NODE_ENV === 'production'
+      ? 'https://apprise-marketplace.vercel.app'
+      : 'http://localhost:3000';
 
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.header('Access-Control-Allow-Origin', origin);
-    }
-
+    res.header('Access-Control-Allow-Origin', allowedOrigin);
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -74,15 +71,11 @@ app.use((req, res, next) => {
 });
 
 app.options('*', (req, res) => {
-    const allowedOrigins = process.env.NODE_ENV === 'production'
-        ? ['https://apprisemarketplacebackend.onrender.com']
-        : ['http://localhost:3000', 'http://192.168.1.75:3000'];
+    const allowedOrigin = process.env.NODE_ENV === 'production'
+      ? 'https://apprise-marketplace.vercel.app'
+      : 'http://localhost:3000';
 
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.header('Access-Control-Allow-Origin', origin);
-    }
-
+    res.header('Access-Control-Allow-Origin', allowedOrigin);
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
