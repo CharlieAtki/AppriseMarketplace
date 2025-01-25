@@ -17,7 +17,10 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL, // Frontend URL
+  origin: [
+      'http://localhost:3000',
+      process.env.FRONTEND_URL,
+  ],
   credentials: true, // Allow cookies to be sent
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
@@ -35,16 +38,16 @@ app.use(session({
   secret: process.env.SECRET_KEY,
   resave: false, // Prevents unnecessary session updates
   saveUninitialized: false, // Only save sessions when they are initialized
-  proxy: true, // Used in render hosting
+  proxy: process.env.NODE_ENV === 'production', // Used in render hosting
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URI, // MongoDB connection URL
     collectionName: 'sessions', // Collection to store session data
     ttl: 24 * 60 * 60, // Session expiration in seconds (e.g., 1 day)
   }),
   cookie: {
-    secure: true, // Use secure cookies in production
+    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
     httpOnly: true, // Prevents JavaScript access to cookies
-    sameSite: 'None', // Protects against CSRF attacks & allows cross-origin cookies in production
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Allow cross-origin in production
     maxAge: 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 day)
     path: '/',
     domain: undefined, // Domain as undefined results in the browser automatically handling the cookie based on the server's response origin.
@@ -57,7 +60,7 @@ app.use(session({
 
 // Enhanced security headers middleware
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://apprise-marketplace.vercel.app'); // Replace with your frontend domain
+    res.header('Access-Control-Allow-Origin', `${process.env.FRONTEND_URL}`); // Replace with your frontend domain
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -65,7 +68,7 @@ app.use((req, res, next) => {
 });
 
 app.options('*', (req, res) => {
-    res.header('Access-Control-Allow-Origin', 'https://apprise-marketplace.vercel.app'); // Replace with your frontend domain
+    res.header('Access-Control-Allow-Origin', `${process.env.FRONTEND_URL}`); // Replace with your frontend domain
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -84,7 +87,7 @@ app.use((req, res, next) => {
 });
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB Connected'))
     .catch((err) => console.log(err));
 
