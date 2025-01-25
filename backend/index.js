@@ -53,10 +53,7 @@ app.use(session({
     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Allow cross-origin in production
     maxAge: 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 day)
     path: '/',
-    domain: undefined, // Domain as undefined results in the browser automatically handling the cookie based on the server's response origin.
-    partitioned: true,
-    priority: 'high',
-    secrets: [process.env.SECRET_KEY],
+    domain: process.env.NODE_ENV === 'production' ? '.apprise-marketplace.vercel.app' : undefined,  // Ensure cookies are available for subdomains in production
   },
   name: 'connect.sid', // Session cookie name
 }));
