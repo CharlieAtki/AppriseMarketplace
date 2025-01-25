@@ -43,6 +43,7 @@ const Shop = () => {
 
 
     // An array of objects, which represent individual locations. This array is mapped to create the components dynamically
+    // Adding the webpage url to each object. This is used to redirect the user when the location/destination is selected
     const destinations = [
         {
             name: "Croatia",
@@ -127,7 +128,10 @@ const Shop = () => {
 
                                         <button
                                             className="w-full flex items-center justify-center bg-indigo-700 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors group"
-                                            onClick={() => {/* Navigate to destination details */}}
+                                            {/* Redirecting the user to the destinationView template. The destination object is passed as a parameter to load the correct contents */}
+                                            onClick={() => {
+                                                navigate('/destination-view', { state: { destination } });
+                                            }}
                                         >
                                             Explore Destination
                                             <ArrowRight
