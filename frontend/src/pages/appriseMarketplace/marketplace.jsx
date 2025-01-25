@@ -128,7 +128,6 @@ const Shop = () => {
 
                                         <button
                                             className="w-full flex items-center justify-center bg-indigo-700 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors group"
-                                            {/* Redirecting the user to the destinationView template. The destination object is passed as a parameter to load the correct contents */}
                                             onClick={() => {
                                                 navigate('/destination-view', { state: { destination } });
                                             }}
