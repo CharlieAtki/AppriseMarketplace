@@ -1,6 +1,6 @@
 import {useLocation, useNavigate} from 'react-router-dom';
 
-const MarketplaceNavigationBar = ({ title, subtitle}) => {
+const BusinessNavigationBar = ({ title, subtitle}) => {
     const location = useLocation(); // Get the current location (URL path)
     const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ const MarketplaceNavigationBar = ({ title, subtitle}) => {
     const handleLogOut = async () => {
         try {
             // need to adjust the backend env variables - these are not used
-            const response = await fetch(`${backendUrl}/api/user-Auth/user-logout`, {
+            const response = await fetch(`${backendUrl}/api/business-Auth/business-logout`, {
                 method: 'GET',
                 headers: {'Content-Type': 'application/json'},
                 credentials: 'include',
@@ -66,4 +66,4 @@ const MarketplaceNavigationBar = ({ title, subtitle}) => {
 };
 
 // Exporting the component, which can be used multiple times across the codebase
-export default MarketplaceNavigationBar;
+export default BusinessNavigationBar;

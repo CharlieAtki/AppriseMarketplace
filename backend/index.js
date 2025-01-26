@@ -7,6 +7,7 @@ import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
 import userRoutes from "./routes/userRoutes.js";
 import unAuthRoutes from "./routes/unAuthRoutes.js";
+import businessRoutes from "./routes/businessRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -69,3 +70,4 @@ app.listen(PORT, () => {
 // Linking the routes within userRoutes
 app.use('/api/user-Auth', userRoutes) // Routes for authorised users - once the account has been created
 app.use('/api/user-unAuth', unAuthRoutes) // Routes for unauthorised users
+app.use('/api/business-Auth', businessRoutes) // Routes for authorised businesses

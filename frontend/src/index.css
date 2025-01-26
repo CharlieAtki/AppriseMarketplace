@@ -13,7 +13,7 @@
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-25%); /* Scroll half of the container width */
+        transform: translateX(-100%); /* Scroll half of the container width */
     }
 }
 

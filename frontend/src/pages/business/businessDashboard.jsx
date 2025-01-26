@@ -1,0 +1,45 @@
+import BusinessNavigationBar from "../../components/business/businessNavigationBar";
+import {useNavigate} from "react-router-dom";
+import {useEffect} from "react";
+
+const BusinessDashboard = () => {
+    const navigate = useNavigate();
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+            try {
+                const response = await fetch(`${backendUrl}/api/user-unAuth/auth-check`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'content-type': 'application/json',
+                        'Accept': 'application/json',
+                    }
+                });
+
+                console.log('Auth check response:', response);
+                const result = await response.json();
+                console.log('Auth check result:', result);
+
+                if (!result || !result.success) {
+                    navigate('/businessAccountManagement');
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                navigate('/businessAccountManagement');
+            }
+        };
+
+        checkLoginStatus();
+    }, [navigate, backendUrl]);
+
+    return (
+        <div>
+            < BusinessNavigationBar title={"Business Dashboard"} subtitle={"Manage Your Business"} />
+            <h1>Helloooo</h1>
+        </div>
+    )
+}
+
+export default BusinessDashboard;
