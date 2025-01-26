@@ -6,3 +6,17 @@
 
 /* Import the Tailwind utility styles */
 @tailwind utilities;
+
+/* Your custom CSS for the marquee animation */
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-25%); /* Scroll half of the container width */
+    }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite; /* Adjust duration as needed */
+}

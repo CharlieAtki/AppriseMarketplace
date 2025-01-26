@@ -87,7 +87,7 @@ const Shop = () => {
                         Explore Destinations
                     </h2>
 
-                    <div className="pt-6 pb-6 flex justify-center overflow-x-auto ">
+                    <div className="pt-6 pb-6 flex justify-center overflow-x-auto">
                         <div className="flex space-x-6 pb-6">
                             {destinations.map((destination, index) => (
                                 <div
