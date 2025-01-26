@@ -7,12 +7,12 @@ export const authCheck = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     if (req.session.user) {
-        return res.status(200).send({
+        return res.status(200).json({
             success: true,
             message: 'Authentication Successful!'
         });
     } else {
-        return res.status(401).send({
+        return res.status(401).json({
             success: false,
             message: "No session present"
         });
