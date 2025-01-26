@@ -21,10 +21,13 @@ const allowedOrigins = [
     'http://localhost:3000',                // Local frontend (dev)
     process.env.FRONTEND_URL,               // Frontend URL from environment variable (prod)
     'https://apprise-marketplace.vercel.app', // Your Vercel frontend
+    'https://app.apprisemarketplace.com',
 ];
 
 app.use(cors({
-  origin: allowedOrigins, // Allow these origins
+  origin: process.env.NODE_ENV === 'production'
+        ? 'https://apprise-marketplace.vercel.app' // Allow production frontend
+        : 'http://localhost:3000', // Allow local development frontend
   credentials: true, // Allow cookies to be sent
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
