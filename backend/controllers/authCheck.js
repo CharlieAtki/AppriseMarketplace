@@ -4,6 +4,7 @@ export const authCheck = async (req, res) => {
     // Setting headers for Safari
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
+    res.setHeader('Content-Type', 'application/json');
 
     if (req.session.user) {
         return res.status(200).send({
