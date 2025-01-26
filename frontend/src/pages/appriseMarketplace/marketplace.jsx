@@ -89,7 +89,6 @@ const Shop = () => {
 
                     <div className="pt-6 pb-6 flex justify-center overflow-x-auto ">
                         <div className="flex space-x-6 pb-6">
-                            (
                             {destinations.map((destination, index) => (
                                 <div
                                     key={destination.name}
@@ -98,7 +97,7 @@ const Shop = () => {
                                     <div className="relative">
                                         <img
                                             src={destination.image}
-                                            alt={`Image of ${destination.name}`}
+                                            alt={destination.name}
                                             className="w-full h-56 object-cover"
                                         />
                                         <div className="absolute inset-0 bg-black opacity-20 group-hover:opacity-30 transition-opacity"></div>

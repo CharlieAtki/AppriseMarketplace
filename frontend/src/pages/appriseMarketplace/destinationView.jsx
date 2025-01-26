@@ -54,7 +54,7 @@ const DestinationView = () => {
         <div className="p-6">
             <MarketplaceNavigationBar title="Apprise Marketplace" subtitle="Destination Details" />
 
-            <div className="py-6 px-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow duration-300">
+            <div className="py-4 px-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow duration-300">
                 <div className="w-full mx-auto">
                     {/* Heading Section */}
                     <div className="flex justify-between items-center mb-6">
@@ -70,34 +70,71 @@ const DestinationView = () => {
                         </button>
                     </div>
 
-                    {/* Main Image Section */}
-                    <div className="relative mb-6">
-                        <img
-                            src={image}
-                            alt={`Image of ${name}`}
-                            className="w-full h-72 object-cover rounded-2xl shadow-lg"
-                        />
-                        <div className="absolute inset-0 bg-black opacity-20"></div>
+                    {/* Divider between the title and images */}
+                    <hr className="border-t-2 border-gray-300 my-4"/>
+
+                    {/* Image and Highlights section (Making it a HStack */}
+                    <div className="flex items-start justify-between gap-8 p-2 h-screen">
+                        {/* Main Image Section - Occupies 3/4 of the HStack */}
+                        <div className="flex-[3] grid grid-cols-3 grid-rows-3 gap-4 h-full">
+                            <div className="col-span-2 row-span-2">
+                                <img
+                                    src={image}
+                                    alt={name}
+                                    className="w-full h-full object-cover rounded-2xl"
+                                />
+                            </div>
+                            <div className="col-span-1 row-span-1">
+                                <img
+                                    src={image}
+                                    alt={name}
+                                    className="w-full h-full object-cover rounded-2xl"
+                                />
+                            </div>
+                            <div className="col-span-1 row-span-1">
+                                <img
+                                    src={image}
+                                    alt={name}
+                                    className="w-full h-full object-cover rounded-2xl"
+                                />
+                            </div>
+                            <div className="col-span-3 row-span-3">
+                                <img
+                                    src={image}
+                                    alt={name}
+                                    className="w-full h-full object-cover rounded-2xl"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Highlights Section - Occupies 1/4 of the HStack */}
+                        <div className="flex-[1] flex flex-col h-full p-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow">
+                            <div>
+                                <h3 className="text-2xl font-semibold text-indigo-700 mb-3">
+                                    Highlights
+                                </h3>
+                                <ul className="list-disc list-inside space-y-2 flex-grow">
+                                    {highlights.map((highlight, index) => (
+                                        <li key={index} className="text-gray-600 text-lg">
+                                            {highlight}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <hr className="border-t-2 border-gray-300 my-4"/>
+                            <div>
+                                {/* Description Section */}
+                                <h3 className="text-2xl font-semibold text-indigo-700 mb-3">
+                                    Description
+                                </h3>
+                                <p className="text-gray-800 text-lg mb-6">
+                                    {description}
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Description Section */}
-                    <p className="text-gray-800 text-lg mb-6">
-                        {description}
-                    </p>
-
-                    {/* Highlights Section */}
-                    <div className="mb-6">
-                        <h3 className="text-2xl font-semibold text-indigo-700 mb-3">
-                            Highlights
-                        </h3>
-                        <ul className="list-disc list-inside space-y-2">
-                            {highlights.map((highlight, index) => (
-                                <li key={index} className="text-gray-600 text-lg">
-                                    {highlight}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <hr className="border-t-2 border-gray-300 my-4"/>
 
                     {/* Call to Action */}
                     <button

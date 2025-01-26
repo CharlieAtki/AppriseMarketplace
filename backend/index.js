@@ -16,18 +16,11 @@ const app = express();
 // Trust proxy setting before other middleware
 app.set('trust proxy', 1);
 
-// List of allowed origins, meaning more than one origin can be used to make requests (for dev and prod)
-const allowedOrigins = [
-    'http://localhost:3000',                // Local frontend (dev)
-    process.env.FRONTEND_URL,               // Frontend URL from environment variable (prod)
-    'https://apprise-marketplace.vercel.app', // Your Vercel frontend
-    'https://app.apprisemarketplace.com',
-];
-
 app.use(cors({
   origin: [
         'https://apprise-marketplace.vercel.app',  // Existing frontend URL
         'https://app.apprisemarketplace.com',  // Add the new frontend URL
+        'http://localhost:3000', // Local development
   ],
   credentials: true, // Allow cookies to be sent
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
