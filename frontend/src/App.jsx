@@ -7,6 +7,7 @@ import DestinationView from "./pages/appriseMarketplace/destinationView";
 import Homepage from "./pages/homePage/homePage";
 import BusinessAccountManagement from "./pages/business/businessAccountManagement";
 import BusinessDashboard from "./pages/business/businessDashboard";
+import AnalyticsPage from "./pages/business/analyticsPage";
 
 const App = () => {
     return (
@@ -18,6 +19,7 @@ const App = () => {
                 <Route path="destination-view" element={<DestinationView />} />
                 <Route path="businessAccountManagement" element={<BusinessAccountManagement />} />
                 <Route path="businessDashboard" element={<BusinessDashboard />} />
+                <Route path="businessAnalytics" element={<AnalyticsPage />} />
             </Routes>
         </Router>
     );

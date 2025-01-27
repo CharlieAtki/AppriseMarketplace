@@ -118,7 +118,9 @@ const HomePageFeaturedSection = () => {
                             </h3>
                             <p className="text-gray-600 text-sm text-center">
                                 Start your business journey by registering your business and exploring
-                                new opportunities.
+                                new opportunities. <br />
+                                <br />
+                                To register your business, click the button below.
                             </p>
                         </div>
                         <div>

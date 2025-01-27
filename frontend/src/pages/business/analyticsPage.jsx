@@ -1,9 +1,9 @@
-import BusinessNavigationBar from "../../components/business/businessNavigationBar";
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import BusinessSideBar from "../../components/business/businessSideBar";
+import BusinessNavigationBar from "../../components/business/businessNavigationBar";
 
-const BusinessDashboard = () => {
+const AnalyticsPage = () => {
     const navigate = useNavigate();
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -40,15 +40,15 @@ const BusinessDashboard = () => {
         <div className="flex w-full h-screen">
             {/* Sidebar */}
             <div className="bg-indigo-700 flex-grow max-w-48">
-                < BusinessSideBar />
+                < BusinessSideBar/>
             </div>
-             {/* Main Content */}
+            {/* Main Content */}
             <div className="flex flex-col flex-grow p-4">
-                < BusinessNavigationBar title={"Business Dashboard"} subtitle={"Manage Your Business"} />
-                <h1>Dashboard</h1>
+                < BusinessNavigationBar title={"Business Dashboard"} subtitle={"Manage Your Business"}/>
+                <h1>Analytics Page</h1>
             </div>
         </div>
     )
 }
 
-export default BusinessDashboard;
+export default AnalyticsPage
