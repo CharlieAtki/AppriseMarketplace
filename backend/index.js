@@ -14,6 +14,12 @@ dotenv.config();
 
 const app = express();
 
+// Middleware to parse JSON request bodies with increased limit
+app.use(express.json({ limit: '50mb' }));  // Increase the limit to 50 MB (adjust as necessary)
+
+// Middleware to handle form data (if using for file uploads)
+app.use(express.urlencoded({ limit: '50mb', extended: true })); // For URL-encoded payloads (form data)
+
 // Trust proxy setting before other middleware
 app.set('trust proxy', 1);
 

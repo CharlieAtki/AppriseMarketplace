@@ -6,8 +6,9 @@ const listingSchema = new mongoose.Schema({
         ref: "User", // References the business user
         required: true
     },
-    title: { type: String, required: true },
+    name: { type: String, required: true },
     description: { type: String, required: true },
+    highlights: [{ type: String, required: true }],
     location: {
         country: { type: String, required: true },
         city: { type: String },

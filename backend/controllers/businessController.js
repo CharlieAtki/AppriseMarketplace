@@ -1,6 +1,6 @@
-
 import bcrypt from "bcryptjs";
-import User from "../models/User.js"; // This is the business model
+import User from "../models/User.js";
+import Listing from "../models/Listing.js"; // This is the business model
 
 // Num of times the hashing algorithm is applied
 const saltRounds = 10
@@ -154,6 +154,63 @@ export const becomeABusiness = async (req, res) => {
         return res.status(400).json({
             success: false,
             message: error.message
+        });
+    }
+};
+
+export const listingCreation = async (req, res) => {
+    // Check if req.body is undefined or null
+    if (!req.body) {
+        return res.status(400).json({ message: 'Request body is empty or not parsed properly.' });
+    }
+
+    // Now destructure the fields
+    const {
+        name,
+        description,
+        highlights,
+        location,
+        price,
+        currency,
+        images,
+        services_offered,
+        max_guests,
+        availability
+    } = req.body;
+
+    // Validate that required fields are present
+    if (!name || !description || !location || !price || !max_guests || !availability) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    try {
+        const newListing = new Listing({
+            business_id: req.session.user.id, // The logged-in user (business) creating the listing
+            name,
+            description,
+            highlights,
+            location,
+            price,
+            currency,
+            images,
+            services_offered,
+            max_guests,
+            availability
+        });
+
+        // Save the listing to the database
+        const savedListing = await newListing.save();
+
+        res.status(201).json({
+            success: true,
+            message: "Created listing successfully",
+            listing: savedListing
+        });
+    } catch (error) {
+        console.error("Error creating listing:", error);
+        return res.status(500).json({
+            success: false,
+            message: error.message || 'An unexpected error occurred'
         });
     }
 };

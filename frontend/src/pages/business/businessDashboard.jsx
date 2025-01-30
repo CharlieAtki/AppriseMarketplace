@@ -2,25 +2,11 @@ import BusinessNavigationBar from "../../components/business/businessNavigationB
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import BusinessSideBar from "../../components/business/businessSideBar";
-import AreaChartComponent from "../../components/business/areaChart";
-import { motion } from "framer-motion"
+import CreateListing from "../../components/business/CreateListing";
 
 const BusinessDashboard = () => {
     const navigate = useNavigate();
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
-
-    const containerVariants = {
-      hidden: { opacity: 0 },
-      visible: {
-        opacity: 1,
-        transition: { staggerChildren: 0.3 },
-      },
-    };
-
-    const itemVariants = {
-      hidden: { opacity: 0, y: 20 },
-      visible: { opacity: 1, y: 0 },
-    };
 
     // Logic for user authentication. This makes sure the user has loggedIn
     useEffect(() => {
@@ -54,13 +40,14 @@ const BusinessDashboard = () => {
     return (
         <div className="flex w-full h-screen">
             {/* Sidebar */}
-            <div className="bg-indigo-700 flex-grow max-w-48">
+            <div className="bg-indigo-700 flex-shrink-0 w-48 h-full">
                 < BusinessSideBar />
             </div>
              {/* Main Content */}
-            <div className="flex flex-col flex-grow p-4">
-                <h1>Dashboard</h1>
-
+            <div className="flex flex-col flex-grow p-4 overflow-y-auto">
+                <div className="max-w-screen-lg mx-auto w-full">
+                    <CreateListing />
+                </div>
             </div>
         </div>
     )
