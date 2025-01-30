@@ -22,6 +22,10 @@ const HomePageNavigationBar = ({ title, subtitle}) => {
         navigate('/businessDashboard');
     }
 
+    const becomeABusiness = async () => {
+        navigate('/become-a-business');
+    }
+
     return (
         <section className="flex justify-between items-center px-8 py-8 gap-x-4">
             {/* Title on the left */}
@@ -38,7 +42,11 @@ const HomePageNavigationBar = ({ title, subtitle}) => {
 
             {/* Buttons on the right */}
             <div className="flex space-x-3.5 p-2">
-                {/* Using React client-side routing, if the button is pressed, route the user to / */}
+                <button
+                    onClick={becomeABusiness}
+                    className={getButtonClass("/customerAccountManagement")}>
+                    Become a Business
+                </button>
                 <button
                     onClick={customerSignIn}
                     className={getButtonClass("/customerAccountManagement")}>

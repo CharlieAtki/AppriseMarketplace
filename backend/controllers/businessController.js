@@ -1,12 +1,13 @@
-import Business from "../models/Business.js";
-import bcrypt from "bcryptjs"; // This is the business model
+
+import bcrypt from "bcryptjs";
+import User from "../models/User.js"; // This is the business model
 
 // Num of times the hashing algorithm is applied
 const saltRounds = 10
 
 export const businessCreation = async (req, res) => {
     try {
-        const existingEmailCheck = await Business.findOne({email: req.body.email});
+        const existingEmailCheck = await User.findOne({email: req.body.email});
         if (existingEmailCheck) {
             return res.status(404).send({
                 success: false,
@@ -18,7 +19,7 @@ export const businessCreation = async (req, res) => {
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
         // Creating the user account (the object in the MongoDb database)
-        const user = new Business({
+        const user = new User({
             email: req.body.email,
             hashedPassword: hashedPassword
         });
@@ -38,10 +39,11 @@ export const businessLogin = async (req, res) => {
     const passwordString = String(req.body.password); // the input password from the frontend
 
     try {
-        const searchedBusiness = await Business.findOne({email: req.body.email}) // searching for a user with the input credentials
+        const searchedBusiness = await User.findOne({email: req.body.email}) // searching for a user with the input credentials
         if (searchedBusiness) {
             const match = await bcrypt.compare(passwordString, searchedBusiness.hashedPassword);
-            if (match) {
+            // Checking to see if the hashed password and user role matches
+            if (match && searchedBusiness.role === "business") {
                 // Set session
                 req.session.user = {
                     id: searchedBusiness._id,
@@ -118,6 +120,38 @@ export const businessLogout = async (req, res) => {
         });
     } catch (error) {
         return res.status(400).send({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// API to change the user role into "business"
+export const becomeABusiness = async (req, res) => {
+    try {
+        const updatedUser = await User.findOneAndUpdate(
+            { email: req.body.email }, // Find user by email
+            {
+                role: "business", // Update role
+                businessName: req.body.businessName,
+            },
+            { new: true } // Return updated document
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Login successful",
+            user: updatedUser // Returning the updated user
+        });
+    } catch (error) {
+        return res.status(400).json({
             success: false,
             message: error.message
         });

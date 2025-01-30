@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-// Define a schema for a User
+// Define a schema for a User (Customer & Businesses)
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -15,8 +15,8 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         required: true,
-        enum: ['user', 'admin'],
-        default: 'user'
+        enum: ['customer', 'business' ,'admin'], // Supports both customers and businesses
+        default: 'customer'
     },
     isVerified: {
         type: Boolean,
@@ -28,42 +28,33 @@ const userSchema = new mongoose.Schema({
     dateOfBirth: {
         type: Date,
     },
-    favoriteDestinations: [
-        {
-            type: String
-        }
-    ],
-    pastBookings: [
-        {
-            bookingId: {
-                type: String
-            },
-            destination: {
-                type: String,
-            },
-            date: {
-                type: Date
-            },
-            status: {
-                type: String,
-            }
-        }
-    ],
-    upcomingBookings: {
-        type: Array,
+    // Customer-Specific Fields
+    favoriteDestinations: [{ type: String }],
+    pastBookings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Booking" }],
+    upcomingBookings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Booking" }],
+
+
+    // Business-specific fields (Only applies to users with role: "business")
+    businessName: {
+        type: String,
+        required: function () { return this.role === 'business'; } // Required only for businesses
     },
-    preferences: {
-        seatPreference: {
-            type: String,
-            enum: ['window', 'aisle', 'middle']
-        },
-        mealPreference: {
-            type: String,
-            enum: ['vegetarian', 'non-vegetarian', 'vegan', 'kosher', 'halal']
-        },
-        language: {
-            type: String
-        }
+    contactNumber: {
+        type: String,
+        required: function () { return this.role === 'business'; } // Required only for businesses
+    },
+    address: {
+        street: { type: String },
+        city: { type: String },
+        state: { type: String },
+        zipCode: { type: String },
+        country: { type: String },
+    },
+    subscriptionPlan: {
+        type: String,
+        enum: ["free", "premium", "enterprise"],
+        default: "free",
+        required: function () { return this.role === 'business'; }, // Required for businesses
     }
 },
     {

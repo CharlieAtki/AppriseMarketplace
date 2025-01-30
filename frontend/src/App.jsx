@@ -10,6 +10,7 @@ import BusinessDashboard from "./pages/business/businessDashboard";
 import AnalyticsPage from "./pages/business/analyticsPage";
 import NewHomePage from "./pages/homePage/newHomePage";
 import DestinationBookingPage from "./pages/appriseMarketplace/destinationBookingPage";
+import HostingBusinessForm from "./components/business/hostingBusinessForm";
 
 const App = () => {
     return (
@@ -23,6 +24,7 @@ const App = () => {
                 <Route path="businessDashboard" element={<BusinessDashboard />} />
                 <Route path="businessAnalytics" element={<AnalyticsPage />} />
                 <Route path="booking-view" element={<DestinationBookingPage />} />
+                <Route path="become-a-business" element={<HostingBusinessForm />} />
                 <Route path="newhomepage" element={<NewHomePage />} />
             </Routes>
         </Router>
