@@ -14,9 +14,13 @@ const HomePageNavigationBar = ({ title, subtitle}) => {
             : 'bg-gray-700 text-white rounded-full shadow-2xl shadow-gray-500/50 px-8 py-3 hover:bg-indigo-700 transition-all transform hover:scale-105'; // Inactive state
     };
 
-    const handleSignIn = async () => {
-        navigate('/customerAccountManagement');
+    const customerSignIn = async () => {
+        navigate('/marketplace');
     };
+
+    const businessSignIn = async () => {
+        navigate('/businessDashboard');
+    }
 
     return (
         <section className="flex justify-between items-center px-8 py-8 gap-x-4">
@@ -36,9 +40,14 @@ const HomePageNavigationBar = ({ title, subtitle}) => {
             <div className="flex space-x-3.5 p-2">
                 {/* Using React client-side routing, if the button is pressed, route the user to / */}
                 <button
-                    onClick={handleSignIn}
+                    onClick={customerSignIn}
                     className={getButtonClass("/customerAccountManagement")}>
-                    Sign In
+                    Marketplace
+                </button>
+                <button
+                    onClick={businessSignIn}
+                    className={getButtonClass("/customerAccountManagement")}>
+                    Business Dashboard
                 </button>
             </div>
         </section>

@@ -39,7 +39,7 @@ const MarketplaceNavigationBar = ({ title, subtitle}) => {
     };
 
     return (
-        <section className="flex justify-between items-center px-8 py-8 gap-x-4">
+        <section className="flex justify-between items-center px-6 py-6 gap-x-4">
             {/* Title on the left */}
             {/* sm:text-2xl - On small screens, the text is 2xl*/}
             {/* md:text-2xl - On medium screens, the text is 4xl*/}

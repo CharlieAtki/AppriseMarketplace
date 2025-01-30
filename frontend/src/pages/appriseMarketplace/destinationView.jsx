@@ -13,6 +13,7 @@ const DestinationView = () => {
     // This means that if the object is missing or has missing properties,
     // the destructured variables (name, image, description, and highlights) will be undefined rather than causing an error.
     const { name, image, description, highlights } = state?.destination || {};
+    const selectedDestination = state?.destination || {};
 
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -138,8 +139,10 @@ const DestinationView = () => {
 
                     {/* Call to Action */}
                     <button
-                        onClick={() => navigate("/booking")}
                         className="w-full bg-indigo-700 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors flex justify-center items-center"
+                        onClick={() => {
+                            navigate('/booking-view', { state: { destination: selectedDestination } });
+                        }}
                     >
                         Book Your Trip
                         <ArrowRight

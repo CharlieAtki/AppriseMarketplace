@@ -2,6 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import BusinessSideBar from "../../components/business/businessSideBar";
 import BusinessNavigationBar from "../../components/business/businessNavigationBar";
+import AreaChartComponent from "../../components/business/areaChart";
 
 const AnalyticsPage = () => {
     const navigate = useNavigate();
@@ -46,6 +47,9 @@ const AnalyticsPage = () => {
             <div className="flex flex-col flex-grow p-4">
                 < BusinessNavigationBar title={"Business Dashboard"} subtitle={"Manage Your Business"}/>
                 <h1>Analytics Page</h1>
+                <div className="flex w-1/4 h-1/4 border-2 border-gray-200 rounded-2xl">
+                    < AreaChartComponent metricOne={"Total Sales"} metricTwo={"Total Revenue"} metricOneUnit={"Units"} metricTwoUnit={"GBP"}/>
+                </div>
             </div>
         </div>
     )

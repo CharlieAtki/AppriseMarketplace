@@ -8,6 +8,8 @@ import Homepage from "./pages/homePage/homePage";
 import BusinessAccountManagement from "./pages/business/businessAccountManagement";
 import BusinessDashboard from "./pages/business/businessDashboard";
 import AnalyticsPage from "./pages/business/analyticsPage";
+import NewHomePage from "./pages/homePage/newHomePage";
+import DestinationBookingPage from "./pages/appriseMarketplace/destinationBookingPage";
 
 const App = () => {
     return (
@@ -20,6 +22,8 @@ const App = () => {
                 <Route path="businessAccountManagement" element={<BusinessAccountManagement />} />
                 <Route path="businessDashboard" element={<BusinessDashboard />} />
                 <Route path="businessAnalytics" element={<AnalyticsPage />} />
+                <Route path="booking-view" element={<DestinationBookingPage />} />
+                <Route path="newhomepage" element={<NewHomePage />} />
             </Routes>
         </Router>
     );
