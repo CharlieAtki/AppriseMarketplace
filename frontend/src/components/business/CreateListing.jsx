@@ -33,6 +33,8 @@ const CreateListing = ({ onListingSubmit }) => {
         }
     };
 
+
+    // The function updates the formData when the image input field changes 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
         const readers = files.map(file => {
@@ -109,7 +111,7 @@ const CreateListing = ({ onListingSubmit }) => {
                     highlights: "",
                     location: { country: "", city: "", lat: "", lng: "" },
                     price: "",
-                    currency: "USD",
+                    currency: "GBP",
                     images: [],
                     services_offered: "",
                     max_guests: "",

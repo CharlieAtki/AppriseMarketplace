@@ -208,3 +208,28 @@ export const listingCreation = async (req, res) => {
         });
     }
 };
+
+export const fetchListings = async (req, res) => {
+    try {
+        const destinations = await Listing.find({}); // Fetch all listings
+
+        if (!destinations || destinations.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Destinations not found"
+            });
+        } else {
+            res.status(200).json({
+                success: true,
+                message: "Destinations found",
+                payload: destinations // Sending results in `payload`
+            });
+        }
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
