@@ -158,49 +158,43 @@ export const becomeABusiness = async (req, res) => {
     }
 };
 
+// Api logic for formating and saving the listing information to the MongoDB listings collection
 export const listingCreation = async (req, res) => {
-    // Check if req.body is undefined or null
-    if (!req.body) {
-        return res.status(400).json({ message: 'Request body is empty or not parsed properly.' });
+    console.log("Received listing creation request");
+    console.log("Request body:", req.body);
+    console.log("Session:", req.session);
+
+    // Checking for session - User must be loggedIn to create a listing
+    if (!req.session.user || !req.session.user.id) {
+        console.log("No valid session found");
+        return res.status(401).json({
+            success: false,
+            message: 'Unauthorized: No valid session'
+        });
     }
 
-    // Now destructure the fields
-    const {
-        name,
-        description,
-        highlights,
-        location,
-        price,
-        currency,
-        images,
-        services_offered,
-        max_guests,
-        availability
-    } = req.body;
-
-    // Validate that required fields are present
-    if (!name || !description || !location || !price || !max_guests || !availability) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
+    // Creating the listing object
     try {
         const newListing = new Listing({
-            business_id: req.session.user.id, // The logged-in user (business) creating the listing
-            name,
-            description,
-            highlights,
-            location,
-            price,
-            currency,
-            images,
-            services_offered,
-            max_guests,
-            availability
+            ...req.body, // { ...req.body }: This spreads all the properties from req.body into the new object. That means every field sent in the request is included in the new listing unless explicitly overridden.
+            business_id: req.session.user.id,
+            // processes the highlights data for storing
+            // Splits the string by commas (split(',')), turning it into an array.
+            // Trims whitespace from each element (map(h => h.trim())).
+            // The same process is applied to the services_offered data
+            highlights: typeof req.body.highlights === 'string'
+                ? req.body.highlights.split(',').map(h => h.trim())
+                : req.body.highlights,
+            services_offered: typeof req.body.services_offered === 'string'
+                ? req.body.services_offered.split(',').map(s => s.trim())
+                : req.body.services_offered
         });
 
-        // Save the listing to the database
-        const savedListing = await newListing.save();
+        console.log("Attempting to save listing:", newListing);
+        const savedListing = await newListing.save(); // saving the listing to the collection
+        console.log("Listing saved successfully:", savedListing);
 
+        // Send a response to the frontend for user feedback etc
         res.status(201).json({
             success: true,
             message: "Created listing successfully",
