@@ -18,14 +18,6 @@ const HomePageNavigationBar = ({ title, subtitle}) => {
         navigate('/marketplace');
     };
 
-    const businessSignIn = async () => {
-        navigate('/businessDashboard');
-    }
-
-    const becomeABusiness = async () => {
-        navigate('/become-a-business');
-    }
-
     return (
         <section className="flex justify-between items-center px-8 py-8 gap-x-4">
             {/* Title on the left */}
@@ -43,19 +35,9 @@ const HomePageNavigationBar = ({ title, subtitle}) => {
             {/* Buttons on the right */}
             <div className="flex space-x-3.5 p-2">
                 <button
-                    onClick={becomeABusiness}
-                    className={getButtonClass("/customerAccountManagement")}>
-                    Become a Business
-                </button>
-                <button
                     onClick={customerSignIn}
                     className={getButtonClass("/customerAccountManagement")}>
                     Marketplace
-                </button>
-                <button
-                    onClick={businessSignIn}
-                    className={getButtonClass("/customerAccountManagement")}>
-                    Business Dashboard
                 </button>
             </div>
         </section>

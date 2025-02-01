@@ -158,6 +158,39 @@ export const becomeABusiness = async (req, res) => {
     }
 };
 
+// Role check - sends the result back to the frontend as only the backend can access the session
+export const roleCheck = async (req, res) => {
+    try {
+        // Checking for a session
+        if (!req.session.user) {
+            return res.status(401).json({
+                success: false,
+                message: "User session not found"
+            });
+        }
+
+        // Checking if the session has the role set
+        if (req.session.user.role) {
+            return res.status(200).json({
+                success: true,
+                userRole: req.session.user.role
+            });
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "User role not found"
+            });
+        }
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// Listing Controllers
+
 // Api logic for formating and saving the listing information to the MongoDB listings collection
 export const listingCreation = async (req, res) => {
     console.log("Received listing creation request");

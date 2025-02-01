@@ -1,21 +1,43 @@
 import {useLocation, useNavigate} from 'react-router-dom';
+import {useEffect, useState} from "react";
 
 const MarketplaceNavigationBar = ({ title, subtitle}) => {
     const location = useLocation(); // Get the current location (URL path)
     const navigate = useNavigate();
-
     // Defining the environment variables
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-    // Function that compares the buttons path url and the current url
-    // Used to improve user-feedback as if the url's match, the button is indigo rather than grey
+    const [businessDashboard, setBusinessDashboard] = useState(false); // Manages what UI the user sees depending on their role
+
+
+    // Function that applies dynamic button styling
     const getButtonClass = (path) => {
         return location.pathname === path
-            // If truthy (the URL is the same as the buttons path, active state (change the colour)
-            ? 'bg-indigo-700 text-white rounded-full shadow-2xl shadow-indigo-500/50 px-8 py-3 transform scale-110' // Active state
-            // If falsy (the URL does not match the buttons path, inactive state (don's change the colour)
-            : 'bg-gray-700 text-white rounded-full shadow-2xl shadow-gray-500/50 px-8 py-3 hover:bg-indigo-700 transition-all transform hover:scale-105'; // Inactive state
+            ? 'bg-indigo-700 text-white rounded-full shadow-2xl shadow-indigo-500/50 px-8 py-3 transform scale-110'
+            : 'bg-gray-700 text-white rounded-full shadow-2xl shadow-gray-500/50 px-8 py-3 hover:bg-indigo-700 transition-all transform hover:scale-105';
     };
+
+    // Fetch user role on component mount
+    useEffect(() => {
+        const roleCheck = async () => {
+            try {
+                const response = await fetch(`${backendUrl}/api/user-unAuth/role-check`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    setBusinessDashboard(result.userRole === "business"); // Set true if business
+                }
+            } catch (error) {
+                console.error('Role check error', error);
+            }
+        };
+
+        roleCheck();
+    }, [backendUrl]); // Runs only when `backendUrl` changes
 
     const handleLogOut = async () => {
         try {
@@ -38,6 +60,15 @@ const MarketplaceNavigationBar = ({ title, subtitle}) => {
         }
     };
 
+    // Button used to redirect the user to the business dashboard
+    const businessDashboardRedirection = async () => {
+        navigate('/businessDashboard');
+    }
+
+    const becomeABusiness = async () => {
+        navigate('/become-a-business');
+    }
+
     return (
         <section className="flex justify-between items-center px-6 py-6 gap-x-4">
             {/* Title on the left */}
@@ -54,7 +85,20 @@ const MarketplaceNavigationBar = ({ title, subtitle}) => {
 
             {/* Buttons on the right */}
             <div className="flex space-x-3.5 p-2">
-                {/* Using React client-side routing, if the button is pressed, route the user to / */}
+                {businessDashboard ? ( // Ternary operator to adjust the buttons within the navigation bar depending on user role
+                    <button
+                        onClick={businessDashboardRedirection}
+                        className={getButtonClass("/businessDashboard")}>
+                        Business Dashboard
+                    </button>
+
+                ) : (
+                    <button
+                        onClick={becomeABusiness}
+                        className={getButtonClass("/become-a-business")}>
+                        Host Your Home?
+                    </button>
+                )}
                 <button
                     onClick={handleLogOut}
                     className={getButtonClass("/customerAccountManagement")}>

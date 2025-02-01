@@ -79,7 +79,7 @@ const Shop = () => {
         fetchDestinations();
     }, [backendUrl]);
 
-    // Filter destinations based on search query (case insensitive)
+    // Filter destinations based on search query (case-insensitive)
     const filteredDestinations = searchQuery
         ? destinations.filter(destination =>
             destination.name.toLowerCase().includes(searchQuery.trim().toLowerCase())
@@ -107,8 +107,10 @@ const Shop = () => {
                     </div>
                 </div>
 
+                <hr className="border-2 border-gray-300 rounded-2xl shadow-lg" />
+
                 {/* Grid Layout for Destinations */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-6">
                     {filteredDestinations.map((destination) => (
                         <div
                             key={destination.name}
