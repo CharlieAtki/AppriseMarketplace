@@ -20,6 +20,7 @@ const CreateListing = ({ onListingSubmit }) => {
     const [previewMode, setPreviewMode] = useState(false); // Controls whether the form is in preview mode.
     const [errorMessages, setErrorMessages] = useState([]); //  Stores any validation errors.
     const [successMessage, setSuccessMessage] = useState(""); // Displays success feedback to the user.
+    const [disabled, setDisabled] = useState(false); // Manages the buffer of the listing submission
 
 
     // This function updates the formData when an input field changes.
@@ -65,8 +66,12 @@ const CreateListing = ({ onListingSubmit }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Submit button clicked");
-        console.log("Form data being sent:", formData);
+
+        // Prevent multiple submissions
+        if (disabled) {
+            return;
+        }
+        setDisabled(true); // Disable button
 
         // Clear previous messages
         setErrorMessages([]);
@@ -86,6 +91,7 @@ const CreateListing = ({ onListingSubmit }) => {
 
         if (errors.length > 0) {
             setErrorMessages(errors);
+            setDisabled(false); // Re-enable button (the input was falsy)
             return;
         }
 
@@ -126,6 +132,11 @@ const CreateListing = ({ onListingSubmit }) => {
             console.error("Error submitting listing:", error);
             setErrorMessages(["There was an error while submitting the form. Please try again."]);
         }
+
+        // Adding a buffer to prevent multiple listing submissions by user.
+        setTimeout(() => {
+            setDisabled(false);
+        }, 10000); // 10-second delay before re-enabling
     };
 
     return (
@@ -143,12 +154,14 @@ const CreateListing = ({ onListingSubmit }) => {
                     </div>
                 )}
 
+                {/* Success message - On successful submission */}
                 {successMessage && (
                     <div className="bg-green-100 text-green-600 p-4 mb-4 rounded">
                         {successMessage}
                     </div>
                 )}
 
+                {/* Edit mode / Preview mode - Ternary operator */}
                 {previewMode ? (
                     <div className="bg-gray-100 p-6 rounded-2xl">
                         <h2 className="text-2xl font-bold text-indigo-700 mb-4">Preview Your Listing</h2>
