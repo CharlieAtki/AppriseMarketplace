@@ -1,5 +1,5 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
 import { Calendar, Clock, Users, DollarSign, Briefcase, ArrowLeft } from 'lucide-react';
 
@@ -15,6 +15,15 @@ const DestinationBookingPage = () => {
     // the destructured variables (name, image, description, and highlights) will be undefined rather than causing an error.
     const { name, image, description, highlights } = state?.destination || {};
     const selectedDestination = state?.destination || {};
+
+    const [adults, setAdults] = useState(1);
+    const [children, setChildren] = useState(0);
+    const [checkInDate, setCheckInDate] = useState("");
+    const [checkOutDate, setCheckOutDate] = useState("");
+    const [bookedDates, setBookedDates] = useState([]);
+
+    const listingId = state?.destination?.id; // Ensure 'listingId' is correctly extracted
+    console.log("Listing ID:", listingId);
 
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -45,6 +54,73 @@ const DestinationBookingPage = () => {
 
         checkLoginStatus();
     }, [navigate, backendUrl]);
+
+    useEffect(() => {
+        const fetchBookedDates = async () => {
+            try {
+                const response = await fetch(`${backendUrl}/api/business-Auth/check-booking-availability`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                })
+
+                if (!response.ok) {
+                    console.error('Error during fetching');
+                }
+
+                const data = await response.json();
+                setBookedDates(data.bookedDates); // Store booked dates in state
+            } catch (error) {
+                console.error('Booking availability check error:', error)
+            }
+        };
+
+        if (listingId) fetchBookedDates(); // Only fetch if `listingId` is available
+    }, [listingId, backendUrl]);
+
+    // Sending the booking details to the backend - Saving to the database
+    const bookingSubmission = async () => {
+        if (!checkInDate) {
+            console.error("Check-in date is required");
+            return;
+        }
+
+        const totalGuests = adults + children;
+        const basePrice = selectedDestination?.price || 299.99;
+        const totalPrice = basePrice * totalGuests;
+
+        const requestBody = {
+            listingId: selectedDestination?._id,
+            serviceDate: new Date(checkInDate).toISOString(),
+            numGuests: totalGuests,
+            totalPrice
+        };
+
+        console.log("Sending booking request:", requestBody);
+
+        try {
+            const response = await fetch(`${backendUrl}/api/business-Auth/create-booking`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestBody),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                console.error("Booking error:", error);
+                return;
+            }
+
+            const result = await response.json();
+            if (result.success) {
+                navigate('/booking-confirmation');
+            }
+        } catch (error) {
+            console.error("Booking error:", error);
+        }
+    };
+
 
     // This checks if destination is either null or undefined.
     // In other words, it evaluates to true if no destination (due to the !state) is selected or the state doesn't have a destination
@@ -104,9 +180,14 @@ const DestinationBookingPage = () => {
 
                     {/* Destination Details & Booking Section  */}
                     <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-8 p-2 h-auto lg:h-screen">
+                        {/* Destination Features Section */}
+                        <div className="flex-[1] flex flex-col h-auto lg:h-full p-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow">
+                            <h2 className="text-3xl font-bold text-indigo-700">
+                                What This Place Offers:
+                            </h2>
+                        </div>
                         {/* Customer Details Input section */}
-                        <div
-                            className="flex-[1] flex flex-col h-auto lg:h-full p-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow">
+                        <div className="flex-[2] flex flex-col h-auto lg:h-full p-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow">
                             <h2 className="text-3xl font-bold text-indigo-700">
                                 Booking Details:
                             </h2>
@@ -123,6 +204,9 @@ const DestinationBookingPage = () => {
                                         <input
                                             type="date"
                                             className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                            min={new Date().toISOString().split("T")[0]} // Prevent past dates
+                                            onChange={(e) => setCheckInDate(e.target.value)} // Store value in state
+                                            disabled={bookedDates.includes(checkInDate)} // Use state instead of e.target.value
                                         />
                                     </div>
                                     <div>
@@ -130,6 +214,9 @@ const DestinationBookingPage = () => {
                                         <input
                                             type="date"
                                             className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                            min={checkInDate} // Check-out must be after check-in
+                                            onChange={(e) => setCheckOutDate(e.target.value)} // Store value in state
+                                            disabled={bookedDates.includes(checkOutDate)} // Use state instead of e.target.value
                                         />
                                     </div>
                                 </div>
@@ -160,7 +247,9 @@ const DestinationBookingPage = () => {
                                     <div>
                                         <label className="block text-sm text-gray-600">Adults</label>
                                         <select
-                                            className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                            value={adults}
+                                            onChange={(e) => setAdults(parseInt(e.target.value))}
+                                            className="mt-1 w-full p-2 border border-gray-300 rounded-lg">
                                             {[1, 2, 3, 4, 5, 6].map(num => (
                                                 <option key={num} value={num}>{num}</option>
                                             ))}
@@ -169,7 +258,9 @@ const DestinationBookingPage = () => {
                                     <div>
                                         <label className="block text-sm text-gray-600">Children</label>
                                         <select
-                                            className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                            value={children}
+                                            onChange={(e) => setChildren(parseInt(e.target.value))}
+                                            className="mt-1 w-full p-2 border border-gray-300 rounded-lg">
                                             {[0, 1, 2, 3, 4].map(num => (
                                                 <option key={num} value={num}>{num}</option>
                                             ))}
@@ -218,23 +309,22 @@ const DestinationBookingPage = () => {
 
                             {/* Book Now Button */}
                             <button
+                                onClick={bookingSubmission}
                                 className="mt-6 w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
                                 Book Now
                             </button>
                         </div>
-                        {/* Destination Features Section */}
-                        <div className="flex-[1] flex flex-col h-auto lg:h-full p-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow">
-                                <h2 className="text-3xl font-bold text-indigo-700">
-                                    What This Place Offers:
-                                </h2>
-                        </div>
-                        {/* Host Information Section */}
-                        <div className="flex-[1] flex flex-col h-auto lg:h-full p-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow">
+                    </div>
+
+                    <hr className="border-t border-gray-300" />
+
+                    {/* Host Information Section */}
+                        <div
+                            className="flex-[1] flex flex-col h-auto lg:h-full p-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow">
                             <h2 className="text-3xl font-bold text-indigo-700">
                                 Host Details
                             </h2>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>

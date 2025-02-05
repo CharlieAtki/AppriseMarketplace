@@ -39,14 +39,14 @@ const bookingSchema = new mongoose.Schema({
         default: "pending",
     },
     paymentDetails: {
-        transitionId: { type: String },
+        transactionId: { type: String },
         paymentMethod: { type: String, enum: ["creditCard", "paypal"] },
         paidAmount: { type: Number }
     },
 },
     {
         timestamps: true,
-        collection: 'users'
+        collection: 'bookings'
     }
 );
 

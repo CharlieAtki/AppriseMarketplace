@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
-import Listing from "../models/Listing.js"; // This is the business model
+import Listing from "../models/Listing.js";
+import Booking from "../models/Booking.js"; // This is the business model
 
 // Num of times the hashing algorithm is applied
 const saltRounds = 10
@@ -265,4 +266,121 @@ export const fetchListings = async (req, res) => {
         });
     }
 };
+
+// Booking logic:
+
+export const bookingCreation = async (req, res) => {
+    try {
+        const { listingId, serviceDate, numGuests, totalPrice } = req.body;
+        const customerId = req.session.user?.id;
+
+        // Validate session
+        if (!customerId) {
+            return res.status(401).json({
+                success: false,
+                message: "User must be logged in",
+            });
+        }
+
+        // Validate required fields
+        if (!listingId || !serviceDate || !numGuests || !totalPrice) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing required fields",
+                required: ["listingId", "serviceDate", "numGuests", "totalPrice"]
+            });
+        }
+
+        // Find listing and validate
+        const listing = await Listing.findById(listingId);
+        if (!listing) {
+            return res.status(404).json({
+                success: false,
+                message: "Listing not found",
+            });
+        }
+
+        // Validate maximum guests
+        if (numGuests > listing.max_guests) {
+            return res.status(400).json({
+                success: false,
+                message: `Maximum ${listing.max_guests} guests allowed`,
+            });
+        }
+
+        // Check for existing booking
+        const existingBooking = await Booking.findOne({
+            listingId,
+            serviceDate: new Date(serviceDate),
+            bookingStatus: { $ne: "canceled" }
+        });
+
+        if (existingBooking) {
+            return res.status(409).json({
+                success: false,
+                message: "This date is already booked",
+            });
+        }
+
+        // Create booking
+        const booking = new Booking({
+            customerId,
+            businessId: listing.business_id,
+            listingId,
+            serviceDate: new Date(serviceDate),
+            numGuests,
+            totalPrice,
+            currency: listing.currency
+        });
+
+        const savedBooking = await booking.save();
+
+        return res.status(201).json({
+            success: true,
+            message: "Booking created successfully",
+            booking: savedBooking
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Server error: " + error.message,
+        });
+    }
+};
+
+
+export const bookingDateAvailabilityCheck = async (req, res) => {
+    try {
+        const { listingId } = req.query; // Use req.query for GET requests
+
+        if (!listingId) {
+            return res.status(400).json({
+                success: false,
+                message: "Listing ID is required",
+            });
+        }
+
+        // Query the database for all booked dates of the listing
+        const bookedDates = await Booking.find({ listingId }).select("serviceDate -_id");
+
+        // Convert booked dates to "YYYY-MM-DD" format
+        const bookedDatesArray = bookedDates.map(booking =>
+            booking.serviceDate.toISOString().split("T")[0]
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Fetched booked dates successfully",
+            bookedDates: bookedDatesArray, // Send formatted booked dates
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Server error: " + error.message,
+        });
+    }
+};
+
+
+
 

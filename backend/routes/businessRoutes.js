@@ -1,5 +1,11 @@
 import express from 'express';
-import {becomeABusiness, businessLogout, fetchListings, listingCreation} from "../controllers/businessController.js";
+import {
+    becomeABusiness,
+    bookingCreation, bookingDateAvailabilityCheck,
+    businessLogout,
+    fetchListings,
+    listingCreation
+} from "../controllers/businessController.js";
 
 const router = express.Router();
 
@@ -12,5 +18,9 @@ router.post('/become-a-business', becomeABusiness)
 // Routes for managing listings
 router.post('/create-listing', listingCreation)
 router.get('/fetch-listings', fetchListings)
+
+// Routes for managing bookings
+router.post('/create-booking', bookingCreation)
+router.get('/check-booking-availability', bookingDateAvailabilityCheck)
 
 export default router;
