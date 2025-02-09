@@ -56,17 +56,19 @@ const Shop = () => {
                 if (!fetchedData.success || !fetchedData.payload) return;
 
                 const formattedDestinations = fetchedData.payload.map(destination => {
-                    const imageSrc = destination.images && destination.images[0]
-                        ? destination.images[0]  // Assuming the first image is the one we want
-                        : defaultImage;
+                const imageSrc = destination.images && destination.images[0]
+                    ? destination.images[0]
+                    : defaultImage;
 
-                    return {
-                        name: destination.name,
-                        image: imageSrc,
-                        description: destination.description || "No description available",
-                        highlights: Array.isArray(destination.highlights) ? destination.highlights : []
-                    };
-                });
+                return {
+                    _id: destination._id,  // Ensure _id is included
+                    name: destination.name,
+                    image: imageSrc,
+                    description: destination.description || "No description available",
+                    highlights: Array.isArray(destination.highlights) ? destination.highlights : []
+                };
+            });
+
 
                 // Update state with fetched destinations
                 setDestinations(formattedDestinations);

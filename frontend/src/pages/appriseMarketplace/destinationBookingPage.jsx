@@ -20,10 +20,9 @@ const DestinationBookingPage = () => {
     const [children, setChildren] = useState(0);
     const [checkInDate, setCheckInDate] = useState("");
     const [checkOutDate, setCheckOutDate] = useState("");
-    const [bookedDates, setBookedDates] = useState([]);
+    const [bookedDates, setBookedDates] = useState([]); // Default value as an empty array
 
-    const listingId = state?.destination?.id; // Ensure 'listingId' is correctly extracted
-    console.log("Listing ID:", listingId);
+    const listingId = state?.destination?._id || null;
 
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -62,21 +61,25 @@ const DestinationBookingPage = () => {
                     method: 'GET',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
-                })
+                });
 
                 if (!response.ok) {
                     console.error('Error during fetching');
+                    return;
                 }
 
                 const data = await response.json();
-                setBookedDates(data.bookedDates); // Store booked dates in state
+
+                setBookedDates(data.bookedDates || []); // Ensure default value
             } catch (error) {
-                console.error('Booking availability check error:', error)
+                console.error('Booking availability check error:', error);
+                setBookedDates([]); // Prevent undefined error
             }
         };
 
-        if (listingId) fetchBookedDates(); // Only fetch if `listingId` is available
+        if (listingId) fetchBookedDates();
     }, [listingId, backendUrl]);
+
 
     // Sending the booking details to the backend - Saving to the database
     const bookingSubmission = async () => {
@@ -96,8 +99,6 @@ const DestinationBookingPage = () => {
             totalPrice
         };
 
-        console.log("Sending booking request:", requestBody);
-
         try {
             const response = await fetch(`${backendUrl}/api/business-Auth/create-booking`, {
                 method: 'POST',
@@ -114,7 +115,7 @@ const DestinationBookingPage = () => {
 
             const result = await response.json();
             if (result.success) {
-                navigate('/booking-confirmation');
+                navigate('/booking-confirmation'); // Page informing the user about their booking ? Maybe payment details
             }
         } catch (error) {
             console.error("Booking error:", error);

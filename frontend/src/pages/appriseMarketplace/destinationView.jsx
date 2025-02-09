@@ -141,7 +141,7 @@ const DestinationView = () => {
                     <button
                         className="w-full bg-indigo-700 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors flex justify-center items-center"
                         onClick={() => {
-                            navigate('/booking-view', { state: { destination: selectedDestination } });
+                            navigate('/booking-view', { state: { destination: { ...selectedDestination, _id: selectedDestination._id } } });
                         }}
                     >
                         Book Your Trip
