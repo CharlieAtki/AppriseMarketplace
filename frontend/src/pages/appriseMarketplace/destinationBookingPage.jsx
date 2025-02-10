@@ -2,6 +2,8 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
 import { Calendar, Clock, Users, DollarSign, Briefcase, ArrowLeft } from 'lucide-react';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const DestinationBookingPage = () => {
@@ -15,12 +17,14 @@ const DestinationBookingPage = () => {
     // the destructured variables (name, image, description, and highlights) will be undefined rather than causing an error.
     const { name, image, description, highlights } = state?.destination || {};
     const selectedDestination = state?.destination || {};
+    const isDateBooked = (date) => bookedDates.includes(date);
 
     const [adults, setAdults] = useState(1);
     const [children, setChildren] = useState(0);
     const [checkInDate, setCheckInDate] = useState("");
     const [checkOutDate, setCheckOutDate] = useState("");
     const [bookedDates, setBookedDates] = useState([]); // Default value as an empty array
+    const [errorMessage, setErrorMessage] = useState("");
 
     const listingId = state?.destination?._id || null;
 
@@ -57,34 +61,32 @@ const DestinationBookingPage = () => {
     useEffect(() => {
         const fetchBookedDates = async () => {
             try {
-                const response = await fetch(`${backendUrl}/api/business-Auth/check-booking-availability`, {
+                const response = await fetch(`${backendUrl}/api/business-Auth/check-booking-availability?listingId=${listingId}`, {
                     method: 'GET',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
                 });
 
                 if (!response.ok) {
-                    console.error('Error during fetching');
+                    console.error('Error fetching booked dates');
                     return;
                 }
 
                 const data = await response.json();
-
-                setBookedDates(data.bookedDates || []); // Ensure default value
+                setBookedDates(data.bookedDates || []);
             } catch (error) {
                 console.error('Booking availability check error:', error);
-                setBookedDates([]); // Prevent undefined error
+                setBookedDates([]);
             }
         };
 
         if (listingId) fetchBookedDates();
     }, [listingId, backendUrl]);
 
-
     // Sending the booking details to the backend - Saving to the database
     const bookingSubmission = async () => {
-        if (!checkInDate) {
-            console.error("Check-in date is required");
+        if (!checkInDate || !checkOutDate) {
+            alert("Please select both check-in and check-out dates.");
             return;
         }
 
@@ -94,7 +96,9 @@ const DestinationBookingPage = () => {
 
         const requestBody = {
             listingId: selectedDestination?._id,
-            serviceDate: new Date(checkInDate).toISOString(),
+            destinationName: selectedDestination?.name,
+            arrivalDate: checkInDate,
+            leavingDate: checkOutDate,
             numGuests: totalGuests,
             totalPrice
         };
@@ -107,21 +111,31 @@ const DestinationBookingPage = () => {
                 body: JSON.stringify(requestBody),
             });
 
+            const result = await response.json();
             if (!response.ok) {
-                const error = await response.json();
-                console.error("Booking error:", error);
+                alert(result.message || "Booking failed. Please try again.");
                 return;
             }
 
-            const result = await response.json();
             if (result.success) {
-                navigate('/booking-confirmation'); // Page informing the user about their booking ? Maybe payment details
+                // Pass all booking information as part of the state to the booking confirmation page
+                navigate('/booking-confirmation', {
+                    state: {
+                        destination: selectedDestination,
+                        checkInDate,
+                        checkOutDate,
+                        adults,
+                        children,
+                        totalGuests,
+                        totalPrice
+                    }
+                });
             }
         } catch (error) {
             console.error("Booking error:", error);
+            alert("An error occurred. Please try again later.");
         }
     };
-
 
     // This checks if destination is either null or undefined.
     // In other words, it evaluates to true if no destination (due to the !state) is selected or the state doesn't have a destination
@@ -202,23 +216,45 @@ const DestinationBookingPage = () => {
                                 <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm text-gray-600">Check-in</label>
-                                        <input
-                                            type="date"
-                                            className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                            min={new Date().toISOString().split("T")[0]} // Prevent past dates
-                                            onChange={(e) => setCheckInDate(e.target.value)} // Store value in state
-                                            disabled={bookedDates.includes(checkInDate)} // Use state instead of e.target.value
+                                        <DatePicker
+                                            selected={checkInDate}
+                                            onChange={(date) => {
+                                                setCheckInDate(date);
+                                                if (isDateBooked(date.toISOString().split("T")[0])) {
+                                                    setErrorMessage("Selected check-in date is unavailable.");
+                                                } else {
+                                                    setErrorMessage("");
+                                                }
+                                            }}
+                                            excludeDates={bookedDates.map(date => new Date(date))}
+                                            minDate={new Date()}
+                                            className="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+                                            placeholderText={"Add date"}
                                         />
                                     </div>
                                     <div>
                                         <label className="block text-sm text-gray-600">Check-out</label>
-                                        <input
-                                            type="date"
-                                            className="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                            min={checkInDate} // Check-out must be after check-in
-                                            onChange={(e) => setCheckOutDate(e.target.value)} // Store value in state
-                                            disabled={bookedDates.includes(checkOutDate)} // Use state instead of e.target.value
+                                        <DatePicker
+                                            selected={checkOutDate}
+                                            onChange={(date) => {
+                                                setCheckOutDate(date);
+                                                if (isDateBooked(date.toISOString().split("T")[0])) {
+                                                    setErrorMessage("Selected check-out date is unavailable.");
+                                                } else {
+                                                    setErrorMessage("");
+                                                }
+                                            }}
+                                            excludeDates={bookedDates.map(date => new Date(date))}
+                                            minDate={checkInDate ? new Date(checkInDate) : new Date()} // Check-out must be after check-in
+                                            className="mt-1 w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+                                            placeholderText={"Add date"}
                                         />
+
+                                        {errorMessage && (
+                                            <div className="mt-2 p-2 text-red-700 bg-red-100 border border-red-500 rounded-lg">
+                                                {errorMessage}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

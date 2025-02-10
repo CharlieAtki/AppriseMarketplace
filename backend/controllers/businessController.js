@@ -271,7 +271,7 @@ export const fetchListings = async (req, res) => {
 
 export const bookingCreation = async (req, res) => {
     try {
-        const { listingId, serviceDate, numGuests, totalPrice } = req.body;
+        const { listingId, destinationName, arrivalDate, leavingDate, numGuests, totalPrice } = req.body;
         const customerId = req.session.user?.id;
 
         // Validate session
@@ -283,13 +283,17 @@ export const bookingCreation = async (req, res) => {
         }
 
         // Validate required fields
-        if (!listingId || !serviceDate || !numGuests || !totalPrice) {
+        if (!listingId || !destinationName || !arrivalDate || !leavingDate || !numGuests || !totalPrice) {
             return res.status(400).json({
                 success: false,
                 message: "Missing required fields",
-                required: ["listingId", "serviceDate", "numGuests", "totalPrice"]
+                required: ["listingId", "destinationName", "arrivalDate", "leavingDate", "numGuests", "totalPrice"]
             });
         }
+
+        // Convert dates to proper Date objects
+        const checkIn = new Date(arrivalDate);
+        const checkOut = new Date(leavingDate);
 
         // Find listing and validate
         const listing = await Listing.findById(listingId);
@@ -308,17 +312,19 @@ export const bookingCreation = async (req, res) => {
             });
         }
 
-        // Check for existing booking
-        const existingBooking = await Booking.findOne({
+        // Check for existing bookings within the selected date range
+        const overlappingBookings = await Booking.find({
             listingId,
-            serviceDate: new Date(serviceDate),
+            $or: [
+                { arrivalDate: { $lte: checkOut }, leavingDate: { $gte: checkIn } }
+            ],
             bookingStatus: { $ne: "canceled" }
         });
 
-        if (existingBooking) {
+        if (overlappingBookings.length > 0) {
             return res.status(409).json({
                 success: false,
-                message: "This date is already booked",
+                message: "Selected dates are unavailable. Please choose a different date range.",
             });
         }
 
@@ -327,7 +333,9 @@ export const bookingCreation = async (req, res) => {
             customerId,
             businessId: listing.business_id,
             listingId,
-            serviceDate: new Date(serviceDate),
+            destinationName,
+            arrivalDate: checkIn,
+            leavingDate: checkOut,
             numGuests,
             totalPrice,
             currency: listing.currency
@@ -348,10 +356,9 @@ export const bookingCreation = async (req, res) => {
     }
 };
 
-
 export const bookingDateAvailabilityCheck = async (req, res) => {
     try {
-        const { listingId } = req.query; // Use req.query for GET requests
+        const { listingId } = req.query;
 
         if (!listingId) {
             return res.status(400).json({
@@ -360,18 +367,26 @@ export const bookingDateAvailabilityCheck = async (req, res) => {
             });
         }
 
-        // Query the database for all booked dates of the listing
-        const bookedDates = await Booking.find({ listingId }).select("serviceDate -_id");
+        // Query the database for all booked date ranges
+        const bookedDateRanges = await Booking.find({ listingId, bookingStatus: { $ne: "canceled" } })
+            .select("arrivalDate leavingDate -_id");
 
-        // Convert booked dates to "YYYY-MM-DD" format
-        const bookedDatesArray = bookedDates.map(booking =>
-            booking.serviceDate.toISOString().split("T")[0]
-        );
+        let bookedDatesArray = [];
+
+        bookedDateRanges.forEach(booking => {
+            let currentDate = new Date(booking.arrivalDate);
+            const endDate = new Date(booking.leavingDate);
+
+            while (currentDate <= endDate) {
+                bookedDatesArray.push(currentDate.toISOString().split("T")[0]);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+        });
 
         return res.status(200).json({
             success: true,
             message: "Fetched booked dates successfully",
-            bookedDates: bookedDatesArray, // Send formatted booked dates
+            bookedDates: bookedDatesArray,
         });
     } catch (error) {
         return res.status(500).json({
@@ -380,7 +395,3 @@ export const bookingDateAvailabilityCheck = async (req, res) => {
         });
     }
 };
-
-
-
-

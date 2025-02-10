@@ -138,6 +138,7 @@ const DestinationView = () => {
                     <hr className="border-t-2 border-gray-300 my-4"/>
 
                     {/* Call to Action */}
+                    {/* Passing the specific attributes to the next page, which are needed to create the booking doc */}
                     <button
                         className="w-full bg-indigo-700 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors flex justify-center items-center"
                         onClick={() => {

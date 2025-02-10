@@ -16,7 +16,15 @@ const bookingSchema = new mongoose.Schema({
         ref: "Listing", // References the listing being booked
         required: true
     },
-    serviceDate: {
+    destinationName: {
+        type: String,
+        required: true
+    },
+    arrivalDate: {
+        type: Date,
+        required: true,
+    },
+    leavingDate: {
         type: Date,
         required: true,
     },

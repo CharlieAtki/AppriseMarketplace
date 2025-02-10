@@ -61,6 +61,7 @@ const Shop = () => {
                     : defaultImage;
 
                 return {
+                    // Passing the attributes to create the listings
                     _id: destination._id,  // Ensure _id is included
                     name: destination.name,
                     image: imageSrc,
@@ -68,7 +69,6 @@ const Shop = () => {
                     highlights: Array.isArray(destination.highlights) ? destination.highlights : []
                 };
             });
-
 
                 // Update state with fetched destinations
                 setDestinations(formattedDestinations);
@@ -82,6 +82,7 @@ const Shop = () => {
     }, [backendUrl]);
 
     // Filter destinations based on search query (case-insensitive)
+    // Allows the user to search for specific destinations
     const filteredDestinations = searchQuery
         ? destinations.filter(destination =>
             destination.name.toLowerCase().includes(searchQuery.trim().toLowerCase())
