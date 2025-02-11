@@ -31,22 +31,26 @@ const BookingListPage = () => {
                 const result = await response.json();
                 setBookings(result);
 
-                if (!result.success || !result.payload) {
-                    setBookingFetchError(true)
+                // Check if result.payload is an array
+                if (!result.success || !Array.isArray(result.payload)) {
+                    console.error("Error: API did not return a valid bookings array");
+                    setBookingFetchError(true);
+                    setBookings([]); // Set to empty array to prevent crash
+                    return;
                 }
 
                 // Formatting the booking so the mapped elements contain only the data below
                 // The information is contained within the useSate, which is defined above
                 const formattedBookings = result.payload.map(booking => {
                     return {
-                        id: booking.id,
-                        destinationName: booking.destinationName,
-                        arrivalDate: booking.arrivalDate,
-                        leavingDate: booking.leavingDate,
-                        numGuests: booking.numGuests,
-                        totalPrice: booking.totalPrice,
-                        currency: booking.currency,
-                        bookingStatus: booking.bookingStatus
+                        id: booking.id || "",
+                        destinationName: booking.destinationName || "Unknown Destination ",
+                        arrivalDate: booking.arrivalDate || "",
+                        leavingDate: booking.leavingDate || "",
+                        numGuests: booking.numGuests || 0,
+                        totalPrice: booking.totalPrice || 0,
+                        currency: booking.currency || "GBP",
+                        bookingStatus: booking.bookingStatus || "Pending"
                     }
                 });
 
@@ -70,11 +74,13 @@ const BookingListPage = () => {
 
     // Filter destinations based on search query (case-insensitive)
     // Allows the user to search for specific destinations
-    const filteredBookings = searchQuery
-        ? bookings.filter(destination =>
-            destination.destinationName.toLowerCase().includes(searchQuery.trim().toLowerCase())
-        )
-        : bookings;
+    const filteredBookings = Array.isArray(bookings) ?
+        (searchQuery
+            ? bookings.filter(destination =>
+                destination.destinationName.toLowerCase().includes(searchQuery.trim().toLowerCase())
+            )
+            : bookings)
+        : [];
 
     return (
         <div className="p-6">
@@ -115,7 +121,13 @@ const BookingListPage = () => {
                             </div>
                         ))}
                     </div>
+                ) : filteredBookings.length === 0 ? (
+                    // Fallback if no bookings are found
+                    <p className="text-center text-gray-500 text-lg py-10">
+                        No bookings found.
+                    </p>
                 ) : (
+                    // Show Bookings if data is available
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-6">
                         {filteredBookings.map((booking, index) => (
                             <div
