@@ -31,11 +31,6 @@ const BookingSuccessPage = () => {
 
     return (
         <div>
-            {/* Navigation Bar */}
-            <div className="bg-gray-100">
-                <MarketplaceNavigationBar title="Booking Confirmation" subtitle="Your booking was successful!" />
-            </div>
-
             {/* Booking Confirmation Card */}
             <div className="p-6 flex flex-col items-center justify-center min-h-screen bg-gray-100">
                 <div className="bg-white shadow-xl rounded-3xl p-8 max-w-2xl w-full text-center md:w-3/4 lg:w-1/2 transform transition-all hover:scale-105 hover:shadow-2xl">

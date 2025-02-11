@@ -2,7 +2,7 @@ import express from 'express';
 import {
     becomeABusiness,
     bookingCreation, bookingDateAvailabilityCheck,
-    businessLogout,
+    businessLogout, fetchBookings,
     fetchListings,
     listingCreation
 } from "../controllers/businessController.js";
@@ -22,5 +22,6 @@ router.get('/fetch-listings', fetchListings)
 // Routes for managing bookings
 router.post('/create-booking', bookingCreation)
 router.get('/check-booking-availability', bookingDateAvailabilityCheck)
+router.get('/fetch-bookings', fetchBookings)
 
 export default router;

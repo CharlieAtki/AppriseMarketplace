@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import Listing from "../models/Listing.js";
-import Booking from "../models/Booking.js"; // This is the business model
+import Booking from "../models/Booking.js";
+import booking from "../models/Booking.js"; // This is the business model
 
 // Num of times the hashing algorithm is applied
 const saltRounds = 10
@@ -267,6 +268,7 @@ export const fetchListings = async (req, res) => {
     }
 };
 
+
 // Booking logic:
 
 export const bookingCreation = async (req, res) => {
@@ -392,6 +394,32 @@ export const bookingDateAvailabilityCheck = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Server error: " + error.message,
+        });
+    }
+};
+
+export const fetchBookings = async (req, res) => {
+    try {
+        const bookings = await Booking.find({
+            customerId: req.session.user.id
+        });
+
+        if (!bookings || bookings.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Booking not found",
+            });
+        } else {
+            return res.status(200).json({
+                success: true,
+                message: "Booking found successfully",
+                payload: bookings
+            });
+        }
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.message,
         });
     }
 };

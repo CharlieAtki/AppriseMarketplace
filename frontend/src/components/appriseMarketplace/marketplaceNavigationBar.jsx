@@ -60,6 +60,21 @@ const MarketplaceNavigationBar = ({ title, subtitle}) => {
         }
     };
 
+    // Define button text based on the current pathname
+    // Allow the button to dynamically change text based on the current URL
+    const getButtonText = () => {
+        switch (location.pathname) {
+            case "/booking-confirmation":
+                return "View Your Bookings";
+            case "/marketplace":
+                return "View Your Bookings";
+            case "/destination-view":
+                return "Marketplace";
+            default:
+                return "Marketplace";
+        }
+    };
+
     // Button used to redirect the user to the business dashboard
     const businessDashboardRedirection = async () => {
         navigate('/businessDashboard');
@@ -68,6 +83,21 @@ const MarketplaceNavigationBar = ({ title, subtitle}) => {
     const becomeABusiness = async () => {
         navigate('/become-a-business');
     }
+
+    // Redirection handler to send the user
+    const bookingListViewRedirection = async () => {
+        if (location.pathname === '/booking-list') {
+            navigate('/marketplace');
+        } else if (location.pathname === '/marketplace') {
+            navigate('/booking-list');
+        } else if (location.pathname === '/destination-view') {
+            navigate('/marketplace');
+        } else if (location.pathname === '/booking-view') {
+            navigate('/marketplace');
+        } else {
+            navigate('/booking-list');
+        }
+    };
 
     return (
         <section className="flex justify-between items-center px-6 py-6 gap-x-4">
@@ -100,8 +130,13 @@ const MarketplaceNavigationBar = ({ title, subtitle}) => {
                     </button>
                 )}
                 <button
+                    onClick={bookingListViewRedirection}
+                    className={getButtonClass("/businessDashboard")}>
+                    {getButtonText()}
+                </button>
+                <button
                     onClick={handleLogOut}
-                    className={getButtonClass("/customerAccountManagement")}>
+                    className="bg-gray-700 text-white rounded-full shadow-2xl shadow-gray-500/50 px-8 py-3 hover:bg-red-600 transition-all transform hover:scale-105">
                     Log Out
                 </button>
             </div>

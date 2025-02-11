@@ -1,4 +1,4 @@
-import { ArrowRight, Search } from "lucide-react";
+import { ArrowRight, Search, Loader } from "lucide-react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,7 @@ const Shop = () => {
     const defaultImage = `${backendUrl}/path/to/default/image`; // Default image path
 
     const [destinations, setDestinations] = useState([]);
+    const [loading, setLoading] = useState(true); // Loading Sate
 
     useEffect(() => {
         const checkLoginStatus = async () => {
@@ -42,6 +43,8 @@ const Shop = () => {
     useEffect(() => {
         const fetchDestinations = async () => {
             try {
+                setLoading(true); // Show loading screen before fetching
+
                 const response = await fetch(`${backendUrl}/api/business-Auth/fetch-listings`, {
                     method: "GET",
                     headers: { "content-type": "application/json" },
@@ -56,25 +59,27 @@ const Shop = () => {
                 if (!fetchedData.success || !fetchedData.payload) return;
 
                 const formattedDestinations = fetchedData.payload.map(destination => {
-                const imageSrc = destination.images && destination.images[0]
-                    ? destination.images[0]
-                    : defaultImage;
+                    const imageSrc = destination.images && destination.images[0]
+                        ? destination.images[0]
+                        : defaultImage;
 
-                return {
-                    // Passing the attributes to create the listings
-                    _id: destination._id,  // Ensure _id is included
-                    name: destination.name,
-                    image: imageSrc,
-                    description: destination.description || "No description available",
-                    highlights: Array.isArray(destination.highlights) ? destination.highlights : []
-                };
-            });
+                    return {
+                        // Passing the attributes to create the listings
+                        _id: destination._id,  // Ensure _id is included
+                        name: destination.name,
+                        image: imageSrc,
+                        description: destination.description || "No description available",
+                        highlights: Array.isArray(destination.highlights) ? destination.highlights : []
+                    };
+                });
 
                 // Update state with fetched destinations
                 setDestinations(formattedDestinations);
 
             } catch (error) {
                 console.error("Error fetching destinations data:", error);
+            } finally {
+                setLoading(false); // Hide loading after fetching
             }
         };
 
@@ -112,50 +117,68 @@ const Shop = () => {
 
                 <hr className="border-2 border-gray-300 rounded-2xl shadow-lg" />
 
-                {/* Grid Layout for Destinations */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-6">
-                    {filteredDestinations.map((destination) => (
-                        <div
-                            key={destination.name}
-                            className="bg-white rounded-2xl shadow-md overflow-hidden transform transition-all hover:scale-105 hover:shadow-lg"
-                        >
-                            <div className="relative">
-                                <img
-                                    src={destination.image} // Display the image from the base64 or URL
-                                    alt={destination.name}
-                                    className="w-full h-48 object-cover"
-                                />
-                                <div className="absolute inset-0 bg-black opacity-20 hover:opacity-30 transition-opacity"></div>
+                {/* Show Shimmer Effect While Loading */}
+                {loading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-6">
+                        {[...Array(8)].map((_, index) => (
+                            <div key={index} className="bg-gray-200 rounded-lg animate-pulse p-4">
+                                <div className="w-full h-48 bg-gray-300 rounded-md"></div>
+                                <div className="mt-4 h-6 bg-gray-400 rounded"></div>
+                                <div className="mt-2 h-4 bg-gray-300 rounded w-3/4"></div>
+                                <div className="mt-2 h-4 bg-gray-300 rounded w-1/2"></div>
                             </div>
+                        ))}
+                    </div>
+                ) : (
+                    // Render the actual destinations after loading
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-6">
+                        {filteredDestinations.length > 0 ? (
+                            filteredDestinations.map((destination) => (
+                                <div
+                                    key={destination._id}
+                                    className="bg-white rounded-2xl shadow-md overflow-hidden transform transition-all hover:scale-105 hover:shadow-lg"
+                                >
+                                    <div className="relative">
+                                        <img
+                                            src={destination.image}
+                                            alt={destination.name}
+                                            className="w-full h-48 object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-black opacity-20 hover:opacity-30 transition-opacity"></div>
+                                    </div>
 
-                            <div className="p-4">
-                                <h3 className="text-xl font-semibold text-gray-800 mb-2">{destination.name}</h3>
-                                <p className="text-gray-600 text-sm mb-3">{destination.description}</p>
+                                    <div className="p-4">
+                                        <h3 className="text-xl font-semibold text-gray-800 mb-2">{destination.name}</h3>
+                                        <p className="text-gray-600 text-sm mb-3">{destination.description}</p>
 
-                                {/* Highlights */}
-                                <div className="mb-3">
-                                    <h4 className="text-xs font-medium text-gray-500">Highlights:</h4>
-                                    <div className="flex flex-wrap gap-1 mt-1">
-                                        {destination.highlights.map((highlight) => (
-                                            <span key={highlight}
-                                                  className="bg-blue-50 text-indigo-500 px-2 py-1 rounded-full text-xs">
-                                                {highlight}
-                                            </span>
-                                        ))}
+                                        {/* Highlights */}
+                                        <div className="mb-3">
+                                            <h4 className="text-xs font-medium text-gray-500">Highlights:</h4>
+                                            <div className="flex flex-wrap gap-1 mt-1">
+                                                {destination.highlights.map((highlight) => (
+                                                    <span key={highlight}
+                                                          className="bg-blue-50 text-indigo-500 px-2 py-1 rounded-full text-xs">
+                                                        {highlight}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <button
+                                            className="w-full flex items-center justify-center bg-indigo-700 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                                            onClick={() => navigate('/destination-view', {state: {destination}})}
+                                        >
+                                            Explore
+                                            <ArrowRight className="ml-2 transition-transform" size={18}/>
+                                        </button>
                                     </div>
                                 </div>
-
-                                <button
-                                    className="w-full flex items-center justify-center bg-indigo-700 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
-                                    onClick={() => navigate('/destination-view', {state: {destination}})}
-                                >
-                                    Explore
-                                    <ArrowRight className="ml-2 transition-transform" size={18}/>
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                            ))
+                        ) : (
+                            <p className="text-center text-gray-500 text-lg">No destinations found.</p>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

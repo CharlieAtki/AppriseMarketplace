@@ -12,6 +12,7 @@ import NewHomePage from "./pages/homePage/newHomePage";
 import DestinationBookingPage from "./pages/appriseMarketplace/destinationBookingPage";
 import HostingBusinessForm from "./components/business/hostingBusinessForm";
 import BookingSuccessPage from "./pages/appriseMarketplace/bookingConfirmation";
+import BookingListPage from "./pages/appriseMarketplace/bookingListPage";
 
 const App = () => {
     return (
@@ -28,6 +29,7 @@ const App = () => {
                 <Route path="become-a-business" element={<HostingBusinessForm />} />
                 <Route path="newhomepage" element={<NewHomePage />} />
                 <Route path="booking-confirmation" element={<BookingSuccessPage />} />
+                <Route path="booking-list" element={<BookingListPage />} />
             </Routes>
         </Router>
     );

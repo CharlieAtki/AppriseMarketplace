@@ -1,4 +1,4 @@
-import { Home, Settings, BarChart2, LogOut } from "lucide-react"; // Icons from Lucide
+import { Home, Settings, BarChart2, LogOut, Store} from "lucide-react"; // Icons from Lucide
 import { useNavigate } from "react-router-dom";
 
 const BusinessSideBar = () => {
@@ -14,6 +14,10 @@ const BusinessSideBar = () => {
     const businessAnalyticsRedirection = async () => {
         navigate('/businessAnalytics');
     };
+
+    const marketplaceRedirection = async () => {
+        navigate('/marketplace');
+    }
 
     const handleLogOut = async () => {
         try {
@@ -81,14 +85,25 @@ const BusinessSideBar = () => {
             </nav>
 
             {/* Logout Section */}
-            <div className="mt-6">
-                <button
-                    onClick={handleLogOut}
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-red-600 transition"
-                >
-                <LogOut size={20} />
-                <span>Logout</span>
-                </button>
+            <div className="mt-6 space-y-4">
+                <div>
+                    <button
+                        onClick={marketplaceRedirection}
+                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-700 transition"
+                    >
+                        <Store size={20} />
+                        <span>Marketplace</span>
+                    </button>
+                </div>
+                <div>
+                    <button
+                        onClick={handleLogOut}
+                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-red-600 transition"
+                    >
+                        <LogOut size={20}/>
+                        <span>Logout</span>
+                    </button>
+                </div>
             </div>
         </div>
     );
