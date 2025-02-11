@@ -69,7 +69,8 @@ const Shop = () => {
                         name: destination.name,
                         image: imageSrc,
                         description: destination.description || "No description available",
-                        highlights: Array.isArray(destination.highlights) ? destination.highlights : []
+                        highlights: Array.isArray(destination.highlights) ? destination.highlights : [],
+                        price: destination.price,
                     };
                 });
 

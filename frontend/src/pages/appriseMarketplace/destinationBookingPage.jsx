@@ -9,21 +9,28 @@ import "react-datepicker/dist/react-datepicker.css";
 const DestinationBookingPage = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
+
     // The expression const { name, image, description, highlights } = state?.destination || {};
     // uses destructuring to extract values from the destination object within state.
     // The ?. (optional chaining) ensures that if state or destination is null or undefined, it won’t throw an error.
     // Instead, it defaults to an empty object ({}).
     // This means that if the object is missing or has missing properties,
     // the destructured variables (name, image, description, and highlights) will be undefined rather than causing an error.
-    const { name, image, description, highlights } = state?.destination || {};
+    const { name, image, description, highlights, price } = state?.destination || {}; // Deconstructing the destination state (passed from the last webpage)
     const selectedDestination = state?.destination || {};
-    const isDateBooked = (date) => bookedDates.includes(date);
 
+    // UseSates for managing the different booking inputs
     const [adults, setAdults] = useState(1);
     const [children, setChildren] = useState(0);
     const [checkInDate, setCheckInDate] = useState("");
     const [checkOutDate, setCheckOutDate] = useState("");
     const [bookedDates, setBookedDates] = useState([]); // Default value as an empty array
+
+    // UseSates for calculating total booking price
+    const [totalPrice, setTotalPrice] = useState(0); // Total price state
+
+    const isDateBooked = (date) => bookedDates.includes(date);
+
     const [errorMessage, setErrorMessage] = useState("");
 
     const listingId = state?.destination?._id || null;
@@ -83,6 +90,15 @@ const DestinationBookingPage = () => {
         if (listingId) fetchBookedDates();
     }, [listingId, backendUrl]);
 
+    // UseEffect to dynamically update the calculated totalPrice of the service.
+    // This needs updating to adjust for length of stay and total number of people
+    useEffect(() => {
+        // Recalculate price when guests change
+        const totalGuests = adults + children;
+        const basePrice = price || 0 // Set the base price (Not decided yet)
+        setTotalPrice(basePrice * totalGuests);
+    }, [adults, children, price]); //Dependencies ensure dynamic updates
+
     // Sending the booking details to the backend - Saving to the database
     const bookingSubmission = async () => {
         if (!checkInDate || !checkOutDate) {
@@ -90,9 +106,7 @@ const DestinationBookingPage = () => {
             return;
         }
 
-        const totalGuests = adults + children;
-        const basePrice = selectedDestination?.price || 299.99;
-        const totalPrice = basePrice * totalGuests;
+        const totalGuests = adults + children
 
         const requestBody = {
             listingId: selectedDestination?._id,
@@ -100,7 +114,7 @@ const DestinationBookingPage = () => {
             arrivalDate: checkInDate,
             leavingDate: checkOutDate,
             numGuests: totalGuests,
-            totalPrice
+            totalPrice: totalPrice,
         };
 
         try {
@@ -119,6 +133,7 @@ const DestinationBookingPage = () => {
 
             if (result.success) {
                 // Pass all booking information as part of the state to the booking confirmation page
+                // All the attributes below can be accessed in the specific webpage
                 navigate('/booking-confirmation', {
                     state: {
                         destination: selectedDestination,
@@ -259,21 +274,6 @@ const DestinationBookingPage = () => {
                                 </div>
                             </div>
 
-                            {/* Time Selection */}
-                            <div className="mt-6">
-                                <label className="flex items-center gap-2 text-lg font-semibold text-gray-700">
-                                    <Clock className="w-5 h-5"/>
-                                    Preferred Time
-                                </label>
-                                <select
-                                    className="mt-2 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option>Select time slot</option>
-                                    <option>Morning (9 AM - 12 PM)</option>
-                                    <option>Afternoon (12 PM - 4 PM)</option>
-                                    <option>Evening (4 PM - 8 PM)</option>
-                                </select>
-                            </div>
-
                             {/* Group Size */}
                             <div className="mt-6">
                                 <label className="flex items-center gap-2 text-lg font-semibold text-gray-700">
@@ -306,31 +306,6 @@ const DestinationBookingPage = () => {
                                 </div>
                             </div>
 
-                            {/* Services Selection */}
-                            <div className="mt-6">
-                                <label className="flex items-center gap-2 text-lg font-semibold text-gray-700">
-                                    <Briefcase className="w-5 h-5"/>
-                                    Additional Services
-                                </label>
-                                <div className="mt-2 space-y-2">
-                                    <label className="flex items-center space-x-2">
-                                        <input type="checkbox"
-                                               className="rounded text-indigo-600 focus:ring-indigo-500"/>
-                                        <span className="text-gray-700">Airport Transfer (£50)</span>
-                                    </label>
-                                    <label className="flex items-center space-x-2">
-                                        <input type="checkbox"
-                                               className="rounded text-indigo-600 focus:ring-indigo-500"/>
-                                        <span className="text-gray-700">Guided Tour (£75)</span>
-                                    </label>
-                                    <label className="flex items-center space-x-2">
-                                        <input type="checkbox"
-                                               className="rounded text-indigo-600 focus:ring-indigo-500"/>
-                                        <span className="text-gray-700">Equipment Rental (£25)</span>
-                                    </label>
-                                </div>
-                            </div>
-
                             {/* Price Summary */}
                             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
                                 <div className="flex items-center justify-between text-lg font-semibold text-gray-700">
@@ -339,7 +314,7 @@ const DestinationBookingPage = () => {
                                         Total Estimate:
                                     </span>
                                     <span>
-                                        £299.99
+                                        £{totalPrice.toFixed(2)}
                                     </span>
                                 </div>
                             </div>

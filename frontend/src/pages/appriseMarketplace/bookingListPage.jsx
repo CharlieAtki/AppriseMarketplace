@@ -156,7 +156,7 @@ const BookingListPage = () => {
                                     {/* Total Guests */}
                                     <p className="flex items-center gap-2">
                                         <Users className="w-5 h-5 text-gray-500"/>
-                                        <strong>Total Guests:</strong> {booking.totalGuests || 0}
+                                        <strong>Total Guests:</strong> {booking.numGuests || 0}
                                     </p>
 
                                     {/* Total Price */}
