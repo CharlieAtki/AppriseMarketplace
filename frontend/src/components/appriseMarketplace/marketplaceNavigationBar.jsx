@@ -116,18 +116,16 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
                 </h4>
             </div>
 
-            {/* Buttons on the right */}
+            {/* Show a loading spinner if the `loading` prop is true */}
             <div className="flex space-x-3.5 p-2">
                 {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-6">
-                        {[...Array(8)].map((_, index) => (
-                            <div key={index} className="bg-gray-200 rounded-lg animate-pulse p-4">
-                                <div className="w-full h-48 bg-gray-300 rounded-md"></div>
-                                <div className="mt-4 h-6 bg-gray-400 rounded"></div>
-                                <div className="mt-2 h-4 bg-gray-300 rounded w-3/4"></div>
-                                <div className="mt-2 h-4 bg-gray-300 rounded w-1/2"></div>
-                            </div>
-                        ))}
+                    <div className="relative flex justify-center items-center">
+                        <svg className="w-6 h-6 text-indigo-700 animate-spin" xmlns="http://www.w3.org/2000/svg"
+                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10" strokeWidth="4" className="text-gray-300"/>
+                            <circle cx="12" cy="12" r="10" strokeWidth="4" strokeDasharray="63" strokeDashoffset="50"
+                                    className="text-indigo-700"/>
+                        </svg>
                     </div>
                 ) : (
                     <>

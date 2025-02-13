@@ -84,7 +84,7 @@ const BookingListPage = () => {
 
     return (
         <div className="p-6">
-            <MarketplaceNavigationBar title={"Bookings View"} subtitle={"Where your bookings are displayed"}/>
+            <MarketplaceNavigationBar title={"Bookings View"} subtitle={"Where your bookings are displayed"} loading={loading}/>
 
             {/* Buttons on the right */}
             <div className="py-6 px-4 border-2 border-gray-300 rounded-2xl shadow-lg">
