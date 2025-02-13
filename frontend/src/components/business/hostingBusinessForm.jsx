@@ -43,84 +43,88 @@ const HostingBusinessForm = () => {
         return false; // the input email is not valid -> no @ symbol
     }
 
+    const fetchRoleAndUpdateState = async () => {
+        try {
+            const response = await fetch(`${backendUrl}/api/user-unAuth/role-check`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log("Updated Role Check Response:", result);
+
+                const userRole = result.user?.role === "business" ? "business" : "customer";
+
+                if (userRole === "business") {
+                    navigate('/businessDashboard'); // Redirect to dashboard only if the role is "business"
+                }
+            }
+        } catch (error) {
+            console.error("Role check error after business signup:", error);
+        }
+    };
 
     // This asynchronous function is used to send and then receive data from backend
     // Data, such as email and password will be transferred
     async function becomeABusiness(buttonType) {
-        // Reset error states before submitting
         setEmailInputError(false);
         setPasswordInputError(false);
         setPasswordInputLengthError(false);
         setEmailInputValidityError(false);
 
-        let hasError = false; // Track if there are any errors
+        let hasError = false;
 
-
-        // Check for empty input fields
         if (!input.email) {
-            setEmailInputError(true); // Set email error to true if empty
+            setEmailInputError(true);
             hasError = true;
-            // Calling a function to check if the email contains an @ symbol
         } else if (!emailValidityCheck(input.email)) {
-            setEmailInputValidityError(true) // the data input doesn't contain an @ symbol
+            setEmailInputValidityError(true);
             hasError = true;
         }
 
-
         if (!input.password) {
-            setPasswordInputError(true); // Set password error to true if empty
+            setPasswordInputError(true);
             hasError = true;
         } else if (input.password.length < 8) {
             setPasswordInputLengthError(true);
-            hasError = true
+            hasError = true;
         }
 
-        // If there are errors, don't proceed with sending data
-        if (hasError) return
+        if (hasError) return;
 
         try {
-            // fetch operation is asynchronous, the process will wait until the response
             const response = await fetch(`${backendUrl}/api/business-Auth/become-a-business`, {
-                // Defining that the method is POST (sending data),
-                // Headers are telling the server that JSON is being sent
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",  // telling the server what data type is being sent
+                    "Content-Type": "application/json",
                     "Accept": "application/json"
                 },
-                credentials: 'include', // Allows cookie exchange
-                body: JSON.stringify(input) // converts the JS object into a JSON string, making it ready for HTTP transmission
+                credentials: 'include',
+                body: JSON.stringify(input)
             });
 
-            // If there is a response, await for the data to be transferred
             if (response.ok) {
-                const data = await response.json(); // .json turns the JSON string back into a JS object
-                // if there is data within the response, redirect the user to the dashboard
-                if (data) {
-                    // Redirecting the user to the dashboard
-                    navigate('/');
-                }
-            } else {
-                // fetching the response data
                 const data = await response.json();
 
-                // The backend checks to see if the email has been used within a client document
-                // The backend responds with a NOT OK (!ok) server status code, such as 500
-                // The backends response will return, which input field must have a different input
-                // By setting the according setInputError, the front end can use the ternary operator to adjust the colour of the input field
-                // In this example, the email input field would turn red
+                if (data.success) {
+                    await fetchRoleAndUpdateState(); // Update role before navigating
+                }
+            } else {
+                const data = await response.json();
+
                 if (data.field === "email") {
                     setEmailInputError(true);
                 }
                 if (data.field === "password") {
                     setPasswordInputError(true);
                 }
-                // Log error response for debugging
+
                 console.log("Error Response Data:", data);
             }
         } catch (err) {
-            // If an error occurs, output the error into the console
-            console.log('Error saving client', err)
+            console.log('Error saving client', err);
         }
     }
 

@@ -1,7 +1,7 @@
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
 import {useLocation} from "react-router-dom";
 import {useEffect, useState} from "react";
-import { Calendar, Users, DollarSign, MapPin, Search } from "lucide-react";
+import {Calendar, Users, DollarSign, MapPin, Search, PoundSterling} from "lucide-react";
 
 const BookingListPage = () => {
     const location = useLocation(); // Get the current location (URL path)
@@ -161,7 +161,7 @@ const BookingListPage = () => {
 
                                     {/* Total Price */}
                                     <p className="flex items-center gap-2 text-lg font-semibold text-green-600">
-                                        <DollarSign className="w-5 h-5 text-green-500"/>
+                                        <PoundSterling className="w-5 h-5 text-green-500"/>
                                         £{booking.totalPrice || 0}
                                     </p>
                                 </div>

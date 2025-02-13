@@ -163,31 +163,38 @@ export const becomeABusiness = async (req, res) => {
 // Role check - sends the result back to the frontend as only the backend can access the session
 export const roleCheck = async (req, res) => {
     try {
-        // Checking for a session
-        if (!req.session.user) {
+        if (!req.session.user || !req.session.user.email) {
             return res.status(401).json({
                 success: false,
-                message: "User session not found"
+                message: "Unauthorized: No session user found",
             });
         }
 
-        // Checking if the session has the role set
-        if (req.session.user.role) {
-            return res.status(200).json({
-                success: true,
-                userRole: req.session.user.role
-            });
-        } else {
-            return res.status(400).json({
+        // Find the user without modifying their role
+        const user = await User.findOne({ email: req.session.user.email });
+
+        if (!user) {
+            return res.status(404).json({
                 success: false,
-                message: "User role not found"
+                message: "User not found",
             });
         }
-    } catch (error) {
-        return res.status(400).json({
-            success: false,
-            message: error.message
+
+        return res.status(200).json({
+            success: true,
+            message: "User role retrieved successfully",
+            user: { role: user.role } // Only return role without modifying it
         });
+
+    } catch (error) {
+        console.error("Error in roleCheck:", error);
+
+        if (!res.headersSent) {
+            return res.status(500).json({
+                success: false,
+                message: "Server error: " + error.message
+            });
+        }
     }
 };
 

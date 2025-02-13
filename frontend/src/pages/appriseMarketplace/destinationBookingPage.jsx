@@ -1,7 +1,7 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
-import { Calendar, Clock, Users, DollarSign, Briefcase, ArrowLeft } from 'lucide-react';
+import {Calendar, Clock, Users, DollarSign, Briefcase, ArrowLeft, PoundSterling} from 'lucide-react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -89,6 +89,8 @@ const DestinationBookingPage = () => {
 
         if (listingId) fetchBookedDates();
     }, [listingId, backendUrl]);
+
+    // Price Calculator
 
     // UseEffect to dynamically update the calculated totalPrice of the service.
     // This needs updating to adjust for length of stay and total number of people
@@ -310,7 +312,7 @@ const DestinationBookingPage = () => {
                             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
                                 <div className="flex items-center justify-between text-lg font-semibold text-gray-700">
                                     <span className="flex items-center gap-2">
-                                        <DollarSign className="w-5 h-5"/>
+                                        <PoundSterling className="w-5 h-5"/>
                                         Total Estimate:
                                     </span>
                                     <span>
