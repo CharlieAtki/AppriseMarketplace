@@ -5,7 +5,6 @@ import MarketplaceNavigationBar from "../../components/appriseMarketplace/market
 
 const BookingDetailsPage = () => {
     const { state } = useLocation();
-    const navigate = useNavigate();
     const booking = state?.booking; // Getting the booking data passed from the previous page
 
     if (!booking) {

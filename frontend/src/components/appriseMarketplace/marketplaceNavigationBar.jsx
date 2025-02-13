@@ -119,7 +119,16 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
             {/* Buttons on the right */}
             <div className="flex space-x-3.5 p-2">
                 {loading ? (
-                    <p>Loading...</p> // Show loading state while fetching role
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pt-6">
+                        {[...Array(8)].map((_, index) => (
+                            <div key={index} className="bg-gray-200 rounded-lg animate-pulse p-4">
+                                <div className="w-full h-48 bg-gray-300 rounded-md"></div>
+                                <div className="mt-4 h-6 bg-gray-400 rounded"></div>
+                                <div className="mt-2 h-4 bg-gray-300 rounded w-3/4"></div>
+                                <div className="mt-2 h-4 bg-gray-300 rounded w-1/2"></div>
+                            </div>
+                        ))}
+                    </div>
                 ) : (
                     <>
                         {businessDashboard ? (

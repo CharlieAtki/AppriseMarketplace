@@ -1,4 +1,3 @@
-import BusinessNavigationBar from "../../components/business/businessNavigationBar";
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import BusinessSideBar from "../../components/business/businessSideBar";
