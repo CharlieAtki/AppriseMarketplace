@@ -63,6 +63,7 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
         }
     };
 
+    // Ensures the navbar adjusts its text depending on the webpage (conditions given)
     const getButtonText = () => {
         switch (location.pathname) {
             case "/booking-confirmation":
@@ -71,8 +72,27 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
                 return "View Your Bookings";
             case "/destination-view":
                 return "Marketplace";
+            case "/booking-details":
+                return "View Your Bookings"
             default:
                 return "Marketplace";
+        }
+    };
+
+    // Ensures the navbar adjusts its redirection address depending on the webpage (conditions given)
+    const bookingListViewRedirection = async () => {
+        if (location.pathname === '/booking-list') {
+            navigate('/marketplace');
+        } else if (location.pathname === '/marketplace') {
+            navigate('/booking-list');
+        } else if (location.pathname === '/destination-view') {
+            navigate('/marketplace');
+        } else if (location.pathname === '/booking-view') {
+            navigate('/marketplace');
+        } else if (location.pathname === '/booking-details') {
+            navigate('/booking-list');
+        } else {
+            navigate('/booking-list');
         }
     };
 
@@ -83,20 +103,6 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
     const becomeABusiness = async () => {
         navigate('/become-a-business');
     }
-
-    const bookingListViewRedirection = async () => {
-        if (location.pathname === '/booking-list') {
-            navigate('/marketplace');
-        } else if (location.pathname === '/marketplace') {
-            navigate('/booking-list');
-        } else if (location.pathname === '/destination-view') {
-            navigate('/marketplace');
-        } else if (location.pathname === '/booking-view') {
-            navigate('/marketplace');
-        } else {
-            navigate('/booking-list');
-        }
-    };
 
     return (
         <section className="flex justify-between items-center px-6 py-6 gap-x-4">

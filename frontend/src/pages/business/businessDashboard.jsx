@@ -44,7 +44,7 @@ const BusinessDashboard = () => {
                 < BusinessSideBar />
             </div>
              {/* Main Content */}
-            <div className="flex flex-col flex-grow p-4 overflow-y-auto">
+            <div className="flex flex-col flex-grow p-4 overflow-y-auto bg-gray-50">
                 <div className="max-w-screen-lg mx-auto w-full">
                     <CreateListing />
                 </div>

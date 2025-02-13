@@ -1,7 +1,7 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
-import {Calendar, Clock, Users, DollarSign, Briefcase, ArrowLeft, PoundSterling} from 'lucide-react';
+import {Calendar, Users, ArrowLeft, PoundSterling} from 'lucide-react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 

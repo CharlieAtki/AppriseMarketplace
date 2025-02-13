@@ -1,16 +1,16 @@
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
-import {useLocation} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {Calendar, Users, DollarSign, MapPin, Search, PoundSterling} from "lucide-react";
+import {Calendar, Users, MapPin, Search, PoundSterling} from "lucide-react";
+import {useNavigate} from "react-router-dom";
 
 const BookingListPage = () => {
-    const location = useLocation(); // Get the current location (URL path)
     const [bookingFetchError, setBookingFetchError] = useState(false); // Error useState used to manage the booking fetch useEffect
     const [bookings, setBookings] = useState([]); // Array holding the listings
     const [searchQuery, setSearchQuery] = useState("");
     const [loading, setLoading] = useState(true); // Loading State
 
 
+    const navigate = useNavigate();
     const backendUrl = process.env.REACT_APP_BACKEND_URL; // fetching the backend URL from the .env file
 
 
@@ -164,6 +164,16 @@ const BookingListPage = () => {
                                         <PoundSterling className="w-5 h-5 text-green-500"/>
                                         £{booking.totalPrice || 0}
                                     </p>
+
+                                    <hr className="border-2 border-gray-300 rounded-2xl shadow-lg"/>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => navigate('/booking-details', {state: {booking}})}
+                                        className="w-full p-2 rounded-lg shadow-2xl text-white bg-gray-700 hover:bg-indigo-700 transition-all transform hover:scale-105"
+                                    >
+                                        More Details
+                                    </button>
                                 </div>
                             </div>
                         ))}
@@ -175,3 +185,4 @@ const BookingListPage = () => {
 };
 
 export default BookingListPage;
+

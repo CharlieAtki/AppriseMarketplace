@@ -143,7 +143,7 @@ const CreateListing = ({ onListingSubmit }) => {
         <div className="p-6">
             <h1 className="text-3xl font-bold text-indigo-700 mb-4">Create a New Listing</h1>
 
-            <div className="border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow duration-300 p-6">
+            <div className="border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow duration-300 p-6 bg-white">
                 {errorMessages.length > 0 && (
                     <div className="bg-red-100 text-red-600 p-4 mb-4 rounded">
                         <ul>

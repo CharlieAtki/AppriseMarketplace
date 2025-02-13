@@ -68,7 +68,7 @@ const HostingBusinessForm = () => {
 
     // This asynchronous function is used to send and then receive data from backend
     // Data, such as email and password will be transferred
-    async function becomeABusiness(buttonType) {
+    async function becomeABusiness() {
         setEmailInputError(false);
         setPasswordInputError(false);
         setPasswordInputLengthError(false);

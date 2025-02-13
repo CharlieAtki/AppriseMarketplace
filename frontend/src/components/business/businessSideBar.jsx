@@ -17,7 +17,7 @@ const BusinessSideBar = () => {
 
     const marketplaceRedirection = async () => {
         navigate('/marketplace');
-    }
+    };
 
     const handleLogOut = async () => {
         try {

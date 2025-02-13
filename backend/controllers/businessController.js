@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import Listing from "../models/Listing.js";
 import Booking from "../models/Booking.js";
-import booking from "../models/Booking.js"; // This is the business model
 
 // Num of times the hashing algorithm is applied
 const saltRounds = 10
@@ -17,7 +16,6 @@ export const businessCreation = async (req, res) => {
                 field: "email"
             });
         }
-        const passwordString = String(req.body.password);
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
         // Creating the user account (the object in the MongoDb database)
