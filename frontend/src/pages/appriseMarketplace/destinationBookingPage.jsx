@@ -1,10 +1,9 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
-import {Calendar, Users, ArrowLeft, PoundSterling, User, MapPin, Star, Briefcase, DollarSign} from 'lucide-react';
+import {Calendar, Users, ArrowLeft, PoundSterling, User, MapPin, Star, Briefcase, DollarSign, Mail} from 'lucide-react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
 
 const DestinationBookingPage = () => {
     const navigate = useNavigate();
@@ -215,8 +214,7 @@ const DestinationBookingPage = () => {
                     <hr className="border-2 border-gray-200 rounded-2xl" />
 
                     {/* Destination Details & Booking Section  */}
-                    <div
-                        className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-8 p-2 h-auto lg:h-screen">
+                    <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-8 p-2 h-full">
                         {/* Destination Features Section */}
                         <div className="p-6 border border-gray-300 rounded-2xl shadow-lg bg-white w-full lg:w-auto">
 
@@ -435,12 +433,53 @@ const DestinationBookingPage = () => {
                     <hr className="border-t border-gray-300"/>
 
                     {/* Host Information Section */}
-                    <div
-                        className="flex-[1] flex flex-col h-auto lg:h-full p-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow">
-                        <h2 className="text-3xl font-bold text-indigo-700">
+                    <div className="flex-[1] flex flex-col h-auto lg:h-full p-4 border-2 border-gray-300 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow bg-white">
+
+                        {/* Panel Title */}
+                        <h2 className="text-3xl font-bold text-indigo-700 mb-4">
                             Host Details
                         </h2>
+
+                        {/* Host Profile */}
+                        <div className="flex items-center space-x-4 mb-4">
+                            <img
+                                src={selectedDestinationHost?.profilePicture || "/default-avatar.png"}
+                                alt={selectedDestinationHost?.username || "Host"}
+                                className="w-16 h-16 rounded-full border border-gray-200 shadow-sm"
+                            />
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-800 flex items-center">
+                                    <User className="w-5 h-5 text-indigo-700 mr-2" />
+                                    {selectedDestinationHost?.username || "Unknown Host"}
+                                </h3>
+                                <p className="text-gray-500 text-sm flex items-center">
+                                    <Mail className="w-4 h-4 text-indigo-700 mr-2" />
+                                    {selectedDestinationHost?.email || "Email not available"}
+                                </p>
+                            </div>
+                        </div>
+
+                        <hr className="border-t border-gray-300 my-4" />
+
+                        {/* Host Account Creation Date */}
+                        <div className="mb-4">
+                            <p className="text-gray-600 flex items-center">
+                                <Calendar className="w-5 h-5 text-indigo-700 mr-2" />
+                                <strong>Joined:</strong> {selectedDestinationHost?.createdAt ? new Date(selectedDestinationHost.createdAt).toLocaleDateString() : "Not available"}
+                            </p>
+                        </div>
+
+                        <hr className="border-t border-gray-300 my-4" />
+
+                        {/* Optional Additional Information */}
+                        <div>
+                            <p className="text-gray-600 text-sm">
+                                Feel free to contact the host for more information about the service.
+                            </p>
+                        </div>
+
                     </div>
+
                 </div>
             </div>
         </div>

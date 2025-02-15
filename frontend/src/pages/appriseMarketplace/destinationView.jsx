@@ -143,7 +143,7 @@ const DestinationView = () => {
                         </div>
 
                         {/* Information Panel */}
-                        <div className="p-6 border border-gray-300 rounded-2xl shadow-lg bg-white w-full lg:w-auto">
+                        <div className="p-6 border border-gray-300 rounded-2xl shadow-lg bg-white w-full h-full lg:w-auto">
 
                             {/* Host Information */}
                             <div className="flex items-center space-x-4 mb-4">
