@@ -68,9 +68,13 @@ const Shop = () => {
                         _id: destination._id,  // Ensure _id is included
                         name: destination.name,
                         image: imageSrc,
-                        description: destination.description || "No description available",
+                        description: destination.description || "No Description Available",
                         highlights: Array.isArray(destination.highlights) ? destination.highlights : [],
-                        price: destination.price,
+                        price: destination?.price || "Unknown Price",
+                        country: destination.location?.country || "Unknown Country",
+                        city: destination.location?.city || "Unknown City",
+                        maxGuests: destination.max_guests || "unknown Guests",
+                        servicesOffered: destination.services_offered || "Unknown Service offered",
                     };
                 });
 
