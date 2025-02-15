@@ -273,7 +273,6 @@ export const fetchListings = async (req, res) => {
     }
 };
 
-
 // Booking logic:
 
 export const bookingCreation = async (req, res) => {

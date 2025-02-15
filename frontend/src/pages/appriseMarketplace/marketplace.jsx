@@ -66,6 +66,7 @@ const Shop = () => {
                     return {
                         // Passing the attributes to create the listings
                         _id: destination._id,  // Ensure _id is included
+                        business_id: destination.business_id,
                         name: destination.name,
                         image: imageSrc,
                         description: destination.description || "No Description Available",

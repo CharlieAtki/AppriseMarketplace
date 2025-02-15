@@ -1,6 +1,6 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {useEffect} from "react";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import {useEffect, useState} from "react";
+import {ArrowLeft, ArrowRight, MapPin, Users, Star, Briefcase, DollarSign, User} from "lucide-react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
 
 const DestinationView = () => {
@@ -12,8 +12,10 @@ const DestinationView = () => {
     // Instead, it defaults to an empty object ({}).
     // This means that if the object is missing or has missing properties,
     // the destructured variables (name, image, description, and highlights) will be undefined rather than causing an error.
-    const { name, image, description, highlights, price, country, city, maxGuests, servicesOffered } = state?.destination || {};
+    const { _id, business_id, name, image, description, highlights, price, country, city, maxGuests, servicesOffered } = state?.destination || {};
     const selectedDestination = state?.destination || {};
+
+    const [ selectedDestinationHost, setSelectedDestinationHost ] = useState([]);
 
     const backendUrl = process.env.REACT_APP_BACKEND_URL; // Fetching the backend URL from the env file
 
@@ -44,6 +46,37 @@ const DestinationView = () => {
 
         checkLoginStatus();
     }, [navigate, backendUrl]);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch(`${backendUrl}/api/user-Auth/fetch-user`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'content-type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({_id: business_id}), // "_id" is the attribute / ID of the selected listing object
+                });
+
+                // Waiting for the response
+                const result = await response.json();
+
+                if (!result || !result.success) {
+                    console.error("Error: API did not return a valid user");
+                }
+
+                // Setting the useSate as the users object
+                setSelectedDestinationHost(result.payload) // info used within the UI
+
+            } catch (error) {
+                console.error('Auth check error:', error);
+            }
+        }
+
+        fetchUser();
+    }, []);
 
     // This checks if destination is either null or undefined.
     // In other words, it evaluates to true if no destination (due to the !state) is selected or the state doesn't have a destination
@@ -110,46 +143,65 @@ const DestinationView = () => {
                         </div>
 
                         {/* Information Panel */}
-                        <div
-                            className="flex-1 p-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow w-full h-full lg:w-auto">
+                        <div className="p-6 border border-gray-300 rounded-2xl shadow-lg bg-white w-full lg:w-auto">
+
+                            {/* Host Information */}
+                            <div className="flex items-center space-x-4 mb-4">
+                                <img
+                                    src={selectedDestinationHost?.profilePicture || "/default-avatar.png"}
+                                    alt={selectedDestinationHost?.username || "Host"}
+                                    className="w-14 h-14 rounded-full border border-gray-200"
+                                />
+                                <div>
+                                    <h2 className="text-lg font-semibold text-gray-800 flex items-center">
+                                        <User className="w-5 h-5 text-indigo-700 mr-2" />
+                                        {selectedDestinationHost?.username || "Unknown Host"}
+                                    </h2>
+                                    <p className="text-gray-500 text-sm">{selectedDestinationHost?.email || "Email not available"}</p>
+                                </div>
+                            </div>
+
+                            <hr className="border-t border-gray-300 my-4" />
 
                             {/* Service Name */}
                             <div className="mb-4">
-                                <p className="text-2xl font-semibold text-indigo-700">{name}</p>
+                                <h1 className="text-2xl font-bold text-indigo-700">{name}</h1>
                             </div>
 
-                            <hr className="border-t-2 border-gray-300 my-4"/>
+                            <hr className="border-t border-gray-300 my-4" />
 
-                            {/* Description Section */}
+                            {/* Description */}
                             <div className="mb-6">
                                 <h3 className="text-xl sm:text-2xl font-semibold text-indigo-700 mb-3">Description</h3>
                                 <p className="text-lg text-gray-700">{description}</p>
                             </div>
 
-                            <hr className="border-t-2 border-gray-300 my-4"/>
+                            <hr className="border-t border-gray-300 my-4" />
 
                             {/* Location & Max Guests */}
                             <div className="flex justify-between items-center mb-4">
-                                <div className="flex flex-col">
-                                    <p className="text-md sm:text-lg text-gray-600"><strong>Location:</strong></p>
+                                <div className="flex items-center space-x-2">
+                                    <MapPin className="w-5 h-5 text-indigo-700" />
                                     <p className="text-lg text-gray-800">{city}, {country}</p>
                                 </div>
-                                <div className="flex flex-col text-right">
-                                    <p className="text-md sm:text-lg text-gray-600"><strong>Max Guests:</strong></p>
-                                    <p className="text-lg text-gray-800">{maxGuests}</p>
+                                <div className="flex items-center space-x-2">
+                                    <Users className="w-5 h-5 text-indigo-700" />
+                                    <p className="text-lg text-gray-800">{maxGuests} guests</p>
                                 </div>
                             </div>
 
-                            <hr className="border-t-2 border-gray-300 my-4"/>
+                            <hr className="border-t border-gray-300 my-4" />
 
-                            {/* Highlights Section */}
+                            {/* Highlights */}
                             <div className="mb-6">
-                                <h3 className="text-xl sm:text-2xl font-semibold text-indigo-700 mb-3">Highlights</h3>
-                                {highlights && highlights.length > 0 ? (
-                                    <ul className="list-disc list-inside space-y-2">
+                                <h3 className="text-xl sm:text-2xl font-semibold text-indigo-700 mb-3 flex items-center">
+                                    <Star className="w-5 h-5 text-indigo-700 mr-2" />
+                                    Highlights
+                                </h3>
+                                {highlights?.length > 0 ? (
+                                    <ul className="list-disc list-inside space-y-2 text-gray-600">
                                         {highlights.map((highlight, index) => (
-                                            <li key={index}
-                                                className="text-gray-600 text-sm sm:text-lg">{highlight}</li>
+                                            <li key={index} className="text-sm sm:text-lg">{highlight}</li>
                                         ))}
                                     </ul>
                                 ) : (
@@ -157,16 +209,18 @@ const DestinationView = () => {
                                 )}
                             </div>
 
-                            <hr className="border-t-2 border-gray-300 my-4"/>
+                            <hr className="border-t border-gray-300 my-4" />
 
-                            {/* Services Offered Section */}
+                            {/* Services Offered */}
                             <div className="mb-6">
-                                <h3 className="text-xl sm:text-2xl font-semibold text-indigo-700 mb-3">Services
-                                    Offered</h3>
+                                <h3 className="text-xl sm:text-2xl font-semibold text-indigo-700 mb-3 flex items-center">
+                                    <Briefcase className="w-5 h-5 text-indigo-700 mr-2" />
+                                    Services Offered
+                                </h3>
                                 {Array.isArray(servicesOffered) && servicesOffered.length > 0 ? (
-                                    <ul className="list-disc list-inside space-y-2">
+                                    <ul className="list-disc list-inside space-y-2 text-gray-600">
                                         {servicesOffered.map((service, index) => (
-                                            <li key={index} className="text-gray-600 text-sm sm:text-lg">{service}</li>
+                                            <li key={index} className="text-sm sm:text-lg">{service}</li>
                                         ))}
                                     </ul>
                                 ) : (
@@ -174,17 +228,20 @@ const DestinationView = () => {
                                 )}
                             </div>
 
-                            <hr className="border-t-2 border-gray-300 my-4"/>
+                            <hr className="border-t border-gray-300 my-4" />
 
-                            {/* Price Per Night Section */}
-                            <div className="mt-6">
-                                <h3 className="text-xl sm:text-2xl font-semibold text-indigo-700 mb-3">Price Per
-                                    Night</h3>
-                                <p className="text-xl font-semibold text-gray-700">{price ? `£${price.toFixed(2)}` : "Price not available"}</p>
+                            {/* Price Per Night */}
+                            <div className="flex justify-between items-center mt-6">
+                                <h3 className="text-xl sm:text-2xl font-semibold text-indigo-700 flex items-center">
+                                    <DollarSign className="w-5 h-5 text-indigo-700 mr-2" />
+                                    Price Per Night
+                                </h3>
+                                <p className="text-xl font-semibold text-gray-700">
+                                    {price ? `£${price.toFixed(2)}` : "Price not available"}
+                                </p>
                             </div>
+
                         </div>
-
-
                     </div>
 
                     <hr className="border-t-2 border-gray-300 my-4"/>
@@ -202,6 +259,7 @@ const DestinationView = () => {
                                             _id: selectedDestination._id,
                                             price: selectedDestination.price
                                         },
+                                        host: selectedDestinationHost
                                     },
                                 });
                         }}
