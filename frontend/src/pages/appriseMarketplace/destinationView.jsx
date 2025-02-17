@@ -12,7 +12,7 @@ const DestinationView = () => {
     // Instead, it defaults to an empty object ({}).
     // This means that if the object is missing or has missing properties,
     // the destructured variables (name, image, description, and highlights) will be undefined rather than causing an error.
-    const { _id, business_id, name, image, description, highlights, price, country, city, maxGuests, servicesOffered } = state?.destination || {};
+    const { business_id, name, image, description, highlights, price, country, city, maxGuests, servicesOffered } = state?.destination || {};
     const selectedDestination = state?.destination || {};
 
     const [ selectedDestinationHost, setSelectedDestinationHost ] = useState([]);

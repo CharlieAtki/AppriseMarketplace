@@ -45,7 +45,7 @@ const CustomerLoginForm = () => {
 
             const UIEndPoint = buttonType !== 'signUp'
                 ? `${frontendUrl}/marketplace`
-                : `${frontendUrl}/customerAccountManagement`;
+                : `${frontendUrl}/marketplace`;
 
             const response = await fetch(APIEndPoint, {
                 method: "POST",

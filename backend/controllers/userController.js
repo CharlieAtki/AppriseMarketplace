@@ -24,6 +24,16 @@ export const userCreation = async (req, res) => {
         });
 
         const result = await user.save(); // saving the client document into the user collection
+
+        // Set session - Allows the user to login on account creation too
+        req.session.user = {
+            id: user._id,
+            email: req.body.email,
+            isAuthenticated: true, // identifying that the user has logged in
+            role: user.role,
+            isVerified: user.isVerified // signifying whether the email has been verified
+        };
+
         return res.status(201).send(result); // sending the document information to the frontend / where the request was made
 
     } catch (error) {
