@@ -1,15 +1,16 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut, Rocket, Home, Calendar, DoorOpen } from "lucide-react";
 
 const MarketplaceNavigationBar = ({ title, subtitle }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-    const [businessDashboard, setBusinessDashboard] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [menuOpen, setMenuOpen] = useState(false);
+    const [businessDashboard, setBusinessDashboard] = useState(null); // Manages the navBar view based on the users role
+    const [currentUser, setCurrentUser] = useState(null); // Manages the current user loggedIn
+    const [loading, setLoading] = useState(true); // Manages the loading state
+    const [menuOpen, setMenuOpen] = useState(false); // Manages the menu state
 
     const getButtonClass = (path) => {
         return location.pathname === path
@@ -42,6 +43,36 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
 
         roleCheck();
     }, [backendUrl]);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch(`${backendUrl}/api/user-Auth/fetch-current-user`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'content-type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                });
+
+                // Waiting for the response
+                const result = await response.json();
+
+                if (!result || !result.success) {
+                    console.error("Error: API did not return a valid user");
+                }
+
+                // Setting the useSate as the users object
+                setCurrentUser(result.payload) // info used within the UI
+
+            } catch (error) {
+                console.error('Auth check error:', error);
+            }
+        }
+
+        fetchUser();
+    }, []);
 
     const handleLogOut = async () => {
         try {
@@ -148,19 +179,31 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
 
                             {/* Mobile Dropdown Menu */}
                             {menuOpen && (
-                                <div className="absolute top-full right-0 bg-white shadow-xl rounded-lg border border-gray-300 w-64 z-50 p-3 flex flex-col space-y-3">
+                                <div className="absolute top-full right-0 bg-white shadow-xl rounded-xl border border-gray-200 w-64 z-50 p-2 flex flex-col space-y-2 animate-fade-in">
                                     {loading ? (
                                         <p className="text-gray-600 text-center">Loading...</p>
                                     ) : (
                                         <>
-                                            <button
-                                                onClick={() => {
-                                                    handleLogOut();
-                                                    setMenuOpen(false);
-                                                }}
-                                                className="bg-gray-700 text-white rounded-xl shadow-md px-6 py-3 hover:bg-red-700 hover:shadow-lg transition-all transform hover:scale-105">
-                                                Log Out
-                                            </button>
+                                            <div className="py-2 px-4 text-sm text-gray-700">
+                                                <p className="font-semibold text-gray-900">Signed in as</p>
+                                                <p className="text-gray-600">{currentUser?.email || "Unknown Email"}</p>
+                                            </div>
+
+                                            {/* Separator */}
+                                            <hr className="border-gray-300 my-2"/>
+
+                                            {/* Log Out Button */}
+                                            <div>
+                                                <button
+                                                    onClick={() => {
+                                                        handleLogOut();
+                                                        setMenuOpen(false);
+                                                    }}
+                                                    className="w-full px-4 py-2 text-sm text-white bg-gray-700 rounded-lg shadow-md hover:bg-red-600 focus:outline-none transform transition-all flex items-center gap-2"
+                                                >
+                                                    <DoorOpen size={20}/> Log Out
+                                                </button>
+                                            </div>
                                         </>
                                     )}
                                 </div>
@@ -180,46 +223,72 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
 
                 {/* Mobile Dropdown Menu */}
                 {menuOpen && (
-                    <div className="absolute top-full right-0 bg-white shadow-xl rounded-lg border border-gray-300 w-64 z-50 p-3 flex flex-col space-y-3">
+                    <div className="absolute top-full right-0 bg-white shadow-xl rounded-xl border border-gray-200 w-64 z-50 p-2 flex flex-col space-y-2 animate-fade-in">
                         {loading ? (
-                            <p className="text-gray-600 text-center">Loading...</p>
+                          <p className="text-gray-600 text-center">Loading...</p>
                         ) : (
                             <>
-                                {businessDashboard ? (
+                                {/* Header for Business Options */}
+                                <div className="py-2 px-4 text-sm text-gray-700">
+                                    <p className="font-semibold text-gray-900">Signed in as</p>
+                                    <p className="text-gray-600">{currentUser?.email || "Unknown Email"}</p>
+                                </div>
+
+                                {/* Separator */}
+                                <hr className="border-gray-300 "/>
+
+                                <div>
+                                    {businessDashboard ? (
+                                        <button
+                                            onClick={() => {
+                                                businessDashboardRedirection();
+                                                setMenuOpen(false);
+                                            }}
+                                            className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none flex items-center gap-2"
+                                        >
+                                            <Rocket size={20}/> Business Dashboard
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() => {
+                                                becomeABusiness();
+                                                setMenuOpen(false);
+                                            }}
+                                            className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none flex items-center gap-2"
+                                        >
+                                            <Home size={20}/> Host Your Home?
+                                        </button>
+                                    )}
+                                </div>
+
+                                {/* Header for Booking */}
+                                <div>
                                     <button
                                         onClick={() => {
-                                            businessDashboardRedirection();
+                                            bookingListViewRedirection();
                                             setMenuOpen(false);
                                         }}
-                                        className={getButtonClass("/businessDashboard")}>
-                                        Business Dashboard
+                                        className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none flex items-center gap-2"
+                                    >
+                                        <Calendar size={20}/> {getButtonText()}
                                     </button>
-                                ) : (
+                                </div>
+
+                                {/* Separator */}
+                                <hr className="border-gray-300 my-2"/>
+
+                                {/* Log Out Button */}
+                                <div>
                                     <button
                                         onClick={() => {
-                                            becomeABusiness();
+                                            handleLogOut();
                                             setMenuOpen(false);
                                         }}
-                                        className={getButtonClass("/become-a-business")}>
-                                        Host Your Home?
+                                        className="w-full px-4 py-2 text-sm text-white bg-gray-700 rounded-lg shadow-md hover:bg-red-600 focus:outline-none transform transition-all flex items-center gap-2"
+                                    >
+                                        <DoorOpen size={20}/> Log Out
                                     </button>
-                                )}
-                                <button
-                                    onClick={() => {
-                                        bookingListViewRedirection();
-                                        setMenuOpen(false);
-                                    }}
-                                    className={getButtonClass("/booking-list")}>
-                                    {getButtonText()}
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        handleLogOut();
-                                        setMenuOpen(false);
-                                    }}
-                                    className="bg-gray-700 text-white rounded-xl shadow-md px-6 py-3 hover:bg-red-700 hover:shadow-lg transition-all transform hover:scale-105">
-                                    Log Out
-                                </button>
+                                </div>
                             </>
                         )}
                     </div>

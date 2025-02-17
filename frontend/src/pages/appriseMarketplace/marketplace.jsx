@@ -121,7 +121,7 @@ const Shop = () => {
                     </div>
                 </div>
 
-                <hr className="border-2 border-gray-300 rounded-2xl shadow-lg" />
+                <hr className="border-2 border-gray-300 rounded-2xl shadow-lg"/>
 
                 {/* Show Shimmer Effect While Loading */}
                 {loading ? (
@@ -150,7 +150,8 @@ const Shop = () => {
                                             alt={destination.name}
                                             className="w-full h-48 object-cover"
                                         />
-                                        <div className="absolute inset-0 bg-black opacity-20 hover:opacity-30 transition-opacity"></div>
+                                        <div
+                                            className="absolute inset-0 bg-black opacity-20 hover:opacity-30 transition-opacity"></div>
                                     </div>
 
                                     <div className="p-4">

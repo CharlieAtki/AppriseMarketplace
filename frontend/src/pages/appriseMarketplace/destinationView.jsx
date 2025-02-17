@@ -108,8 +108,7 @@ const DestinationView = () => {
                     <hr className="border border-gray-200 mb-4 rounded-2xl"/>
 
                     {/* Image and Highlights section (Making it a HStack */}
-                    <div
-                        className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-8 h-auto lg:h-screen">
+                    <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-8 h-auto lg:h-screen">
                         {/* Main Image Section - Occupies 3/4 of the HStack */}
                         <div
                             className="flex-[3] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-3 gap-2 sm:gap-4 h-auto lg:h-full">

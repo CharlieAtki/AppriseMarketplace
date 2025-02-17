@@ -134,10 +134,42 @@ export const userLogout = async (req, res) => {
     }
 };
 
+// Used to find the user who created the listing - req.body._id is the listing owners document objectID
+// Used to show the host of a service
 export const fetchUser = async (req, res) => {
     try {
         const user = await User.findOne({
             _id: req.body._id // finding the user document based on the listingId, which is passed from the frontend
+        })
+
+        // checking if the fetch was successful
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        // Sending back the user details
+        return res.status(200).json({
+            success: true,
+            message: "User found successfully",
+            payload: user
+        });
+
+    } catch (error) {
+        return res.status(400).send({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// Used to find the currently loggedIn user - for the NavBar
+export const fetchCurrentUser = async (req, res) => {
+    try {
+        const user = await User.findOne({
+            _id: req.session.user.id // using the user documentId stored in the session to identify the currently loggedIn user
         })
 
         // checking if the fetch was successful
