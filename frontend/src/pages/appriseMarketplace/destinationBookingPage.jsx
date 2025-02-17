@@ -433,7 +433,7 @@ const DestinationBookingPage = () => {
                     <hr className="border-t border-gray-300"/>
 
                     {/* Host Information Section */}
-                    <div className="flex-[1] flex flex-col h-auto lg:h-full p-4 border-2 border-gray-300 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow bg-white">
+                    <div className="flex-[1] flex flex-col h-auto lg:h-full p-6 border-2 border-gray-300 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow bg-white">
 
                         {/* Panel Title */}
                         <h2 className="text-3xl font-bold text-indigo-700 mb-4">

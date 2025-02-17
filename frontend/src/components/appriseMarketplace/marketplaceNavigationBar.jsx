@@ -1,22 +1,22 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
 
 const MarketplaceNavigationBar = ({ title, subtitle }) => {
-    const location = useLocation(); // Get the current location (URL path)
+    const location = useLocation();
     const navigate = useNavigate();
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-    const [businessDashboard, setBusinessDashboard] = useState(null); // null for loading state
-    const [loading, setLoading] = useState(true); // Manage loading state while fetching role
+    const [businessDashboard, setBusinessDashboard] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [menuOpen, setMenuOpen] = useState(false);
 
-    // Function that applies dynamic button styling
     const getButtonClass = (path) => {
         return location.pathname === path
-            ? 'bg-indigo-700 text-white rounded-full shadow-2xl shadow-indigo-500/50 px-8 py-3 transform scale-110'
-            : 'bg-gray-700 text-white rounded-full shadow-2xl shadow-gray-500/50 px-8 py-3 hover:bg-indigo-700 transition-all transform hover:scale-105';
+            ? 'bg-gray-700 text-white rounded-xl shadow-md px-6 sm:px-8 py-3 transition-all transform scale-105'
+            : 'bg-gray-700 text-white rounded-xl shadow-md px-6 sm:px-8 py-3 hover:bg-indigo-700 hover:shadow-lg transition-all transform hover:scale-105';
     };
 
-    // Fetch user role on component mount
     useEffect(() => {
         const roleCheck = async () => {
             try {
@@ -28,15 +28,15 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
 
                 if (response.ok) {
                     const result = await response.json();
-                    setBusinessDashboard(result.user?.role === "business"); // Set true if business
+                    setBusinessDashboard(result.user?.role === "business");
                 } else {
-                    setBusinessDashboard(false); // Default to false if no role found or error
+                    setBusinessDashboard(false);
                 }
             } catch (error) {
                 console.error('Role check error', error);
-                setBusinessDashboard(false); // Default to false on error
+                setBusinessDashboard(false);
             } finally {
-                setLoading(false); // Set loading to false when the request is done
+                setLoading(false);
             }
         };
 
@@ -52,8 +52,6 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
             });
 
             if (response.ok) {
-                const result = await response.json();
-                console.log(result.message);
                 navigate('/');
             } else {
                 console.error('Logout failed');
@@ -63,23 +61,21 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
         }
     };
 
-    // Ensures the navbar adjusts its text depending on the webpage (conditions given)
     const getButtonText = () => {
         switch (location.pathname) {
             case "/booking-confirmation":
-                return "View Your Bookings";
             case "/marketplace":
                 return "View Your Bookings";
             case "/destination-view":
+            case "/booking-view":
                 return "Marketplace";
             case "/booking-details":
-                return "View Your Bookings"
+                return "View Your Bookings";
             default:
                 return "Marketplace";
         }
     };
 
-    // Ensures the navbar adjusts its redirection address depending on the webpage (conditions given)
     const bookingListViewRedirection = async () => {
         if (location.pathname === '/booking-list') {
             navigate('/marketplace');
@@ -96,31 +92,26 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
         }
     };
 
-    const businessDashboardRedirection = async () => {
-        navigate('/businessDashboard');
-    }
-
-    const becomeABusiness = async () => {
-        navigate('/become-a-business');
-    }
+    const businessDashboardRedirection = () => navigate('/businessDashboard');
+    const becomeABusiness = () => navigate('/become-a-business');
 
     return (
-        <section className="flex justify-between items-center px-6 py-6 gap-x-4">
-            {/* Title on the left */}
-            <div className="text-left mr-auto">
-                <h1 className="font-extrabold text-indigo-700 sm:text-2xl md:text-4xl">
+        <section className="flex justify-between items-center px-6 py-6 relative">
+            {/* Title Section */}
+            <div className="text-left">
+                <h1 className="font-extrabold text-indigo-700 text-2xl md:text-4xl">
                     {title}
                 </h1>
-                <h4 className="text-gray-700 sm:text-md md:text-xl">
+                <h4 className="text-gray-700 text-md md:text-xl">
                     {subtitle}
                 </h4>
             </div>
 
-            {/* Show a loading spinner if the `loading` prop is true */}
-            <div className="flex space-x-3.5 p-2">
+            {/* Desktop Buttons */}
+            <div className="hidden lg:flex space-x-4">
                 {loading ? (
                     <div className="relative flex justify-center items-center">
-                        <svg className="w-6 h-6 text-indigo-700 animate-spin" xmlns="http://www.w3.org/2000/svg"
+                        <svg className="w-8 h-8 text-indigo-700 animate-spin" xmlns="http://www.w3.org/2000/svg"
                              fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <circle cx="12" cy="12" r="10" strokeWidth="4" className="text-gray-300"/>
                             <circle cx="12" cy="12" r="10" strokeWidth="4" strokeDasharray="63" strokeDashoffset="50"
@@ -144,15 +135,94 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
                         )}
                         <button
                             onClick={bookingListViewRedirection}
-                            className={getButtonClass("/businessDashboard")}>
+                            className={getButtonClass("/booking-list")}>
                             {getButtonText()}
                         </button>
-                        <button
-                            onClick={handleLogOut}
-                            className="bg-gray-700 text-white rounded-full shadow-2xl shadow-gray-500/50 px-8 py-3 hover:bg-red-600 transition-all transform hover:scale-105">
-                            Log Out
-                        </button>
+
+                        <div>
+                            <button
+                                onClick={() => setMenuOpen(!menuOpen)}
+                                className="text-indigo-700 focus:outline-none p-2 rounded-md hover:bg-gray-200 transition">
+                                {menuOpen ? <X size={32} /> : <Menu size={32} />}
+                            </button>
+
+                            {/* Mobile Dropdown Menu */}
+                            {menuOpen && (
+                                <div className="absolute top-full right-0 bg-white shadow-xl rounded-lg border border-gray-300 w-64 z-50 p-3 flex flex-col space-y-3">
+                                    {loading ? (
+                                        <p className="text-gray-600 text-center">Loading...</p>
+                                    ) : (
+                                        <>
+                                            <button
+                                                onClick={() => {
+                                                    handleLogOut();
+                                                    setMenuOpen(false);
+                                                }}
+                                                className="bg-gray-700 text-white rounded-xl shadow-md px-6 py-3 hover:bg-red-700 hover:shadow-lg transition-all transform hover:scale-105">
+                                                Log Out
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </>
+                )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden relative">
+                <button
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    className="text-indigo-700 focus:outline-none p-2 rounded-md hover:bg-gray-200 transition">
+                    {menuOpen ? <X size={32} /> : <Menu size={32} />}
+                </button>
+
+                {/* Mobile Dropdown Menu */}
+                {menuOpen && (
+                    <div className="absolute top-full right-0 bg-white shadow-xl rounded-lg border border-gray-300 w-64 z-50 p-3 flex flex-col space-y-3">
+                        {loading ? (
+                            <p className="text-gray-600 text-center">Loading...</p>
+                        ) : (
+                            <>
+                                {businessDashboard ? (
+                                    <button
+                                        onClick={() => {
+                                            businessDashboardRedirection();
+                                            setMenuOpen(false);
+                                        }}
+                                        className={getButtonClass("/businessDashboard")}>
+                                        Business Dashboard
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={() => {
+                                            becomeABusiness();
+                                            setMenuOpen(false);
+                                        }}
+                                        className={getButtonClass("/become-a-business")}>
+                                        Host Your Home?
+                                    </button>
+                                )}
+                                <button
+                                    onClick={() => {
+                                        bookingListViewRedirection();
+                                        setMenuOpen(false);
+                                    }}
+                                    className={getButtonClass("/booking-list")}>
+                                    {getButtonText()}
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        handleLogOut();
+                                        setMenuOpen(false);
+                                    }}
+                                    className="bg-gray-700 text-white rounded-xl shadow-md px-6 py-3 hover:bg-red-700 hover:shadow-lg transition-all transform hover:scale-105">
+                                    Log Out
+                                </button>
+                            </>
+                        )}
+                    </div>
                 )}
             </div>
         </section>
