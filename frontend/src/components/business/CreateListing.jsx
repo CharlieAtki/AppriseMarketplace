@@ -2,8 +2,10 @@ import { useState } from "react";
 
 const CreateListing = ({ onListingSubmit }) => {
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    const cloudinaryUrl = process.env.REACT_APP_CLOUDINARY_URL;
+    const uploadPreset = process.env.REACT_APP_UPLOAD_PRESET;
 
-    //  Stores all the input fields required for the listing.
+    // Stores all the input fields required for the listing.
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -18,12 +20,41 @@ const CreateListing = ({ onListingSubmit }) => {
     });
 
     const [previewMode, setPreviewMode] = useState(false); // Controls whether the form is in preview mode.
-    const [errorMessages, setErrorMessages] = useState([]); //  Stores any validation errors.
+    const [errorMessages, setErrorMessages] = useState([]); // Stores any validation errors.
     const [successMessage, setSuccessMessage] = useState(""); // Displays success feedback to the user.
     const [disabled, setDisabled] = useState(false); // Manages the buffer of the listing submission
 
+    // Function to handle image upload
+    const handleImageUpload = async (e) => {
+        const files = Array.from(e.target.files);
+        const uploadedImages = [];
 
-    // This function updates the formData when an input field changes.
+        for (let i = 0; i < files.length; i++) {
+            const formData = new FormData();
+            formData.append("file", files[i]);
+            formData.append("upload_preset", uploadPreset); // Using the preset for unsigned uploads
+
+            try {
+                const response = await fetch(cloudinaryUrl, {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const data = await response.json();
+                if (data.secure_url) {
+                    uploadedImages.push(data.secure_url); // Store image URL
+                } else {
+                    setErrorMessages([...errorMessages, "Error uploading image"]);
+                }
+            } catch (error) {
+                console.error("Image upload failed:", error);
+                setErrorMessages([...errorMessages, "Error uploading image"]);
+            }
+        }
+
+        setFormData({ ...formData, images: uploadedImages });
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name.startsWith("location.")) {
@@ -32,23 +63,6 @@ const CreateListing = ({ onListingSubmit }) => {
         } else {
             setFormData({ ...formData, [name]: value });
         }
-    };
-
-
-    // The function updates the formData when the image input field changes 
-    const handleImageUpload = (e) => {
-        const files = Array.from(e.target.files);
-        const readers = files.map(file => {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.readAsDataURL(file);
-            });
-        });
-
-        Promise.all(readers).then((imageUrls) => {
-            setFormData({ ...formData, images: imageUrls });
-        });
     };
 
     const handleAvailabilityChange = (index, field, value) => {
