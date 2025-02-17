@@ -161,7 +161,7 @@ const DestinationBookingPage = () => {
     }
 
     return (
-        <div className="p-4">
+        <div className="p-2">
             <MarketplaceNavigationBar title="Apprise Marketplace" subtitle="Destination Details"/>
             {/* Image + Booking input section */}
             <div className="border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow duration-300 p-4">
@@ -179,13 +179,13 @@ const DestinationBookingPage = () => {
                     </button>
                 </div>
 
-                <hr className="border-t-2 border-gray-300 my-4"/>
+                <hr className="border border-gray-300 my-4 rounded-2xl"/>
 
                 <div className="grid grid-rows-[auto,1fr] gap-4">
                 {/* Large Image Grid */}
                     <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4">
                         {/* Main large image - increased height */}
-                        <div className="col-span-1 md:col-span-2 h-[650px]">
+                        <div className="col-span-1 md:col-span-2 h-[550]">
                             <img
                                 src={image}
                                 alt={name}
@@ -211,12 +211,12 @@ const DestinationBookingPage = () => {
                         </div>
                     </div>
 
-                    <hr className="border-2 border-gray-200 rounded-2xl" />
+                    <hr className="border border-gray-200 my-2 rounded-2xl" />
 
                     {/* Destination Details & Booking Section  */}
-                    <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-8 p-2 h-full">
+                    <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-8 h-full">
                         {/* Destination Features Section */}
-                        <div className="p-6 border border-gray-300 rounded-2xl shadow-lg bg-white w-full lg:w-auto">
+                        <div className="p-6 border border-gray-300 rounded-2xl shadow-lg bg-white w-full lg:w-auto hover:shadow-2xl transition-shadow">
 
                             {/* Host Information */}
                             <div className="flex items-center space-x-4 mb-4">
@@ -318,7 +318,7 @@ const DestinationBookingPage = () => {
 
                         {/* Customer Details Input section */}
                         <div
-                            className="flex-[2] flex flex-col h-auto w-full lg:h-full p-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow">
+                            className="flex-[2] flex flex-col h-auto w-full lg:h-full p-4 border border-gray-300 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow">
                             <h2 className="text-3xl font-bold text-indigo-700">
                                 Booking Details:
                             </h2>
@@ -430,54 +430,56 @@ const DestinationBookingPage = () => {
                         </div>
                     </div>
 
-                    <hr className="border-t border-gray-300"/>
+                    <hr className="border border-gray-200 my-2 rounded-2xl"/>
 
                     {/* Host Information Section */}
-                    <div className="flex-[1] flex flex-col h-auto lg:h-full p-6 border-2 border-gray-300 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow bg-white">
+                    <div>
+                        <div className="flex-[1] flex flex-col h-auto lg:h-full p-6 border border-gray-300 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow">
 
-                        {/* Panel Title */}
-                        <h2 className="text-3xl font-bold text-indigo-700 mb-4">
-                            Host Details
-                        </h2>
+                            {/* Panel Title */}
+                            <h2 className="text-3xl font-bold text-indigo-700 mb-4">
+                                Host Details
+                            </h2>
 
-                        {/* Host Profile */}
-                        <div className="flex items-center space-x-4 mb-4">
-                            <img
-                                src={selectedDestinationHost?.profilePicture || "/default-avatar.png"}
-                                alt={selectedDestinationHost?.username || "Host"}
-                                className="w-16 h-16 rounded-full border border-gray-200 shadow-sm"
-                            />
-                            <div>
-                                <h3 className="text-lg font-semibold text-gray-800 flex items-center">
-                                    <User className="w-5 h-5 text-indigo-700 mr-2" />
-                                    {selectedDestinationHost?.username || "Unknown Host"}
-                                </h3>
-                                <p className="text-gray-500 text-sm flex items-center">
-                                    <Mail className="w-4 h-4 text-indigo-700 mr-2" />
-                                    {selectedDestinationHost?.email || "Email not available"}
+                            {/* Host Profile */}
+                            <div className="flex items-center space-x-4 mb-4">
+                                <img
+                                    src={selectedDestinationHost?.profilePicture || "/default-avatar.png"}
+                                    alt={selectedDestinationHost?.username || "Host"}
+                                    className="w-16 h-16 rounded-full border border-gray-200 shadow-sm"
+                                />
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-800 flex items-center">
+                                        <User className="w-5 h-5 text-indigo-700 mr-2" />
+                                        {selectedDestinationHost?.username || "Unknown Host"}
+                                    </h3>
+                                    <p className="text-gray-500 text-sm flex items-center">
+                                        <Mail className="w-4 h-4 text-indigo-700 mr-2" />
+                                        {selectedDestinationHost?.email || "Email not available"}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <hr className="border-t border-gray-300 my-4" />
+
+                            {/* Host Account Creation Date */}
+                            <div className="mb-4">
+                                <p className="text-gray-600 flex items-center">
+                                    <Calendar className="w-5 h-5 text-indigo-700 mr-2" />
+                                    <strong>Joined:</strong> {selectedDestinationHost?.createdAt ? new Date(selectedDestinationHost.createdAt).toLocaleDateString() : "Not available"}
                                 </p>
                             </div>
+
+                            <hr className="border-t border-gray-300 my-4" />
+
+                            {/* Optional Additional Information */}
+                            <div>
+                                <p className="text-gray-600 text-sm">
+                                    Feel free to contact the host for more information about the service.
+                                </p>
+                            </div>
+
                         </div>
-
-                        <hr className="border-t border-gray-300 my-4" />
-
-                        {/* Host Account Creation Date */}
-                        <div className="mb-4">
-                            <p className="text-gray-600 flex items-center">
-                                <Calendar className="w-5 h-5 text-indigo-700 mr-2" />
-                                <strong>Joined:</strong> {selectedDestinationHost?.createdAt ? new Date(selectedDestinationHost.createdAt).toLocaleDateString() : "Not available"}
-                            </p>
-                        </div>
-
-                        <hr className="border-t border-gray-300 my-4" />
-
-                        {/* Optional Additional Information */}
-                        <div>
-                            <p className="text-gray-600 text-sm">
-                                Feel free to contact the host for more information about the service.
-                            </p>
-                        </div>
-
                     </div>
 
                 </div>

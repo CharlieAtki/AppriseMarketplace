@@ -85,10 +85,10 @@ const DestinationView = () => {
     }
 
     return (
-        <div className="p-6">
+        <div className="p-2">
             <MarketplaceNavigationBar title="Apprise Marketplace" subtitle="Destination Details" />
 
-            <div className="py-4 px-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow duration-300">
+            <div className="p-4 border border-gray-300 rounded-2xl shadow-lg bg-white w-full lg:w-auto hover:shadow-2xl transition-shadow">
                 <div className="w-full mx-auto">
                     {/* Heading Section */}
                     <div className="flex justify-between items-center mb-6">
@@ -99,16 +99,17 @@ const DestinationView = () => {
                             onClick={() => navigate("/marketplace")}
                             className="text-gray-600 hover:text-indigo-700 flex items-center"
                         >
-                            <ArrowLeft size={20} className="mr-2" />
+                            <ArrowLeft size={20} className="mr-2"/>
                             Back to Marketplace
                         </button>
                     </div>
 
                     {/* Divider between the title and images */}
-                    <hr className="border-t-2 border-gray-300 my-4"/>
+                    <hr className="border border-gray-200 mb-4 rounded-2xl"/>
+
                     {/* Image and Highlights section (Making it a HStack */}
                     <div
-                        className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-8 p-2 h-auto lg:h-screen">
+                        className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-8 h-auto lg:h-screen">
                         {/* Main Image Section - Occupies 3/4 of the HStack */}
                         <div
                             className="flex-[3] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-3 gap-2 sm:gap-4 h-auto lg:h-full">
@@ -143,7 +144,8 @@ const DestinationView = () => {
                         </div>
 
                         {/* Information Panel */}
-                        <div className="p-6 border border-gray-300 rounded-2xl shadow-lg bg-white w-full h-full lg:w-auto">
+                        <div
+                            className="p-6 border border-gray-300 rounded-2xl shadow-lg bg-white w-full h-full lg:w-auto">
 
                             {/* Host Information */}
                             <div className="flex items-center space-x-4 mb-4">
@@ -154,21 +156,21 @@ const DestinationView = () => {
                                 />
                                 <div>
                                     <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-                                        <User className="w-5 h-5 text-indigo-700 mr-2" />
+                                        <User className="w-5 h-5 text-indigo-700 mr-2"/>
                                         {selectedDestinationHost?.username || "Unknown Host"}
                                     </h2>
                                     <p className="text-gray-500 text-sm">{selectedDestinationHost?.email || "Email not available"}</p>
                                 </div>
                             </div>
 
-                            <hr className="border-t border-gray-300 my-4" />
+                            <hr className="border-t border-gray-300 my-4"/>
 
                             {/* Service Name */}
                             <div className="mb-4">
                                 <h1 className="text-2xl font-bold text-indigo-700">{name}</h1>
                             </div>
 
-                            <hr className="border-t border-gray-300 my-4" />
+                            <hr className="border-t border-gray-300 my-4"/>
 
                             {/* Description */}
                             <div className="mb-6">
@@ -176,26 +178,26 @@ const DestinationView = () => {
                                 <p className="text-lg text-gray-700">{description}</p>
                             </div>
 
-                            <hr className="border-t border-gray-300 my-4" />
+                            <hr className="border-t border-gray-300 my-4"/>
 
                             {/* Location & Max Guests */}
                             <div className="flex justify-between items-center mb-4">
                                 <div className="flex items-center space-x-2">
-                                    <MapPin className="w-5 h-5 text-indigo-700" />
+                                    <MapPin className="w-5 h-5 text-indigo-700"/>
                                     <p className="text-lg text-gray-800">{city}, {country}</p>
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                    <Users className="w-5 h-5 text-indigo-700" />
+                                    <Users className="w-5 h-5 text-indigo-700"/>
                                     <p className="text-lg text-gray-800">{maxGuests} guests</p>
                                 </div>
                             </div>
 
-                            <hr className="border-t border-gray-300 my-4" />
+                            <hr className="border-t border-gray-300 my-4"/>
 
                             {/* Highlights */}
                             <div className="mb-6">
                                 <h3 className="text-xl sm:text-2xl font-semibold text-indigo-700 mb-3 flex items-center">
-                                    <Star className="w-5 h-5 text-indigo-700 mr-2" />
+                                    <Star className="w-5 h-5 text-indigo-700 mr-2"/>
                                     Highlights
                                 </h3>
                                 {highlights?.length > 0 ? (
@@ -209,12 +211,12 @@ const DestinationView = () => {
                                 )}
                             </div>
 
-                            <hr className="border-t border-gray-300 my-4" />
+                            <hr className="border-t border-gray-300 my-4"/>
 
                             {/* Services Offered */}
                             <div className="mb-6">
                                 <h3 className="text-xl sm:text-2xl font-semibold text-indigo-700 mb-3 flex items-center">
-                                    <Briefcase className="w-5 h-5 text-indigo-700 mr-2" />
+                                    <Briefcase className="w-5 h-5 text-indigo-700 mr-2"/>
                                     Services Offered
                                 </h3>
                                 {Array.isArray(servicesOffered) && servicesOffered.length > 0 ? (
@@ -228,12 +230,12 @@ const DestinationView = () => {
                                 )}
                             </div>
 
-                            <hr className="border-t border-gray-300 my-4" />
+                            <hr className="border-t border-gray-300 my-4"/>
 
                             {/* Price Per Night */}
                             <div className="flex justify-between items-center mt-6">
                                 <h3 className="text-xl sm:text-2xl font-semibold text-indigo-700 flex items-center">
-                                    <DollarSign className="w-5 h-5 text-indigo-700 mr-2" />
+                                    <DollarSign className="w-5 h-5 text-indigo-700 mr-2"/>
                                     Price Per Night
                                 </h3>
                                 <p className="text-xl font-semibold text-gray-700">
@@ -244,7 +246,7 @@ const DestinationView = () => {
                         </div>
                     </div>
 
-                    <hr className="border-t-2 border-gray-300 my-4"/>
+                    <hr className="border border-gray-200 my-4 rounded-2xl"/>
 
                     {/* Call to Action */}
                     {/* Passing the specific attributes to the next page, which are needed to create the booking doc */}
