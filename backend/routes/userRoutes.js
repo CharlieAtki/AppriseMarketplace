@@ -1,5 +1,5 @@
 import express from 'express';
-import {fetchCurrentUser, fetchUser, userLogout} from "../controllers/userController.js";
+import {fetchCurrentUser, fetchUser, updateUserDetails, userLogout} from "../controllers/userController.js";
 
 const router = express.Router();
 
@@ -10,4 +10,5 @@ router.post('/fetch-user', fetchUser) // Fetching the users credentials via the 
 
 router.get('/fetch-current-user', fetchCurrentUser) // Fetching the currently loggedIn user - (For NavBar)
 
+router.post('/update-user-details', updateUserDetails)
 export default router;

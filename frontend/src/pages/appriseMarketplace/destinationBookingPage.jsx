@@ -1,7 +1,19 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
-import {Calendar, Users, ArrowLeft, PoundSterling, User, MapPin, Star, Briefcase, DollarSign, Mail} from 'lucide-react';
+import {
+    Calendar,
+    Users,
+    ArrowLeft,
+    PoundSterling,
+    User,
+    MapPin,
+    Star,
+    Briefcase,
+    DollarSign,
+    Mail,
+    Image
+} from 'lucide-react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -220,11 +232,16 @@ const DestinationBookingPage = () => {
 
                             {/* Host Information */}
                             <div className="flex items-center space-x-4 mb-4">
-                                <img
-                                    src={selectedDestinationHost?.profilePicture || "/default-avatar.png"}
-                                    alt={selectedDestinationHost?.username || "Host"}
-                                    className="w-14 h-14 rounded-full border border-gray-200"
-                                />
+                                <div
+                                    className="w-16 h-16 rounded-full overflow-hidden border flex items-center justify-center bg-gray-200">
+                                    {selectedDestinationHost?.profilePicture ? (
+                                        <img src={selectedDestinationHost?.profilePicture}
+                                             alt={selectedDestinationHost?.username || "Host"}
+                                             className="w-full h-full object-cover"/>
+                                    ) : (
+                                        <Image size={28} className="text-gray-500"/>
+                                    )}
+                                </div>
                                 <div>
                                     <h2 className="text-lg font-semibold text-gray-800 flex items-center">
                                         <User className="w-5 h-5 text-indigo-700 mr-2"/>
@@ -443,29 +460,32 @@ const DestinationBookingPage = () => {
 
                             {/* Host Profile */}
                             <div className="flex items-center space-x-4 mb-4">
-                                <img
-                                    src={selectedDestinationHost?.profilePicture || "/default-avatar.png"}
-                                    alt={selectedDestinationHost?.username || "Host"}
-                                    className="w-16 h-16 rounded-full border border-gray-200 shadow-sm"
-                                />
+                                <div
+                                    className="w-16 h-16 rounded-full overflow-hidden border flex items-center justify-center bg-gray-200">
+                                    {selectedDestinationHost?.profilePicture ? (
+                                        <img src={selectedDestinationHost?.profilePicture} alt={selectedDestinationHost?.username || "Host"} className="w-full h-full object-cover"/>
+                                    ) : (
+                                        <Image size={28} className="text-gray-500"/>
+                                    )}
+                                </div>
                                 <div>
                                     <h3 className="text-lg font-semibold text-gray-800 flex items-center">
-                                        <User className="w-5 h-5 text-indigo-700 mr-2" />
+                                        <User className="w-5 h-5 text-indigo-700 mr-2"/>
                                         {selectedDestinationHost?.username || "Unknown Host"}
                                     </h3>
                                     <p className="text-gray-500 text-sm flex items-center">
-                                        <Mail className="w-4 h-4 text-indigo-700 mr-2" />
+                                        <Mail className="w-4 h-4 text-indigo-700 mr-2"/>
                                         {selectedDestinationHost?.email || "Email not available"}
                                     </p>
                                 </div>
                             </div>
 
-                            <hr className="border-t border-gray-300 my-4" />
+                            <hr className="border-t border-gray-300 my-4"/>
 
                             {/* Host Account Creation Date */}
                             <div className="mb-4">
                                 <p className="text-gray-600 flex items-center">
-                                    <Calendar className="w-5 h-5 text-indigo-700 mr-2" />
+                                    <Calendar className="w-5 h-5 text-indigo-700 mr-2"/>
                                     <strong>Joined:</strong> {selectedDestinationHost?.createdAt ? new Date(selectedDestinationHost.createdAt).toLocaleDateString() : "Not available"}
                                 </p>
                             </div>

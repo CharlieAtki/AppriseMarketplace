@@ -14,6 +14,7 @@ import HostingBusinessForm from "./components/business/hostingBusinessForm";
 import BookingSuccessPage from "./pages/appriseMarketplace/bookingConfirmation";
 import BookingListPage from "./pages/appriseMarketplace/bookingListPage";
 import BookingDetails from "./pages/appriseMarketplace/bookingDetails";
+import AccountSettingsPage from "./pages/appriseMarketplace/accountSettingsPage";
 
 const App = () => {
     return (
@@ -32,6 +33,7 @@ const App = () => {
                 <Route path="booking-confirmation" element={<BookingSuccessPage />} />
                 <Route path="booking-list" element={<BookingListPage />} />
                 <Route path="booking-details" element={<BookingDetails />} />
+                <Route path="account-settings" element={<AccountSettingsPage />} />
             </Routes>
         </Router>
     );

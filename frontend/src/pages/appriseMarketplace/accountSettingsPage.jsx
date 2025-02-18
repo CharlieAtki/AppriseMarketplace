@@ -1,10 +1,9 @@
+import AccountSettingsSideBar from "../../components/appriseMarketplace/accountSettingsSideBar";
+import AccountInfoInputForm from "../../components/appriseMarketplace/accountInfoInputForm";
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
-import BusinessSideBar from "../../components/business/businessSideBar";
-import BusinessNavigationBar from "../../components/business/businessNavigationBar";
-import AreaChartComponent from "../../components/business/areaChart";
 
-const AnalyticsPage = () => {
+const AccountSettingsPage = () => {
     const navigate = useNavigate();
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -38,21 +37,21 @@ const AnalyticsPage = () => {
     }, [navigate, backendUrl]);
 
     return (
-        <div className="flex w-full h-screen ">
+        <div className="flex w-full h-screen bg-gray-50">
+
             {/* Sidebar */}
-            <div className="bg-gray-50 flex-grow max-w-48">
-                < BusinessSideBar/>
+            <div className="bg-gray-50 flex-shrink-0 w-48 h-full">
+                <AccountSettingsSideBar/>
             </div>
-            {/* Main Content */}
-            <div className="flex flex-col flex-grow p-4 bg-gray-50">
-                < BusinessNavigationBar title={"Business Dashboard"} subtitle={"Manage Your Business"}/>
-                <h1>Analytics Page</h1>
-                <div className="flex w-1/4 h-1/4 border-2 border-gray-200 rounded-2xl">
-                    < AreaChartComponent metricOne={"Total Sales"} metricTwo={"Total Revenue"} metricOneUnit={"Units"} metricTwoUnit={"GBP"}/>
+
+            {/* Details Input */}
+            <div className="flex flex-col flex-grow overflow-y-auto bg-gray-50">
+                <div className="max-w-screen-xl mx-auto w-full">
+                    <AccountInfoInputForm/>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default AnalyticsPage
+export default AccountSettingsPage;

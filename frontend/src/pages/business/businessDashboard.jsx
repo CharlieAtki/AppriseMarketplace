@@ -39,12 +39,12 @@ const BusinessDashboard = () => {
     return (
         <div className="flex w-full h-screen">
             {/* Sidebar */}
-            <div className="bg-indigo-700 flex-shrink-0 w-48 h-full">
+            <div className="bg-gray-50 flex-shrink-0 w-48 h-full">
                 < BusinessSideBar />
             </div>
              {/* Main Content */}
-            <div className="flex flex-col flex-grow p-4 overflow-y-auto bg-gray-50">
-                <div className="max-w-screen-lg mx-auto w-full">
+            <div className="flex flex-col flex-grow overflow-y-auto bg-gray-50">
+                <div className="max-w-screen-xl mx-auto w-full">
                     <CreateListing />
                 </div>
             </div>

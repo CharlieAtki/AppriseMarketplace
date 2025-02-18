@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BarChart2, Home, LogOut, Settings, Store } from "lucide-react";
+import { LogOut, Settings, Store } from "lucide-react";
 
 const AccountSettingsSideBar = () => {
     const navigate = useNavigate();
@@ -8,11 +8,9 @@ const AccountSettingsSideBar = () => {
 
     // Define environment variables
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
-
-    const handleHomeRedirection = () => navigate('/businessDashboard');
-    const businessAnalyticsRedirection = () => navigate('/businessAnalytics');
     const marketplaceRedirection = () => navigate('/marketplace');
 
+    const accountSettingsRedirection = () => navigate('/account-settings');
     const handleLogOut = async () => {
         try {
             const response = await fetch(`${backendUrl}/api/business-Auth/business-logout`, {
@@ -44,7 +42,7 @@ const AccountSettingsSideBar = () => {
             {/* Sidebar Header */}
             <div className={`mb-8 transition-opacity ${isExpanded ? "opacity-100" : "opacity-0 hidden"}`}>
                 <h3 className="text-lg font-semibold">Apprise Marketplace</h3>
-                <p className="text-sm font-light text-indigo-200">Business Management</p>
+                <p className="text-sm font-light text-indigo-200">Account Management</p>
             </div>
 
             {/* Navigation Links */}
@@ -52,24 +50,7 @@ const AccountSettingsSideBar = () => {
                 <ul className="space-y-4">
                     <li>
                         <button
-                            onClick={handleHomeRedirection}
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-700 transition"
-                        >
-                            <Home size={20} />
-                            {isExpanded && <span>Home</span>}
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            onClick={businessAnalyticsRedirection}
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-700 transition"
-                        >
-                            <BarChart2 size={20} />
-                            {isExpanded && <span>Analytics</span>}
-                        </button>
-                    </li>
-                    <li>
-                        <button
+                            onClick={accountSettingsRedirection}
                             className="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-700 transition"
                         >
                             <Settings size={20} />

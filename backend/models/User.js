@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 
 // Define a schema for a User (Customer & Businesses)
 const userSchema = new mongoose.Schema({
+    username: {
+        type: String,
+    },
     email: {
         type: String,
         required: true,

@@ -194,3 +194,40 @@ export const fetchCurrentUser = async (req, res) => {
         });
     }
 };
+
+export const updateUserDetails = async (req, res) => {
+    try {
+        const updates = {};
+
+        // Only include fields that were actually sent in the request
+        if (req.body.username) updates.username = req.body.username;
+        if (req.body.email) updates.email = req.body.email;
+        if (req.body.profilePicture) updates.profilePicture = req.body.profilePicture;
+        if (req.body.dateOfBirth) updates.dateOfBirth = req.body.dateOfBirth;
+
+        const user = await User.findOneAndUpdate(
+            { _id: req.session.user.id },
+            { $set: updates },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: "User not found and details not updated"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "User details updated successfully",
+            user
+        });
+
+    } catch (error) {
+        return res.status(400).send({
+            success: false,
+            message: error.message
+        });
+    }
+};

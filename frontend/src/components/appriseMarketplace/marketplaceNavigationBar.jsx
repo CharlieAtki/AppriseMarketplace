@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
-import { Menu, X, LogOut, Rocket, Home, Calendar, DoorOpen } from "lucide-react";
+import {Menu, X, Rocket, Home, Calendar, DoorOpen, Settings} from "lucide-react";
 
 const MarketplaceNavigationBar = ({ title, subtitle }) => {
     const location = useLocation();
@@ -11,6 +11,7 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
     const [currentUser, setCurrentUser] = useState(null); // Manages the current user loggedIn
     const [loading, setLoading] = useState(true); // Manages the loading state
     const [menuOpen, setMenuOpen] = useState(false); // Manages the menu state
+    const [isExpanded, setIsExpanded] = useState(false); // Manages if a user is hovering over the NavBar Component
 
     const getButtonClass = (path) => {
         return location.pathname === path
@@ -126,6 +127,8 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
     const businessDashboardRedirection = () => navigate('/businessDashboard');
     const becomeABusiness = () => navigate('/become-a-business');
 
+    const accountSettingsRedirection =  () => navigate('/account-settings');
+
     return (
         <section className="flex justify-between items-center px-6 py-6 relative">
             {/* Title Section */}
@@ -187,6 +190,22 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
                                             <div className="py-2 px-4 text-sm text-gray-700">
                                                 <p className="font-semibold text-gray-900">Signed in as</p>
                                                 <p className="text-gray-600">{currentUser?.email || "Unknown Email"}</p>
+                                            </div>
+
+                                            {/* Separator */}
+                                            <hr className="border-gray-300 my-2"/>
+
+                                            {/* Settings */}
+                                            <div>
+                                                <button
+                                                    onClick={() => {
+                                                        accountSettingsRedirection();
+                                                        setMenuOpen(false);
+                                                    }}
+                                                    className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none flex items-center gap-2"
+                                                >
+                                                    <Settings size={20}/> Settings
+                                                </button>
                                             </div>
 
                                             {/* Separator */}
@@ -271,6 +290,19 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
                                         className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none flex items-center gap-2"
                                     >
                                         <Calendar size={20}/> {getButtonText()}
+                                    </button>
+                                </div>
+
+                                {/* Settings */}
+                                <div>
+                                    <button
+                                        onClick={() => {
+                                            accountSettingsRedirection();
+                                            setMenuOpen(false);
+                                        }}
+                                        className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none flex items-center gap-2"
+                                    >
+                                        <Settings size={20}/> Settings
                                     </button>
                                 </div>
 

@@ -1,6 +1,6 @@
 import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {ArrowLeft, ArrowRight, MapPin, Users, Star, Briefcase, DollarSign, User} from "lucide-react";
+import {ArrowLeft, ArrowRight, MapPin, Users, Star, Briefcase, DollarSign, User, Image} from "lucide-react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
 
 const DestinationView = () => {
@@ -147,11 +147,16 @@ const DestinationView = () => {
 
                             {/* Host Information */}
                             <div className="flex items-center space-x-4 mb-4">
-                                <img
-                                    src={selectedDestinationHost?.profilePicture || "/default-avatar.png"}
-                                    alt={selectedDestinationHost?.username || "Host"}
-                                    className="w-14 h-14 rounded-full border border-gray-200"
-                                />
+                                <div
+                                    className="w-16 h-16 rounded-full overflow-hidden border flex items-center justify-center bg-gray-200">
+                                    {selectedDestinationHost?.profilePicture ? (
+                                        <img src={selectedDestinationHost?.profilePicture}
+                                             alt={selectedDestinationHost?.username || "Host"}
+                                             className="w-full h-full object-cover"/>
+                                    ) : (
+                                        <Image size={28} className="text-gray-500"/>
+                                    )}
+                                </div>
                                 <div>
                                     <h2 className="text-lg font-semibold text-gray-800 flex items-center">
                                         <User className="w-5 h-5 text-indigo-700 mr-2"/>
