@@ -7,29 +7,6 @@ const AccountSettingsSideBar = ({ isExpanded, setIsExpanded }) => {
     // Define environment variables
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-    const handleHomeRedirection = () => navigate('/businessDashboard');
-    const businessAnalyticsRedirection = () => navigate('/businessAnalytics');
-    const marketplaceRedirection = () => navigate('/marketplace');
-
-    const handleLogOut = async () => {
-        try {
-            const response = await fetch(`${backendUrl}/api/business-Auth/business-logout`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-            });
-
-            if (response.ok) {
-                console.log("Logout successful");
-                navigate('/');
-            } else {
-                console.error('Logout failed');
-            }
-        } catch (error) {
-            console.error('Logout error', error);
-        }
-    };
-
     // The CSS below means that when the sidebar is hovered over, it will expand
     return (
         <div
@@ -95,7 +72,7 @@ const AccountSettingsSideBar = ({ isExpanded, setIsExpanded }) => {
                                     headers: {'Content-Type': 'application/json'},
                                     credentials: 'include',
                                 });
-                                navigate('/');
+                                navigate('/customerAccountManagement');
                             } catch (error) {
                                 console.error('Logout error', error);
                             }

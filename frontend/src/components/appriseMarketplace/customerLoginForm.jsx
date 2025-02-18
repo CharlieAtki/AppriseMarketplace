@@ -96,7 +96,7 @@ const CustomerLoginForm = () => {
                                     required
                                     value={input.email}
                                     onChange={handleChange}
-                                    className={`block w-full rounded-md px-4 py-2 text-gray-900 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-lg ${emailInputError || emailInputValidityError ? 'border-red-500' : 'border-gray-300'}`}
+                                    className={`block w-full rounded-md px-4 py-2 text-gray-900 border-2 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-lg ${emailInputError || emailInputValidityError ? 'border-red-500' : 'border-gray-300'}`}
                                 />
                                 {emailInputError && <p className="text-red-500 text-sm mt-1">Email already taken</p>}
                                 {emailInputValidityError && <p className="text-red-500 text-sm mt-1">Invalid email</p>}
@@ -115,7 +115,7 @@ const CustomerLoginForm = () => {
                                     required
                                     value={input.password}
                                     onChange={handleChange}
-                                    className={`block w-full rounded-md px-4 py-2 text-gray-900 outline-gray-700 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-lg ${passwordInputError || passwordInputLengthError ? 'border-red-500' : 'border-gray-300'}`}
+                                    className={`block w-full rounded-md px-4 py-2 text-gray-900 border-2 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-lg ${passwordInputError || passwordInputLengthError ? 'border-red-500' : 'border-gray-300'}`}
                                 />
                                 {passwordInputLengthError &&
                                     <p className="text-red-500 text-sm mt-1">Password must be at least 8 characters</p>}
