@@ -132,7 +132,8 @@ const AccountInfoInputForm = ({ onListingSubmit }) => {
     };
 
     return (
-        <div className="w-full m-4 border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow duration-300 p-6 bg-white">
+        <div
+            className="flex flex-col w-full h-full border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow duration-300 p-6 bg-white overflow-y-auto">
             <h2 className="text-2xl font-bold text-indigo-700 mb-4">
                 Account Settings
             </h2>
@@ -153,10 +154,11 @@ const AccountInfoInputForm = ({ onListingSubmit }) => {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="flex flex-col flex-grow">
                 {/* Profile Picture Section */}
                 <div className="flex items-center space-x-4 mb-6">
-                    <div className="w-24 h-24 rounded-full overflow-hidden border flex items-center justify-center bg-gray-200">
+                    <div
+                        className="w-24 h-24 rounded-full overflow-hidden border flex items-center justify-center bg-gray-200">
                         {(previewImage || formData.profilePicture) ? (
                             <img
                                 src={previewImage || formData.profilePicture}
@@ -181,57 +183,60 @@ const AccountInfoInputForm = ({ onListingSubmit }) => {
                     </div>
                 </div>
 
-                {/* Name Input */}
-                <div className="mb-4">
-                    <label htmlFor="name" className="block text-sm font-semibold text-gray-700">
-                        Full Name
-                    </label>
-                    <input
-                        type="text"
-                        id="name"
-                        value={formData.username}
-                        onChange={handleInputChange}
-                        className="mt-2 w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="Enter your full name"
-                    />
-                </div>
+                {/* Input Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
+                    {/* Name Input */}
+                    <div>
+                        <label htmlFor="name" className="block text-sm font-semibold text-gray-700">
+                            Full Name
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            value={formData.username}
+                            onChange={handleInputChange}
+                            className="mt-2 w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            placeholder="Enter your full name"
+                        />
+                    </div>
 
-                {/* Email Input */}
-                <div className="mb-4">
-                    <label htmlFor="email" className="block text-sm font-semibold text-gray-700">
-                        Email Address
-                    </label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="mt-2 w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="Enter your email"
-                    />
-                </div>
+                    {/* Email Input */}
+                    <div>
+                        <label htmlFor="email" className="block text-sm font-semibold text-gray-700">
+                            Email Address
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            className="mt-2 w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            placeholder="Enter your email"
+                        />
+                    </div>
 
-                {/* Date of Birth Input */}
-                <div className="mb-4">
-                    <label htmlFor="dateOfBirth" className="block text-sm font-semibold text-gray-700">
-                        Date of Birth
-                    </label>
-                    <input
-                        type="date"
-                        id="dateOfBirth"
-                        value={formData.dateOfBirth}
-                        onChange={handleInputChange}
-                        className="mt-2 w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
+                    {/* Date of Birth Input */}
+                    <div>
+                        <label htmlFor="dateOfBirth" className="block text-sm font-semibold text-gray-700">
+                            Date of Birth
+                        </label>
+                        <input
+                            type="date"
+                            id="dateOfBirth"
+                            value={formData.dateOfBirth}
+                            onChange={handleInputChange}
+                            className="mt-2 w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                    </div>
                 </div>
 
                 {/* Submit Button */}
-                <div className="mt-6 flex justify-end">
+                <div className="mt-auto flex justify-end">
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className={`px-6 py-2 bg-indigo-600 text-white rounded-lg transition-colors duration-300 
-                            ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-indigo-700'}`}
+                        className={`px-6 py-3 bg-indigo-600 text-white rounded-lg transition-colors duration-300 w-full md:w-auto
+                    ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-indigo-700'}`}
                     >
                         {isSubmitting ? 'Saving...' : 'Save Changes'}
                     </button>

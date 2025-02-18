@@ -110,7 +110,7 @@ const DestinationView = () => {
                     {/* Image and Highlights section (Making it a HStack */}
                     <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-8 h-auto lg:h-screen">
                         {/* Main Image Section - Occupies 3/4 of the HStack */}
-                        <div className="flex-[3] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-3 gap-2 sm:gap-4 h-auto lg:h-full">
+                        <div className="flex-[5] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-3 gap-2 sm:gap-4 h-auto lg:h-full">
                             <div className="col-span-1 sm:col-span-2 row-span-2">
                                 <img
                                     src={image}
@@ -142,8 +142,7 @@ const DestinationView = () => {
                         </div>
 
                         {/* Information Panel */}
-                        <div
-                            className="flex-[1] p-6 border border-gray-300 rounded-2xl shadow-lg bg-white w-full h-full lg:w-auto">
+                        <div className="flex-[2] p-6 border border-gray-300 rounded-2xl shadow-lg bg-white w-full h-full lg:w-auto">
 
                             {/* Host Information */}
                             <div className="flex items-center space-x-4 mb-4">

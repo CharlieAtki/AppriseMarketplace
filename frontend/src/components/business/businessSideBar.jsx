@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BarChart2, Home, LogOut, Settings, Store } from "lucide-react";
 
-const AccountSettingsSideBar = () => {
+const AccountSettingsSideBar = ({ isExpanded, setIsExpanded }) => {
     const navigate = useNavigate();
-    const [isExpanded, setIsExpanded] = useState(false);
 
     // Define environment variables
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
@@ -52,27 +50,25 @@ const AccountSettingsSideBar = () => {
                 <ul className="space-y-4">
                     <li>
                         <button
-                            onClick={handleHomeRedirection}
+                            onClick={() => navigate('/businessDashboard')}
                             className="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-700 transition"
                         >
-                            <Home size={20} />
+                            <Home size={20}/>
                             {isExpanded && <span>Home</span>}
                         </button>
                     </li>
                     <li>
                         <button
-                            onClick={businessAnalyticsRedirection}
+                            onClick={() => navigate('/businessAnalytics')}
                             className="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-700 transition"
                         >
-                            <BarChart2 size={20} />
+                            <BarChart2 size={20}/>
                             {isExpanded && <span>Analytics</span>}
                         </button>
                     </li>
                     <li>
-                        <button
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-700 transition"
-                        >
-                            <Settings size={20} />
+                        <button className="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-700 transition">
+                            <Settings size={20}/>
                             {isExpanded && <span>Settings</span>}
                         </button>
                     </li>
@@ -80,23 +76,33 @@ const AccountSettingsSideBar = () => {
             </nav>
 
             {/* Logout Section */}
-            {/* When expanded, the text explaining the images will appear */}
             <div className="mt-6 space-y-4">
                 <div>
                     <button
-                        onClick={marketplaceRedirection}
+                        onClick={() => navigate('/marketplace')}
                         className="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-700 transition"
                     >
-                        <Store size={20} />
+                        <Store size={20}/>
                         {isExpanded && <span>Marketplace</span>}
                     </button>
                 </div>
                 <div>
                     <button
-                        onClick={handleLogOut}
+                        onClick={async () => {
+                            try {
+                                await fetch(`${backendUrl}/api/business-Auth/business-logout`, {
+                                    method: 'GET',
+                                    headers: {'Content-Type': 'application/json'},
+                                    credentials: 'include',
+                                });
+                                navigate('/');
+                            } catch (error) {
+                                console.error('Logout error', error);
+                            }
+                        }}
                         className="flex items-center gap-3 p-2 rounded-lg hover:bg-red-600 transition"
                     >
-                        <LogOut size={20} />
+                        <LogOut size={20}/>
                         {isExpanded && <span>Logout</span>}
                     </button>
                 </div>

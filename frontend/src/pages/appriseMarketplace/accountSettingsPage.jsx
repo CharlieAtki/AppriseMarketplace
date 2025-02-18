@@ -1,11 +1,13 @@
 import AccountSettingsSideBar from "../../components/appriseMarketplace/accountSettingsSideBar";
 import AccountInfoInputForm from "../../components/appriseMarketplace/accountInfoInputForm";
 import {useNavigate} from "react-router-dom";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 const AccountSettingsPage = () => {
     const navigate = useNavigate();
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
+    const [isExpanded, setIsExpanded] = useState(false);
 
     // Logic for user authentication. This makes sure the user has loggedIn
     useEffect(() => {
@@ -38,16 +40,13 @@ const AccountSettingsPage = () => {
 
     return (
         <div className="flex w-full h-screen bg-gray-50">
-
             {/* Sidebar */}
-            <div className="bg-gray-50 flex-shrink-0 w-48 h-full">
-                <AccountSettingsSideBar/>
-            </div>
+            <AccountSettingsSideBar isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
 
-            {/* Details Input */}
-            <div className="flex flex-col flex-grow overflow-y-auto bg-gray-50">
-                <div className="max-w-screen-xl mx-auto w-full">
-                    <AccountInfoInputForm/>
+            {/* Details Input (flex-grow ensures it uses remaining space dynamically) */}
+            <div className="flex flex-col flex-grow overflow-y-auto bg-gray-50 transition-all duration-300">
+                <div className="max-w-screen-xl mx-auto w-full p-6">
+                    <AccountInfoInputForm />
                 </div>
             </div>
         </div>

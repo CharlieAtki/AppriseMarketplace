@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogOut, Settings, Store } from "lucide-react";
 
-const AccountSettingsSideBar = () => {
+const AccountSettingsSideBar = ({ isExpanded, setIsExpanded }) => {
     const navigate = useNavigate();
-    const [isExpanded, setIsExpanded] = useState(false);
 
     // Define environment variables
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
@@ -53,7 +51,7 @@ const AccountSettingsSideBar = () => {
                             onClick={accountSettingsRedirection}
                             className="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-700 transition"
                         >
-                            <Settings size={20} />
+                            <Settings size={20}/>
                             {isExpanded && <span>Settings</span>}
                         </button>
                     </li>
@@ -61,14 +59,13 @@ const AccountSettingsSideBar = () => {
             </nav>
 
             {/* Logout Section */}
-            {/* When expanded, the text explaining the images will appear */}
             <div className="mt-6 space-y-4">
                 <div>
                     <button
                         onClick={marketplaceRedirection}
                         className="flex items-center gap-3 p-2 rounded-lg hover:bg-indigo-700 transition"
                     >
-                        <Store size={20} />
+                        <Store size={20}/>
                         {isExpanded && <span>Marketplace</span>}
                     </button>
                 </div>
@@ -77,7 +74,7 @@ const AccountSettingsSideBar = () => {
                         onClick={handleLogOut}
                         className="flex items-center gap-3 p-2 rounded-lg hover:bg-red-600 transition"
                     >
-                        <LogOut size={20} />
+                        <LogOut size={20}/>
                         {isExpanded && <span>Logout</span>}
                     </button>
                 </div>

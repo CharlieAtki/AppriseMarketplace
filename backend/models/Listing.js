@@ -15,7 +15,7 @@ const listingSchema = new mongoose.Schema({
         coordinates: { lat: Number, lng: Number }
     },
     price: { type: Number, required: true },
-    currency: { type: String, default: "USD" },
+    currency: { type: String, default: "GBP" },
     images: [{ type: String }], // Array of image URLs
     services_offered: [{ type: String }], // ["Snorkeling", "City Tour", etc.]
     max_guests: { type: Number, required: true },

@@ -12,7 +12,7 @@ const CreateListing = ({ onListingSubmit }) => {
         highlights: "",
         location: { country: "", city: "", lat: "", lng: "" },
         price: "",
-        currency: "USD",
+        currency: "GBP",
         images: [],
         services_offered: "",
         max_guests: "",

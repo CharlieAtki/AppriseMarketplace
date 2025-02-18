@@ -1,11 +1,13 @@
 import {useNavigate} from "react-router-dom";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import BusinessSideBar from "../../components/business/businessSideBar";
 import CreateListing from "../../components/business/CreateListing";
 
 const BusinessDashboard = () => {
     const navigate = useNavigate();
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    
+    const [isExpanded, setIsExpanded] = useState(false); // Move state here
 
     // Logic for user authentication. This makes sure the user has loggedIn
     useEffect(() => {
@@ -37,15 +39,14 @@ const BusinessDashboard = () => {
     }, [navigate, backendUrl]);
 
     return (
-        <div className="flex w-full h-screen">
+        <div className="flex w-full h-screen bg-gray-50">
             {/* Sidebar */}
-            <div className="bg-gray-50 flex-shrink-0 w-48 h-full">
-                < BusinessSideBar />
-            </div>
-             {/* Main Content */}
-            <div className="flex flex-col flex-grow overflow-y-auto bg-gray-50">
-                <div className="max-w-screen-xl mx-auto w-full">
-                    <CreateListing />
+            <BusinessSideBar isExpanded={isExpanded} setIsExpanded={setIsExpanded}/>
+
+            {/* Main Content */}
+            <div className="flex flex-col flex-grow overflow-y-auto bg-gray-50 transition-all duration-300">
+                <div className="max-w-screen-xl mx-auto w-full p-6">
+                    <CreateListing/>
                 </div>
             </div>
         </div>

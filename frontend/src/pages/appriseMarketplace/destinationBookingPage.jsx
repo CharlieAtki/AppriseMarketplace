@@ -228,31 +228,7 @@ const DestinationBookingPage = () => {
                     {/* Destination Details & Booking Section  */}
                     <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-8 h-full">
                         {/* Destination Features Section */}
-                        <div className="p-6 border border-gray-300 rounded-2xl shadow-lg bg-white w-full lg:w-auto hover:shadow-2xl transition-shadow">
-
-                            {/* Host Information */}
-                            <div className="flex items-center space-x-4 mb-4">
-                                <div
-                                    className="w-16 h-16 rounded-full overflow-hidden border flex items-center justify-center bg-gray-200">
-                                    {selectedDestinationHost?.profilePicture ? (
-                                        <img src={selectedDestinationHost?.profilePicture}
-                                             alt={selectedDestinationHost?.username || "Host"}
-                                             className="w-full h-full object-cover"/>
-                                    ) : (
-                                        <Image size={28} className="text-gray-500"/>
-                                    )}
-                                </div>
-                                <div>
-                                    <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-                                        <User className="w-5 h-5 text-indigo-700 mr-2"/>
-                                        {selectedDestinationHost?.username || "Unknown Host"}
-                                    </h2>
-                                    <p className="text-gray-500 text-sm">{selectedDestinationHost?.email || "Email not available"}</p>
-                                </div>
-                            </div>
-
-                            <hr className="border-t border-gray-300 my-4"/>
-
+                        <div className="flex-[3] p-6 border border-gray-300 rounded-2xl shadow-lg bg-white w-full lg:w-auto hover:shadow-2xl transition-shadow">
                             {/* Service Name */}
                             <div className="mb-4">
                                 <h1 className="text-2xl font-bold text-indigo-700">{name}</h1>
@@ -334,8 +310,7 @@ const DestinationBookingPage = () => {
                         </div>
 
                         {/* Customer Details Input section */}
-                        <div
-                            className="flex-[2] flex flex-col h-auto w-full lg:h-full p-4 border border-gray-300 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow">
+                        <div className="flex-[2] flex flex-col h-auto w-full lg:h-full p-4 border border-gray-300 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow">
                             <h2 className="text-3xl font-bold text-indigo-700">
                                 Booking Details:
                             </h2>
