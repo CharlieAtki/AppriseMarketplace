@@ -32,85 +32,73 @@ const HomePageCommentSection = () => {
             </div>
             <div
                 className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-start lg:gap-y-10">
+                {/* Intro Section */}
                 <div
                     className="lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
                     <div className="lg:pr-4">
                         <div className="lg:max-w-lg">
-                            <p className="text-base/7 font-semibold text-indigo-600">Deploy faster</p>
+                            <p className="text-base/7 font-semibold text-indigo-600">
+                                Find your ideal getaway
+                            </p>
                             <h1 className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl">
-                                A better workflow
+                                Discover Your Perfect Stay
                             </h1>
                             <p className="mt-6 text-xl/8 text-gray-700">
-                                Aliquet nec orci mattis amet quisque ullamcorper neque, nibh sem. At arcu, sit dui mi,
-                                nibh dui, diam
-                                eget aliquam. Quisque id at vitae feugiat egestas.
+                                At Apprise Marketplace, explore a curated selection of unique homes, cozy apartments,
+                                and luxurious retreats. Every listing is handpicked to ensure comfort, quality, and a
+                                memorable travel experience.
                             </p>
                         </div>
                     </div>
                 </div>
+                {/* Image Section */}
                 <div
                     className="-mt-12 -ml-12 p-12 lg:sticky lg:top-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:overflow-hidden">
                     <img
-                        alt=""
-                        src="https://tailwindui.com/plus-assets/img/component-images/dark-project-app-screenshot.png"
-                        className="w-[48rem] max-w-none rounded-xl bg-gray-900 ring-1 shadow-xl ring-gray-400/10 sm:w-[57rem]"
+                        alt="App screenshot"
+                        src="https://res.cloudinary.com/dtjcj2krm/image/upload/v1740045850/Screenshot_2025-02-20_at_10.03.40_t9bkki.png"
+                        className="w-[48rem] max-w-none rounded-xl bg-gray-900 ring-1 shadow-xl ring-gray-400/10 sm:w-[45rem]"
                     />
                 </div>
+                {/* Features and Details Section */}
                 <div
                     className="lg:col-span-2 lg:col-start-1 lg:row-start-2 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
                     <div className="lg:pr-4">
                         <div className="max-w-xl text-base/7 text-gray-700 lg:max-w-lg">
                             <p>
-                                Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris
-                                semper sed amet
-                                vitae sed turpis id. Id dolor praesent donec est. Odio penatibus risus viverra tellus
-                                varius sit neque
-                                erat velit. Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim.
-                                Mattis mauris
-                                semper sed amet vitae sed turpis id.
+                                Our platform offers a seamless and secure booking experience for discerning travelers
+                                seeking that perfect stay.
                             </p>
                             <ul role="list" className="mt-8 space-y-8 text-gray-600">
                                 <li className="flex gap-x-3">
-                                    <ArrowLeft aria-hidden="true"
-                                               className="mt-1 size-5 flex-none text-indigo-600"/>
+                                    <ArrowLeft aria-hidden="true" className="mt-1 size-5 flex-none text-indigo-600"/>
                                     <span>
-                                        <strong className="font-semibold text-gray-900">Push to deploy.</strong> Lorem ipsum, dolor sit amet
-                                        consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate
-                                        blanditiis ratione.
-                                    </span>
+                <strong className="font-semibold text-gray-900">Curated Listings.</strong> Browse handpicked properties that meet high standards for quality and comfort.
+              </span>
                                 </li>
                                 <li className="flex gap-x-3">
-                                    <Lock aria-hidden="true"
-                                                    className="mt-1 size-5 flex-none text-indigo-600"/>
+                                    <Lock aria-hidden="true" className="mt-1 size-5 flex-none text-indigo-600"/>
                                     <span>
-                                        <strong className="font-semibold text-gray-900">SSL certificates.</strong> Anim aute id magna aliqua
-                                        ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.
-                                    </span>
+                <strong className="font-semibold text-gray-900">Verified Hosts.</strong> Stay with confidence knowing every host is thoroughly verified.
+              </span>
                                 </li>
                                 <li className="flex gap-x-3">
                                     <ServerIcon aria-hidden="true" className="mt-1 size-5 flex-none text-indigo-600"/>
                                     <span>
-                                        <strong className="font-semibold text-gray-900">Database backups.</strong> Ac tincidunt sapien
-                                        vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.
-                                    </span>
+                <strong className="font-semibold text-gray-900">Secure Bookings.</strong> Enjoy a smooth, secure, and transparent booking process.
+              </span>
                                 </li>
                             </ul>
                             <p className="mt-8">
-                                Et vitae blandit facilisi magna lacus commodo. Vitae sapien duis odio id et. Id blandit
-                                molestie auctor
-                                fermentum dignissim. Lacus diam tincidunt ac cursus in vel. Mauris varius vulputate et
-                                ultrices hac
-                                adipiscing egestas. Iaculis convallis ac tempor et ut. Ac lorem vel integer orci.
+                                Discover, book, and experience a world of unique stays designed to make your journey
+                                unforgettable.
                             </p>
-                            <h2 className="mt-16 text-2xl font-bold tracking-tight text-gray-900">No server? No problem.</h2>
+                            <h2 className="mt-16 text-2xl font-bold tracking-tight text-gray-900">
+                                Your journey starts here
+                            </h2>
                             <p className="mt-6">
-                                Id orci tellus laoreet id ac. Dolor, aenean leo, ac etiam consequat in. Convallis arcu
-                                ipsum urna nibh.
-                                Pharetra, euismod vitae interdum mauris enim, consequat vulputate nibh. Maecenas
-                                pellentesque id sed
-                                tellus mauris, ultrices mauris. Tincidunt enim cursus ridiculus mi. Pellentesque nam sed
-                                nullam sed diam
-                                turpis ipsum eu a sed convallis diam.
+                                Whether planning a weekend escape or a month-long adventure, Apprise Marketplace makes
+                                it easy to book the perfect stay—anywhere, anytime.
                             </p>
                         </div>
                     </div>

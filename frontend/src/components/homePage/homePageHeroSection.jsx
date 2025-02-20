@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Dialog, DialogPanel } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Rocket, Globe, LineChart, LogIn } from 'lucide-react';
+import {useNavigate} from "react-router-dom";
 
 
 const navigation = [
@@ -13,14 +14,16 @@ const navigation = [
 ];
 
 const HomePageHeroSection = () => {
-      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const navigate = useNavigate();
+
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     return (
         <div className="relative min-h-screen">
             {/* Background image container */}
             <div className="absolute inset-0 z-0 bg-cover bg-center filter blur-3xl"
                  style={{
-                     backgroundImage: 'url(https://res.cloudinary.com/dtjcj2krm/image/upload/t_gradientBGImage/v1739967855/Screenshot_2025-02-19_at_12.23.51_kpvtgl.png)',
+                     backgroundImage: 'url(https://res.cloudinary.com/dtjcj2krm/image/upload/v1739969615/Screenshot_2025-02-19_at_12.23.51_kpvtgl.png)',
                      backgroundSize: '110%' // Increase the size to zoom in
                  }}></div>
 
@@ -28,7 +31,7 @@ const HomePageHeroSection = () => {
             <header className="absolute inset-x-0 top-0 z-50">
                 <nav className="flex items-center justify-between p-6 lg:px-8">
                     <div className="flex lg:flex-1">
-                        <a href="#" className="text-lg font-semibold text-gray-900">Brand</a>
+                        <a href="#" className="text-lg font-semibold text-gray-900">Apprise Marketplace</a>
                     </div>
                     <div className="flex lg:hidden">
                         <button onClick={() => setMobileMenuOpen(true)} className="p-2 text-gray-700">
@@ -43,7 +46,7 @@ const HomePageHeroSection = () => {
                         ))}
                     </div>
                     <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                        <a href="#" className="text-sm font-semibold text-gray-900">
+                        <a href='/customerAccountManagement' className="text-sm font-semibold text-gray-900">
                             Log in →
                         </a>
                     </div>
@@ -69,24 +72,19 @@ const HomePageHeroSection = () => {
 
             {/* Content container */}
             <div className="relative flex flex-col items-center justify-center min-h-screen text-center px-6 z-10">
-                <div className="bg-white/70 p-4 rounded-lg shadow-lg">
-                    <p className="text-sm text-gray-600">
-                        Announcing our next round of funding. <a href="#" className="text-indigo-600 font-semibold">Read
-                        more →</a>
-                    </p>
-                </div>
                 <h1 className="mt-6 text-5xl font-bold text-gray-900 sm:text-7xl">
-                    Data to enrich your online business
+                    Find Stays That Feel Like Home
                 </h1>
                 <p className="mt-6 text-lg text-gray-600">
-                    Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.
+                    Discover unique places to stay, from cozy apartments to luxury retreats — anywhere in the world.
                 </p>
                 <div className="mt-8 flex items-center space-x-4">
                     <button
+                        onClick={() => navigate('/customerAccountManagement')}
                         className="bg-indigo-600 text-white px-5 py-3 text-sm font-semibold rounded-md shadow-md hover:bg-indigo-500">
                         Get started
                     </button>
-                    <a href="#" className="text-sm font-semibold text-gray-900">Learn more →</a>
+                    <a href='/customerAccountManagement' className="text-sm font-semibold text-gray-900">Explore Stays →</a>
                 </div>
             </div>
         </div>
