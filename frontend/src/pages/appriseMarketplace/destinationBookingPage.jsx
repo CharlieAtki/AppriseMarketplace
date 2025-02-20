@@ -1,5 +1,5 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
 import {
     Calendar,
@@ -40,6 +40,10 @@ const DestinationBookingPage = () => {
 
     // UseSates for calculating total booking price
     const [totalPrice, setTotalPrice] = useState(0); // Total price state
+
+    // UseSates for managing the scroll user-feedback
+    const [scrollProgress, setScrollProgress] = useState(0);
+    const [scrollVisible, setScrollVisible] = useState(false);
 
     const isDateBooked = (date) => bookedDates.includes(date);
 
@@ -166,6 +170,21 @@ const DestinationBookingPage = () => {
         }
     };
 
+    // Handle scroll progress and button visibility
+    useEffect(() => {
+        const handleScroll = () => {
+            // Calculate scroll progress
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            setScrollProgress(scrolled);
+            setScrollVisible(winScroll > 500);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     // This checks if destination is either null or undefined.
     // In other words, it evaluates to true if no destination (due to the !state) is selected or the state doesn't have a destination
     if (!state?.destination) {
@@ -174,6 +193,15 @@ const DestinationBookingPage = () => {
 
     return (
         <div className="p-2">
+
+            {/* Progress Bar */}
+            <div className="fixed top-0 left-0 w-full h-1 z-50">
+                <div
+                    className="h-full bg-indigo-600 transition-all duration-150 ease-out"
+                    style={{ width: `${scrollProgress}%` }}
+                />
+            </div>
+
             <MarketplaceNavigationBar title="Apprise Marketplace" subtitle="Destination Details"/>
             {/* Image + Booking input section */}
             <div className="border-2 border-gray-300 rounded-2xl hover:shadow-2xl transition-shadow duration-300 p-4">
@@ -479,6 +507,28 @@ const DestinationBookingPage = () => {
 
                 </div>
             </div>
+
+            {/* Scroll to Top Button */}
+            <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className={`fixed bottom-8 right-8 bg-white/80 backdrop-blur-sm p-3 rounded-full 
+                    shadow-lg transition-all duration-300 hover:bg-white
+                    border border-gray-200 group
+                    ${scrollVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
+                aria-label="Scroll to top"
+            >
+                <svg
+                    className="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+            </button>
         </div>
     );
 };

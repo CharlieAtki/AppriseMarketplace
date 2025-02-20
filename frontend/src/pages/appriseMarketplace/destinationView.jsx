@@ -1,5 +1,5 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ArrowLeft, ArrowRight, MapPin, Users, Star, Briefcase, DollarSign, User, Image} from "lucide-react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
 
@@ -14,6 +14,10 @@ const DestinationView = () => {
     // the destructured variables (name, image, description, and highlights) will be undefined rather than causing an error.
     const { business_id, name, image, description, highlights, price, country, city, maxGuests, servicesOffered } = state?.destination || {};
     const selectedDestination = state?.destination || {};
+
+    // UseSates for managing the scroll user-feedback
+    const [scrollProgress, setScrollProgress] = useState(0);
+    const [scrollVisible, setScrollVisible] = useState(false);
 
     const [ selectedDestinationHost, setSelectedDestinationHost ] = useState([]);
 
@@ -78,6 +82,21 @@ const DestinationView = () => {
         fetchUser();
     }, []);
 
+    // Handle scroll progress and button visibility
+    useEffect(() => {
+        const handleScroll = () => {
+            // Calculate scroll progress
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            setScrollProgress(scrolled);
+            setScrollVisible(winScroll > 500);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     // This checks if destination is either null or undefined.
     // In other words, it evaluates to true if no destination (due to the !state) is selected or the state doesn't have a destination
     if (!state?.destination) {
@@ -86,6 +105,15 @@ const DestinationView = () => {
 
     return (
         <div className="p-2">
+
+            {/* Progress Bar */}
+            <div className="fixed top-0 left-0 w-full h-1 z-50">
+                <div
+                    className="h-full bg-indigo-600 transition-all duration-150 ease-out"
+                    style={{ width: `${scrollProgress}%` }}
+                />
+            </div>
+
             <MarketplaceNavigationBar title="Apprise Marketplace" subtitle="Destination Details" />
 
             <div className="p-4 border border-gray-300 rounded-2xl shadow-lg bg-white w-full lg:w-auto hover:shadow-2xl transition-shadow">
@@ -177,7 +205,7 @@ const DestinationView = () => {
                             {/* Description */}
                             <div className="mb-6">
                                 <h3 className="text-xl sm:text-2xl font-semibold text-indigo-700 mb-3">Description</h3>
-                                <p className="text-lg text-gray-700">{description}</p>
+                                <p className="text-md text-gray-700">{description}</p>
                             </div>
 
                             <hr className="border-t border-gray-300 my-4"/>
@@ -276,6 +304,28 @@ const DestinationView = () => {
                     </button>
                 </div>
             </div>
+
+            {/* Scroll to Top Button */}
+            <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className={`fixed bottom-8 right-8 bg-white/80 backdrop-blur-sm p-3 rounded-full 
+                    shadow-lg transition-all duration-300 hover:bg-white
+                    border border-gray-200 group
+                    ${scrollVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
+                aria-label="Scroll to top"
+            >
+                <svg
+                    className="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+            </button>
         </div>
     );
 };

@@ -5,6 +5,7 @@ import HomePageStayInspired from "../../components/homePage/homePageStayInspired
 import HomePageFAQ from "../../components/homePage/homePageFAQ";
 import React, { useEffect, useRef, useState } from 'react';
 
+// Function for calculating when the components should load into view
 const useInView = (options = {}, once = true) => {
     const [isInView, setIsInView] = useState(false);
     const elementRef = useRef(null);
