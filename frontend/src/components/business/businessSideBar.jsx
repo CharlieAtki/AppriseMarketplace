@@ -72,7 +72,7 @@ const AccountSettingsSideBar = ({ isExpanded, setIsExpanded }) => {
                                     headers: {'Content-Type': 'application/json'},
                                     credentials: 'include',
                                 });
-                                navigate('/customerAccountManagement');
+                                navigate('/');
                             } catch (error) {
                                 console.error('Logout error', error);
                             }

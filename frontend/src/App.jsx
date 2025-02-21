@@ -4,7 +4,7 @@ import './index.css';
 import Marketplace from "./pages/appriseMarketplace/marketplace";
 import CustomerAccountManagement from "./pages/appriseMarketplace/customerAccountManagement";
 import DestinationView from "./pages/appriseMarketplace/destinationView";
-import Homepage from "./pages/homePage/homePage";
+import Homepage from "./pages/landingPage/landingPage";
 import BusinessAccountManagement from "./pages/business/businessAccountManagement";
 import BusinessDashboard from "./pages/business/businessDashboard";
 import AnalyticsPage from "./pages/business/analyticsPage";
@@ -14,6 +14,7 @@ import BookingSuccessPage from "./pages/appriseMarketplace/bookingConfirmation";
 import BookingListPage from "./pages/appriseMarketplace/bookingListPage";
 import BookingDetails from "./pages/appriseMarketplace/bookingDetails";
 import AccountSettingsPage from "./pages/appriseMarketplace/accountSettingsPage";
+import AboutPage from "./pages/landingPage/aboutPage";
 
 const App = () => {
     return (
@@ -32,6 +33,7 @@ const App = () => {
                 <Route path="booking-list" element={<BookingListPage />} />
                 <Route path="booking-details" element={<BookingDetails />} />
                 <Route path="account-settings" element={<AccountSettingsPage />} />
+                <Route path="about" element={<AboutPage />} />
             </Routes>
         </Router>
     );

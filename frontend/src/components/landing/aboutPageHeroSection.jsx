@@ -2,11 +2,7 @@ import { useState } from 'react';
 import { X, Menu } from 'lucide-react';
 import {useNavigate} from "react-router-dom";
 
-const navigation = [
-  { name: 'Marketplace', href: '/marketplace' },
-];
-
-const HomePageHeroSection = () => {
+const AboutPageHeroSection = ({ navigation }) => {
     const navigate = useNavigate();
 
     const [menuOpen, setMenuOpen] = useState(false); // Manages the menu state
@@ -104,23 +100,14 @@ const HomePageHeroSection = () => {
             {/* Content container */}
             <div className="relative flex flex-col items-center justify-center min-h-screen text-center px-6 z-10">
                 <h1 className="mt-6 text-5xl font-bold text-gray-900 sm:text-7xl">
-                    Find Stays That Feel Like Home
+                    About Apprise
                 </h1>
                 <p className="mt-6 text-lg text-gray-600">
-                    Discover unique places to stay, from cozy apartments to luxury retreats — anywhere in the world.
+                    Discover the story behind Apprise and our vision for seamless travel experiences.
                 </p>
-                <div className="mt-8 flex items-center space-x-4">
-                    <button
-                        onClick={() => navigate('/customerAccountManagement')}
-                        className="bg-indigo-600 text-white px-5 py-3 text-sm font-semibold rounded-md shadow-md hover:bg-indigo-500">
-                        Get started
-                    </button>
-                    <a href='/customerAccountManagement' className="text-md font-semibold text-gray-900">Explore Stays
-                        →</a>
-                </div>
             </div>
         </div>
     );
 };
 
-export default HomePageHeroSection;
+export default AboutPageHeroSection;

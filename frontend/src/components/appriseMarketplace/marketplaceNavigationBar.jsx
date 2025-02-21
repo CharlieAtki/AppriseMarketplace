@@ -84,7 +84,7 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
             });
 
             if (response.ok) {
-                navigate('/customerAccountManagement');
+                navigate('/');
             } else {
                 console.error('Logout failed');
             }
