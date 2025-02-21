@@ -28,7 +28,25 @@ const HomePageHeroSection = () => {
             <header className="absolute inset-x-0 top-0 z-50">
                 <nav className="flex items-center justify-between p-6 lg:px-8">
                     <div className="flex lg:flex-1">
-                        <a href="#" className="text-lg font-semibold text-gray-900">Apprise Marketplace</a>
+                        <a href="/" className="group relative block w-fit" aria-label="Go to Homepage">
+                            {/* Logo Container */}
+                            <div
+                                className="relative transition-transform duration-300 group-hover:scale-110 will-change-transform">
+                                {/* Background Glow */}
+                                <div
+                                    className="absolute inset-0 bg-white/30 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                                {/* Logo Wrapper */}
+                                <div className="relative bg-white/90 backdrop-blur-md rounded-full p-2 shadow-xl">
+                                    <img
+                                        src="https://res.cloudinary.com/dtjcj2krm/image/upload/t_1To1/v1740137665/Screenshot_2025-02-21_at_11.19.24_npmcgm.png"
+                                        alt="Apprise Logo"
+                                        className="h-10 w-auto drop-shadow-md"
+                                        loading="lazy"
+                                    />
+                                </div>
+                            </div>
+                        </a>
                     </div>
                     <div className="flex lg:hidden">
                         <button onClick={() => setMobileMenuOpen(true)} className="p-2 text-gray-700">
@@ -52,7 +70,7 @@ const HomePageHeroSection = () => {
 
             <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
                 <DialogPanel className="fixed inset-y-0 right-0 w-full bg-white p-6">
-                    <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-gray-700">
+                <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-gray-700">
                         <XMarkIcon className="size-6"/>
                     </button>
                     <div className="mt-6">

@@ -76,6 +76,26 @@ const CustomerLoginForm = () => {
     return (
         <div className="flex min-h-screen items-center justify-center px-6 py-12 lg:px-8 bg-gray-50">
             <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl transition-all transform hover:scale-105 hover:shadow-2xl">
+                {/* Logo */}
+                <a href="/" className="group relative block w-fit mx-auto" aria-label="Go to Homepage">
+                    {/* Logo Container */}
+                    <div className="relative transition-transform duration-300 group-hover:scale-110">
+                        {/* Soft Glow Effect on Hover */}
+                        <div
+                            className="absolute inset-0 bg-indigo-200/30 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                        {/* Logo Wrapper */}
+                        <div className="relative bg-white/90 backdrop-blur-md rounded-full p-3 shadow-lg">
+                            <img
+                                src="https://res.cloudinary.com/dtjcj2krm/image/upload/t_1To1/v1740137665/Screenshot_2025-02-21_at_11.19.24_npmcgm.png"
+                                alt="Apprise Logo"
+                                className="h-12 w-12 drop-shadow-md"
+                                loading="lazy"
+                            />
+                        </div>
+                    </div>
+                </a>
+
                 <div className="text-center">
                     <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
                         Sign in to your account

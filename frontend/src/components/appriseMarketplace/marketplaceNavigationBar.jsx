@@ -131,14 +131,38 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
 
     return (
         <section className="flex justify-between items-center px-6 py-6 relative">
-            {/* Title Section */}
-            <div className="text-left">
-                <h1 className="font-extrabold text-indigo-700 text-2xl md:text-4xl">
-                    {title}
-                </h1>
-                <h4 className="text-gray-700 text-md md:text-xl">
-                    {subtitle}
-                </h4>
+
+            {/* Logo + Text Container */}
+            <div className="flex justify-between items-center gap-x-8">
+                {/* Logo */}
+                <a href="/" className="group relative block w-fit" aria-label="Go to Homepage">
+                    {/* Logo Container */}
+                    <div className="relative transition-transform duration-300 group-hover:scale-110">
+                        {/* Soft Glow Effect on Hover */}
+                        <div
+                            className="absolute inset-0 bg-indigo-200/30 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                        {/* Logo Wrapper */}
+                        <div className="relative bg-white/90 backdrop-blur-md rounded-full p-3 shadow-lg">
+                            <img
+                                src="https://res.cloudinary.com/dtjcj2krm/image/upload/t_1To1/v1740137665/Screenshot_2025-02-21_at_11.19.24_npmcgm.png"
+                                alt="Apprise Logo"
+                                className="h-12 w-12 drop-shadow-md"
+                                loading="lazy"
+                            />
+                        </div>
+                    </div>
+                </a>
+
+                {/* Title Section */}
+                <div className="text-left">
+                    <h1 className="font-extrabold text-indigo-700 text-2xl md:text-4xl">
+                        {title}
+                    </h1>
+                    <h4 className="text-gray-700 text-md md:text-xl">
+                        {subtitle}
+                    </h4>
+                </div>
             </div>
 
             {/* Desktop Buttons */}
