@@ -205,7 +205,7 @@ const DestinationView = () => {
                             {/* Description */}
                             <div className="mb-6">
                                 <h3 className="text-xl sm:text-2xl font-semibold text-indigo-700 mb-3">Description</h3>
-                                <p className="text-md text-gray-700">{description}</p>
+                                <p className="text-sm text-gray-700">{description}</p>
                             </div>
 
                             <hr className="border-t border-gray-300 my-4"/>

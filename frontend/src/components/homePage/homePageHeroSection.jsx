@@ -1,10 +1,6 @@
-
 import { useState } from 'react';
-import { Dialog, DialogPanel } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import {Rocket, Globe, LineChart, LogIn, X, Menu, Home, Calendar, Settings, DoorOpen} from 'lucide-react';
+import { X, Menu } from 'lucide-react';
 import {useNavigate} from "react-router-dom";
-
 
 const navigation = [
   { name: 'Marketplace', href: '/marketplace' },
@@ -43,7 +39,7 @@ const HomePageHeroSection = () => {
                                     <img
                                         src="https://res.cloudinary.com/dtjcj2krm/image/upload/t_1To1/v1740137665/Screenshot_2025-02-21_at_11.19.24_npmcgm.png"
                                         alt="Apprise Logo"
-                                        className="h-12 w-12 drop-shadow-md"
+                                        className="h-8 w-8 drop-shadow-md"
                                         loading="lazy"
                                     />
                                 </div>
