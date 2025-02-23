@@ -12,6 +12,7 @@ const listingSchema = new mongoose.Schema({
     location: {
         country: { type: String, required: true },
         city: { type: String },
+        address: { type: String },
         coordinates: { lat: Number, lng: Number }
     },
     price: { type: Number, required: true },
@@ -19,6 +20,7 @@ const listingSchema = new mongoose.Schema({
     images: [{ type: String }], // Array of image URLs
     services_offered: [{ type: String }], // ["Snorkeling", "City Tour", etc.]
     max_guests: { type: Number, required: true },
+    // Availability is not input anymore - currently redundant
     availability: [{
         date: { type: Date, required: true },
         slots: { type: Number, required: true }
@@ -26,4 +28,5 @@ const listingSchema = new mongoose.Schema({
 }, { timestamps: true, collection: 'listings' });
 
 const Listing = mongoose.model("Listing", listingSchema);
+
 export default Listing;

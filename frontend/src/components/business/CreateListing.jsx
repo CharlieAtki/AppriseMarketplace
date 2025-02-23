@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
 const CreateListing = ({ onListingSubmit }) => {
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
@@ -10,19 +11,76 @@ const CreateListing = ({ onListingSubmit }) => {
         name: "",
         description: "",
         highlights: "",
-        location: { country: "", city: "", lat: "", lng: "" },
+        location: { country: "", city: "", address: "", lat: "", lng: "" },
         price: "",
         currency: "GBP",
         images: [],
         services_offered: "",
         max_guests: "",
-        availability: [{ date: "", slots: "" }]
     });
 
     const [previewMode, setPreviewMode] = useState(false); // Controls whether the form is in preview mode.
     const [errorMessages, setErrorMessages] = useState([]); // Stores any validation errors.
     const [successMessage, setSuccessMessage] = useState(""); // Displays success feedback to the user.
     const [disabled, setDisabled] = useState(false); // Manages the buffer of the listing submission
+
+    const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+        libraries: ["places"]
+    });
+
+    // Create geocoder using useMemo to prevent unnecessary re-creation
+    const geocoder = useMemo(() => {
+        return isLoaded ? new window.google.maps.Geocoder() : null;
+    }, [isLoaded]);
+
+    // Function to handle address input and geocoding
+    // Modified to handle all address fields
+    const handleAddressChange = async (e) => {
+        const { name, value } = e.target;
+
+        // Update the form data first
+        setFormData(prevState => ({
+            ...prevState,
+            location: {
+                ...prevState.location,
+                [name.split('.')[1]]: value
+            }
+        }));
+
+        // Construct full address for geocoding
+        const updatedFormData = {
+            ...formData,
+            location: {
+                ...formData.location,
+                [name.split('.')[1]]: value
+            }
+        };
+
+        const fullAddress = `${updatedFormData.location.address}, ${updatedFormData.location.city}, ${updatedFormData.location.country}`.trim();
+
+        // Only geocode if we have some address information
+        if (fullAddress.length > 3) {
+            try {
+                const results = await geocoder.geocode({ address: fullAddress });
+
+                if (results.results && results.results[0]) {
+                    const { lat, lng } = results.results[0].geometry.location;
+
+                    setFormData(prevState => ({
+                        ...prevState,
+                        location: {
+                            ...prevState.location,
+                            lat: lat(),
+                            lng: lng()
+                        }
+                    }));
+                }
+            } catch (error) {
+                console.error("Geocoding error:", error);
+            }
+        }
+    };
 
     // Function to handle image upload
     const handleImageUpload = async (e) => {
@@ -65,19 +123,6 @@ const CreateListing = ({ onListingSubmit }) => {
         }
     };
 
-    const handleAvailabilityChange = (index, field, value) => {
-        const updatedAvailability = [...formData.availability];
-        updatedAvailability[index][field] = value;
-        setFormData({ ...formData, availability: updatedAvailability });
-    };
-
-    const addAvailability = () => {
-        setFormData({
-            ...formData,
-            availability: [...formData.availability, { date: "", slots: "" }]
-        });
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -91,17 +136,15 @@ const CreateListing = ({ onListingSubmit }) => {
         setErrorMessages([]);
         setSuccessMessage("");
 
-        // Validation
+        // Validation checks
         const errors = [];
         if (!formData.name) errors.push("Name is required");
         if (!formData.description) errors.push("Description is required");
-        if (!formData.location.country) errors.push("Country is required");
+        if (!formData.location.address) errors.push("Address is required");
+        if (!formData.location.lat || !formData.location.lng) errors.push("Location (lat, lng) is required");
         if (!formData.price || formData.price <= 0) errors.push("Valid price is required");
         if (!formData.max_guests || formData.max_guests <= 0) errors.push("Valid max guests number is required");
         if (!formData.highlights) errors.push("At least one highlight is required");
-        if (!formData.availability[0].date || !formData.availability[0].slots) {
-            errors.push("At least one availability slot is required");
-        }
 
         if (errors.length > 0) {
             setErrorMessages(errors);
@@ -119,9 +162,7 @@ const CreateListing = ({ onListingSubmit }) => {
                 body: JSON.stringify(formData)
             });
 
-            console.log("Response status:", response.status);
             const data = await response.json();
-            console.log("Response data:", data);
 
             if (response.ok) {
                 setSuccessMessage("Listing created successfully!");
@@ -129,13 +170,12 @@ const CreateListing = ({ onListingSubmit }) => {
                     name: "",
                     description: "",
                     highlights: "",
-                    location: { country: "", city: "", lat: "", lng: "" },
+                    location: { country: "", city: "", address: "", lat: "", lng: "" },
                     price: "",
                     currency: "GBP",
                     images: [],
                     services_offered: "",
                     max_guests: "",
-                    availability: [{ date: "", slots: "" }]
                 });
                 if (onListingSubmit) onListingSubmit();
             } else {
@@ -206,14 +246,6 @@ const CreateListing = ({ onListingSubmit }) => {
                                         Price: {formData.currency} {formData.price}
                                     </p>
                                     <p className="text-gray-600">Max Guests: {formData.max_guests}</p>
-                                    <p className="text-gray-600">Available Dates:</p>
-                                    <ul className="text-gray-600">
-                                        {formData.availability.map((slot, index) => (
-                                            <li key={index} className="mt-1">
-                                                📅 {slot.date} - {slot.slots} Slots
-                                            </li>
-                                        ))}
-                                    </ul>
                                 </div>
                             </div>
 
@@ -280,7 +312,7 @@ const CreateListing = ({ onListingSubmit }) => {
                             type="text"
                             name="location.country"
                             value={formData.location.country}
-                            onChange={handleChange}
+                            onChange={handleAddressChange}
                             className="border p-2 rounded-lg w-full"
                             placeholder="Country"
                             required
@@ -289,28 +321,44 @@ const CreateListing = ({ onListingSubmit }) => {
                             type="text"
                             name="location.city"
                             value={formData.location.city}
-                            onChange={handleChange}
+                            onChange={handleAddressChange}
                             className="border p-2 rounded-lg w-full"
                             placeholder="City"
                         />
+
                         <input
                             type="text"
-                            name="location.lat"
-                            value={formData.location.lat}
-                            onChange={handleChange}
+                            name="location.address"
+                            value={formData.location.address}
+                            onChange={handleAddressChange}
                             className="border p-2 rounded-lg w-full"
-                            placeholder="Latitude"
-                            required
+                            placeholder="Enter Address"
                         />
-                        <input
-                            type="text"
-                            name="location.lng"
-                            value={formData.location.lng}
-                            onChange={handleChange}
-                            className="border p-2 rounded-lg w-full"
-                            placeholder="Longitude"
-                            required
-                        />
+
+                        {/* Google Map */}
+                        <div className="w-full h-[400px]">
+                            {isLoaded ? (
+                                <GoogleMap
+                                    mapContainerStyle={{ width: "100%", height: "100%" }}
+                                    center={{
+                                        lat: parseFloat(formData.location.lat) || 51.5074,
+                                        lng: parseFloat(formData.location.lng) || -0.1278
+                                    }}
+                                    zoom={13}
+                                >
+                                    {formData.location.lat && formData.location.lng && (
+                                        <Marker
+                                            position={{
+                                                lat: parseFloat(formData.location.lat),
+                                                lng: parseFloat(formData.location.lng)
+                                            }}
+                                        />
+                                    )}
+                                </GoogleMap>
+                            ) : (
+                                <p>Loading map...</p>
+                            )}
+                        </div>
 
                         <label className="text-lg font-semibold text-gray-700">Price</label>
                         <input
@@ -341,32 +389,6 @@ const CreateListing = ({ onListingSubmit }) => {
                             className="border p-2 rounded-lg"
                             required
                         />
-
-                        <label className="text-lg font-semibold text-gray-700">Availability</label>
-                        {formData.availability.map((slot, index) => (
-                            <div key={index} className="flex gap-4">
-                                <input
-                                    type="date"
-                                    value={slot.date}
-                                    onChange={(e) => handleAvailabilityChange(index, 'date', e.target.value)}
-                                    className="border p-2 rounded-lg flex-1"
-                                />
-                                <input
-                                    type="number"
-                                    value={slot.slots}
-                                    onChange={(e) => handleAvailabilityChange(index, 'slots', e.target.value)}
-                                    className="border p-2 rounded-lg w-24"
-                                    placeholder="Slots"
-                                />
-                            </div>
-                        ))}
-                        <button
-                            type="button"
-                            onClick={addAvailability}
-                            className="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg mt-2 hover:bg-gray-300 transition-colors"
-                        >
-                            Add More Dates
-                        </button>
 
                         <div className="flex gap-4 mt-6">
                             <button

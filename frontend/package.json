@@ -5,6 +5,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
+    "@react-google-maps/api": "^2.20.6",
     "autoprefixer": "^10.4.20",
     "cra-template": "1.2.0",
     "framer-motion": "^12.0.6",

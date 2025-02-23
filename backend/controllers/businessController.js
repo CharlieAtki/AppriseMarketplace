@@ -200,10 +200,6 @@ export const roleCheck = async (req, res) => {
 
 // Api logic for formating and saving the listing information to the MongoDB listings collection
 export const listingCreation = async (req, res) => {
-    console.log("Received listing creation request");
-    console.log("Request body:", req.body);
-    console.log("Session:", req.session);
-
     // Checking for session - User must be loggedIn to create a listing
     if (!req.session.user || !req.session.user.id) {
         console.log("No valid session found");
