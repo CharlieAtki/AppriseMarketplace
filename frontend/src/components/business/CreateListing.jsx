@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { useJsApiLoader } from "@react-google-maps/api";
+import ListingMap from "../appriseMarketplace/googleMap";
 
-const CreateListing = ({ onListingSubmit }) => {
+const CreateListing = () => {
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
     const cloudinaryUrl = process.env.REACT_APP_CLOUDINARY_URL;
     const uploadPreset = process.env.REACT_APP_UPLOAD_PRESET;
@@ -126,33 +127,50 @@ const CreateListing = ({ onListingSubmit }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Prevent multiple submissions
         if (disabled) {
             return;
         }
-        setDisabled(true); // Disable button
-
-        // Clear previous messages
+        setDisabled(true);
         setErrorMessages([]);
         setSuccessMessage("");
 
-        // Validation checks
-        const errors = [];
-        if (!formData.name) errors.push("Name is required");
-        if (!formData.description) errors.push("Description is required");
-        if (!formData.location.address) errors.push("Address is required");
-        if (!formData.location.lat || !formData.location.lng) errors.push("Location (lat, lng) is required");
-        if (!formData.price || formData.price <= 0) errors.push("Valid price is required");
-        if (!formData.max_guests || formData.max_guests <= 0) errors.push("Valid max guests number is required");
-        if (!formData.highlights) errors.push("At least one highlight is required");
-
-        if (errors.length > 0) {
-            setErrorMessages(errors);
-            setDisabled(false); // Re-enable button (the input was falsy)
-            return;
-        }
+        // First ensure we have the latest coordinates
+        const fullAddress = `${formData.location.address}, ${formData.location.city}, ${formData.location.country}`.trim();
 
         try {
+            // Get coordinates right before submission
+            if (fullAddress && geocoder) {
+                const results = await geocoder.geocode({ address: fullAddress });
+
+                if (results.results && results.results[0]) {
+                    const { lat, lng } = results.results[0].geometry.location;
+                    // Update formData with the latest coordinates
+                    formData.location.lat = lat();
+                    formData.location.lng = lng();
+                } else {
+                    setErrorMessages(['Could not find coordinates for the provided address']);
+                    setDisabled(false);
+                    return;
+                }
+            }
+
+            // Validation checks
+            const errors = [];
+            if (!formData.name) errors.push("Name is required");
+            if (!formData.description) errors.push("Description is required");
+            if (!formData.location.address) errors.push("Address is required");
+            if (!formData.location.lat || !formData.location.lng) errors.push("Location coordinates could not be determined");
+            if (!formData.price || formData.price <= 0) errors.push("Valid price is required");
+            if (!formData.max_guests || formData.max_guests <= 0) errors.push("Valid max guests number is required");
+            if (!formData.highlights) errors.push("At least one highlight is required");
+
+            if (errors.length > 0) {
+                setErrorMessages(errors);
+                setDisabled(false);
+                return;
+            }
+
+            // Submit to backend
             const response = await fetch(`${backendUrl}/api/business-Auth/create-listing`, {
                 method: "POST",
                 headers: {
@@ -166,18 +184,7 @@ const CreateListing = ({ onListingSubmit }) => {
 
             if (response.ok) {
                 setSuccessMessage("Listing created successfully!");
-                setFormData({
-                    name: "",
-                    description: "",
-                    highlights: "",
-                    location: { country: "", city: "", address: "", lat: "", lng: "" },
-                    price: "",
-                    currency: "GBP",
-                    images: [],
-                    services_offered: "",
-                    max_guests: "",
-                });
-                if (onListingSubmit) onListingSubmit();
+                // ... rest of success handling ...
             } else {
                 console.error("Error response:", data);
                 setErrorMessages([data.message || "Error creating listing"]);
@@ -187,10 +194,9 @@ const CreateListing = ({ onListingSubmit }) => {
             setErrorMessages(["There was an error while submitting the form. Please try again."]);
         }
 
-        // Adding a buffer to prevent multiple listing submissions by user.
         setTimeout(() => {
             setDisabled(false);
-        }, 10000); // 10-second delay before re-enabling
+        }, 10000);
     };
 
     return (
@@ -337,27 +343,11 @@ const CreateListing = ({ onListingSubmit }) => {
 
                         {/* Google Map */}
                         <div className="w-full h-[400px]">
-                            {isLoaded ? (
-                                <GoogleMap
-                                    mapContainerStyle={{ width: "100%", height: "100%" }}
-                                    center={{
-                                        lat: parseFloat(formData.location.lat) || 51.5074,
-                                        lng: parseFloat(formData.location.lng) || -0.1278
-                                    }}
-                                    zoom={13}
-                                >
-                                    {formData.location.lat && formData.location.lng && (
-                                        <Marker
-                                            position={{
-                                                lat: parseFloat(formData.location.lat),
-                                                lng: parseFloat(formData.location.lng)
-                                            }}
-                                        />
-                                    )}
-                                </GoogleMap>
-                            ) : (
-                                <p>Loading map...</p>
-                            )}
+                            <ListingMap
+                                lat={formData.location.lat}
+                                lng={formData.location.lng}
+                                address={formData.location.address}
+                            />
                         </div>
 
                         <label className="text-lg font-semibold text-gray-700">Price</label>

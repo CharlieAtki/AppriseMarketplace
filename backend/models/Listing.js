@@ -13,7 +13,8 @@ const listingSchema = new mongoose.Schema({
         country: { type: String, required: true },
         city: { type: String },
         address: { type: String },
-        coordinates: { lat: Number, lng: Number }
+        lat: { type: String },
+        lng: { type: String },
     },
     price: { type: Number, required: true },
     currency: { type: String, default: "GBP" },

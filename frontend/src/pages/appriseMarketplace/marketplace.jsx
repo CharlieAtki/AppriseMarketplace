@@ -1,4 +1,4 @@
-import { ArrowRight, Search, Loader } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -78,6 +78,9 @@ const Shop = () => {
                         price: destination?.price || "Unknown Price",
                         country: destination.location?.country || "Unknown Country",
                         city: destination.location?.city || "Unknown City",
+                        address: destination.location?.address || "Unknown Address",
+                        lat: destination.location?.lat || "Unknown Latitude",
+                        lng: destination.location?.lng || "Unknown Longitude",
                         maxGuests: destination.max_guests || "unknown Guests",
                         servicesOffered: destination.services_offered || "Unknown Service offered",
                     };
@@ -198,7 +201,6 @@ const Shop = () => {
                                                 ))}
                                             </div>
                                         </div>
-
                                         <button
                                             className="w-full flex items-center justify-center bg-indigo-700 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
                                             onClick={() => navigate('/destination-view', {state: {destination}})}

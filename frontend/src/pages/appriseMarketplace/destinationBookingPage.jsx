@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import ListingMap from "../../components/appriseMarketplace/googleMap";
 
 const DestinationBookingPage = () => {
     const navigate = useNavigate();
@@ -334,7 +335,6 @@ const DestinationBookingPage = () => {
                                     {price ? `£${price.toFixed(2)}` : "Price not available"}
                                 </p>
                             </div>
-
                         </div>
 
                         {/* Customer Details Input section */}
@@ -448,6 +448,17 @@ const DestinationBookingPage = () => {
                                 Book Now
                             </button>
                         </div>
+                    </div>
+
+                    <hr className="border border-gray-200 my-2 rounded-2xl"/>
+
+                    {/* Google Map */}
+                    <div className="w-full h-[400px]">
+                        <ListingMap
+                            lat={selectedDestination.lat}
+                            lng={selectedDestination.lng}
+                            address={selectedDestination.address}
+                        />
                     </div>
 
                     <hr className="border border-gray-200 my-2 rounded-2xl"/>
