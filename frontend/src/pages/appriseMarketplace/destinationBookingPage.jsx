@@ -487,10 +487,6 @@ const DestinationBookingPage = () => {
                                         <User className="w-5 h-5 text-indigo-700 mr-2"/>
                                         {selectedDestinationHost?.username || "Unknown Host"}
                                     </h3>
-                                    <p className="text-gray-500 text-sm flex items-center">
-                                        <Mail className="w-4 h-4 text-indigo-700 mr-2"/>
-                                        {selectedDestinationHost?.email || "Email not available"}
-                                    </p>
                                 </div>
                             </div>
 
