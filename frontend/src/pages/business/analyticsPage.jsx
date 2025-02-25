@@ -1,5 +1,5 @@
 import {useNavigate} from "react-router-dom";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import BusinessSideBar from "../../components/business/businessSideBar";
 import BusinessNavigationBar from "../../components/business/businessNavigationBar";
 import AreaChartComponent from "../../components/business/areaChart";
@@ -7,6 +7,8 @@ import AreaChartComponent from "../../components/business/areaChart";
 const AnalyticsPage = () => {
     const navigate = useNavigate();
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
+    const [isExpanded, setIsExpanded] = useState(false); // Move state here
 
     // Logic for user authentication. This makes sure the user has loggedIn
     useEffect(() => {
@@ -41,7 +43,7 @@ const AnalyticsPage = () => {
         <div className="flex w-full h-screen ">
             {/* Sidebar */}
             <div className="bg-gray-50 flex-grow max-w-48">
-                < BusinessSideBar/>
+                < BusinessSideBar isExpanded={isExpanded} setIsExpanded={setIsExpanded}/>
             </div>
             {/* Main Content */}
             <div className="flex flex-col flex-grow p-4 bg-gray-50">
