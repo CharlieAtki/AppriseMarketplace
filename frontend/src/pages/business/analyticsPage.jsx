@@ -1,8 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import BusinessSideBar from "../../components/business/businessSideBar";
-import BusinessNavigationBar from "../../components/business/businessNavigationBar";
-import AreaChartComponent from "../../components/business/areaChart";
+import AreaChartComponent from "../../components/business/analyticsCharts/totalRevenueChart";
 
 const AnalyticsPage = () => {
     const navigate = useNavigate();
@@ -20,12 +19,10 @@ const AnalyticsPage = () => {
                     headers: {
                         'content-type': 'application/json',
                         'Accept': 'application/json',
-                    }
+                    },
                 });
 
-                console.log('Auth check response:', response);
                 const result = await response.json();
-                console.log('Auth check result:', result);
 
                 if (!result || !result.success) {
                     navigate('/businessAccountManagement');
@@ -40,19 +37,18 @@ const AnalyticsPage = () => {
     }, [navigate, backendUrl]);
 
     return (
-        <div className="flex w-full h-screen ">
+        <div className="flex w-full h-screen border-gray-50">
             {/* Sidebar */}
-            <div className="bg-gray-50 flex-grow max-w-48">
-                < BusinessSideBar isExpanded={isExpanded} setIsExpanded={setIsExpanded}/>
-            </div>
+             < BusinessSideBar isExpanded={isExpanded} setIsExpanded={setIsExpanded}/>
+
             {/* Main Content */}
-            <div className="flex flex-col flex-grow p-4 bg-gray-50">
-                < BusinessNavigationBar title={"Business Dashboard"} subtitle={"Manage Your Business"}/>
-                <h1>Analytics Page</h1>
-                <div className="flex w-1/4 h-1/4 border-2 border-gray-200 rounded-2xl">
-                    < AreaChartComponent metricOne={"Total Sales"} metricTwo={"Total Revenue"} metricOneUnit={"Units"} metricTwoUnit={"GBP"}/>
+            <div className="flex flex-col flex-grow p-6 bg-gray-50">
+                <div className="max-w-2xl h-1/2 border border-gray-100 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 p-6">
+                    <h3 className="text-xl font-semibold text-gray-600 mb-2 text-center">Seasonal Booking Trends vs Occupancy Rate</h3>
+                    < AreaChartComponent metricOne={"Total Revenue"} metricOneUnit={"GBP"} />
                 </div>
             </div>
+
         </div>
     )
 }

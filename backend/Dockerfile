@@ -1,5 +1,5 @@
 # Use official Node.js image as the base
-FROM node:16
+FROM node:lts
 
 # Set the working directory in the container
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Expose the port that the backend will run on
-EXPOSE 5000
+EXPOSE 5011
 
 # Set environment variable for development
 ENV NODE_ENV=development

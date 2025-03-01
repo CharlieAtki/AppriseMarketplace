@@ -2,20 +2,20 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"  # Expose port 3000 for React's development server
+      - "3000:3000"  # Expose port 3000 for Reacts development server
     volumes:
       - ./frontend:/app  # Mount local code to container for live reloading
     environment:
       - CHOKIDAR_USEPOLLING=true  # Enable file watching in Docker for better reloading performance
     env_file:
-      - ./frontend/.env  # Specify path to the frontend's .env file
+      - ./frontend/.env  # Specify path to the frontends .env file
     depends_on:
       - backend
 
   backend:
     build: ./backend
     ports:
-      - "5000:5000"  # Expose backend API on port 5000
+      - "5011:5011"  # Expose backend API on port 5011
     volumes:
       - ./backend:/app  # Mount the backend code for live development
     env_file:

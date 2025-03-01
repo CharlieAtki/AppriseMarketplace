@@ -2,7 +2,7 @@ import express from 'express';
 import {
     becomeABusiness,
     bookingCreation, bookingDateAvailabilityCheck,
-    businessLogout, fetchBookings,
+    businessLogout, fetchAggregatedBookingData, fetchBookings,
     fetchListings,
     listingCreation
 } from "../controllers/businessController.js";
@@ -23,5 +23,8 @@ router.get('/fetch-listings', fetchListings)
 router.post('/create-booking', bookingCreation)
 router.get('/check-booking-availability', bookingDateAvailabilityCheck)
 router.get('/fetch-bookings', fetchBookings)
+
+// Routes for managing listing analyticsCharts
+router.get('/fetch-aggregate-booking-data', fetchAggregatedBookingData)
 
 export default router;

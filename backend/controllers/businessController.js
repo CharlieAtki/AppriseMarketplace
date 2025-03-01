@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import Listing from "../models/Listing.js";
 import Booking from "../models/Booking.js";
+import mongoose from "mongoose";
 
 // Num of times the hashing algorithm is applied
 const saltRounds = 10
@@ -420,6 +421,52 @@ export const fetchBookings = async (req, res) => {
         return res.status(400).json({
             success: false,
             message: error.message,
+        });
+    }
+};
+
+export const fetchAggregatedBookingData = async (req, res) => {
+    try {
+        // Ensure businessId is an ObjectId by converting the string to an ObjectId
+        const businessId = new mongoose.Types.ObjectId(req.session.user.id);
+
+        const bookings = await Booking.aggregate([
+            {
+                $match: { businessId: businessId } // filtering the booking documents to only include the ones with the currently logged-in users listings
+            },
+            {
+                $group: { // groups the documents by the year and week of the createdAt field
+                    _id: {
+                        year: { $year: "$createdAt" }, // operator extracts the year from the createdAt field
+                        week: { $week: "$createdAt" } // Operator extracts the week from the createdAt field
+                    },
+                    // Operators calculate the metrics below
+                    totalRevenue: { $sum: "$totalPrice" },
+                    averagePrice: { $avg: "$totalPrice" },
+                    totalBookings: { $sum: 1 } // Counts the number of bookings within each group. Increments for each one
+                }
+            },
+            { $sort: { "_id": 1 } } // Sorts the results by the _id field (defined above) in accenting order (1 for ascending -1 for descending)
+        ]);
+
+        if (!bookings || bookings.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No bookings found",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Booking found successfully",
+            payload: bookings
+        });
+
+    } catch (error) {
+        console.error("Aggregation Error:", error); // Log error to debug
+        return res.status(500).json({
+            success: false,
+            message: "Server error: " + error.message,
         });
     }
 };
