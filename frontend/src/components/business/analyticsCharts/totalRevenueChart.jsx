@@ -39,7 +39,7 @@ const AreaChartComponent = ({ metricOne, metricOneUnit }) => {
                 }
 
                 const transformedData = result.payload.map((booking) => ({
-                    name: `Year ${booking._id.year}, Week ${booking._id.week}`,
+                    name: `${booking._id.dayOfWeek}, Hour ${booking._id.hour}`,
                     "Total Revenue": booking.totalRevenue || 0, // Only include Total Revenue
                 }));
                 setGraphData(transformedData);

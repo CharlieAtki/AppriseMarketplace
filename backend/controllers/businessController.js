@@ -432,23 +432,46 @@ export const fetchAggregatedBookingData = async (req, res) => {
 
         const bookings = await Booking.aggregate([
             {
-                $match: { businessId: businessId } // filtering the booking documents to only include the ones with the currently logged-in users listings
+                $match: { businessId: businessId } // Filtering the booking documents to only include the ones with the currently logged-in user's listings
             },
             {
-                $group: { // groups the documents by the year and week of the createdAt field
-                    _id: {
-                        year: { $year: "$createdAt" }, // operator extracts the year from the createdAt field
-                        week: { $week: "$createdAt" } // Operator extracts the week from the createdAt field
-                    },
-                    // Operators calculate the metrics below
-                    totalRevenue: { $sum: "$totalPrice" },
-                    averagePrice: { $avg: "$totalPrice" },
-                    totalBookings: { $sum: 1 } // Counts the number of bookings within each group. Increments for each one
+                $project: { // Defines what information should be extracted from the documents that satify the conditions specified
+                    dayOfWeekNumber: { $dayOfWeek: "$createdAt" }, // Extracts day of the week as a number (1 = Sunday, 2 = Monday, etc.)
+                    hour: { $hour: "$createdAt" }, // Extracts the hour of the booking
+                    totalPrice: 1 // Keeps totalPrice for aggregation in the next stage
                 }
             },
-            { $sort: { "_id": 1 } } // Sorts the results by the _id field (defined above) in accenting order (1 for ascending -1 for descending)
+            {
+                $group: {
+                    _id: {
+                        // Convert numeric day of the week into a human-readable name
+                        dayOfWeek: {
+                            $switch: { // Evaluates the conditions / cases in order and returns the first match
+                                branches: [ // An array of different cases to be evaluated
+                                    { case: { $eq: ["$dayOfWeekNumber", 1] }, then: "Sunday" },
+                                    { case: { $eq: ["$dayOfWeekNumber", 2] }, then: "Monday" },
+                                    { case: { $eq: ["$dayOfWeekNumber", 3] }, then: "Tuesday" },
+                                    { case: { $eq: ["$dayOfWeekNumber", 4] }, then: "Wednesday" },
+                                    { case: { $eq: ["$dayOfWeekNumber", 5] }, then: "Thursday" },
+                                    { case: { $eq: ["$dayOfWeekNumber", 6] }, then: "Friday" },
+                                    { case: { $eq: ["$dayOfWeekNumber", 7] }, then: "Saturday" }
+                                ],
+                                default: "Unknown" // Fallback in case of unexpected values
+                            }
+                        },
+                        hour: "$hour" // Group by hour as well
+                    },
+                    totalRevenue: { $sum: "$totalPrice" }, // Calculate total revenue for each day/hour group
+                    averagePrice: { $avg: "$totalPrice" }, // Calculate average booking price
+                    totalBookings: { $sum: 1 } // Count total number of bookings
+                }
+            },
+            {
+                $sort: { "_id": 1 } // Sorts results by day name and hour in ascending order
+            }
         ]);
 
+        // Checking for unexpected behaviour. Eg, if no information is passed back, dont attempt to load the graph
         if (!bookings || bookings.length === 0) {
             return res.status(404).json({
                 success: false,
@@ -456,6 +479,7 @@ export const fetchAggregatedBookingData = async (req, res) => {
             });
         }
 
+        // Passing thr aggregate information back to the frontend in the from of an array
         return res.status(200).json({
             success: true,
             message: "Booking found successfully",
