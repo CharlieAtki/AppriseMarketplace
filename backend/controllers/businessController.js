@@ -131,10 +131,10 @@ export const businessLogout = async (req, res) => {
 export const becomeABusiness = async (req, res) => {
     try {
         const updatedUser = await User.findOneAndUpdate(
-            { email: req.body.email }, // Find user by email
+            { email: req.session.user.email }, // Find user by email
             {
                 role: "business", // Update role
-                businessName: req.body.businessName,
+                businessName: "BusinessName",
             },
             { new: true } // Return updated document
         );
@@ -435,7 +435,7 @@ export const fetchAggregatedBookingData = async (req, res) => {
                 $match: { businessId: businessId } // Filtering the booking documents to only include the ones with the currently logged-in user's listings
             },
             {
-                $project: { // Defines what information should be extracted from the documents that satify the conditions specified
+                $project: { // Defines what information should be extracted from the documents that satisfy the conditions specified
                     dayOfWeekNumber: { $dayOfWeek: "$createdAt" }, // Extracts day of the week as a number (1 = Sunday, 2 = Monday, etc.)
                     hour: { $hour: "$createdAt" }, // Extracts the hour of the booking
                     totalPrice: 1 // Keeps totalPrice for aggregation in the next stage

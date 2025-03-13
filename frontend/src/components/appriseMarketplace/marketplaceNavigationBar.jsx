@@ -125,7 +125,30 @@ const MarketplaceNavigationBar = ({ title, subtitle }) => {
     };
 
     const businessDashboardRedirection = () => navigate('/businessDashboard');
-    const becomeABusiness = () => navigate('/become-a-business');
+
+    // Api request to switch the users account role to a business - Uses the email stored within the session
+    const becomeABusiness = async () => {
+        try {
+            const response = await fetch(`${backendUrl}/api/business-Auth/become-a-business`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'content-type': 'application/json',
+                    'Accept': 'application/json',
+                }
+            });
+
+            const result = await response.json();
+
+            if (!result || !result.success) {
+                navigate('/');
+            } else {
+                navigate('/businessDashboard');
+            }
+        } catch (error) {
+            console.error('Business Dashboard', error);
+        }
+    };
 
     const accountSettingsRedirection =  () => navigate('/account-settings');
 

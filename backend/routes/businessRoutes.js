@@ -13,7 +13,7 @@ const router = express.Router();
 router.get('/business-logout', businessLogout)
 
 // Routes for managing role conversion
-router.post('/become-a-business', becomeABusiness)
+router.get('/become-a-business', becomeABusiness)
 
 // Routes for managing listings
 router.post('/create-listing', listingCreation)
