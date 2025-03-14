@@ -9,7 +9,6 @@ import BusinessAccountManagement from "./pages/business/businessAccountManagemen
 import BusinessDashboard from "./pages/business/businessDashboard";
 import AnalyticsPage from "./pages/business/analyticsPage";
 import DestinationBookingPage from "./pages/appriseMarketplace/destinationBookingPage";
-import HostingBusinessForm from "./components/business/hostingBusinessForm";
 import BookingSuccessPage from "./pages/appriseMarketplace/bookingConfirmation";
 import BookingListPage from "./pages/appriseMarketplace/bookingListPage";
 import BookingDetails from "./pages/appriseMarketplace/bookingDetails";
@@ -28,7 +27,6 @@ const App = () => {
                 <Route path="businessDashboard" element={<BusinessDashboard />} />
                 <Route path="businessAnalytics" element={<AnalyticsPage />} />
                 <Route path="booking-view" element={<DestinationBookingPage />} />
-                <Route path="become-a-business" element={<HostingBusinessForm />} />
                 <Route path="booking-confirmation" element={<BookingSuccessPage />} />
                 <Route path="booking-list" element={<BookingListPage />} />
                 <Route path="booking-details" element={<BookingDetails />} />
