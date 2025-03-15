@@ -6,6 +6,7 @@ export const authCheck = async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
     res.setHeader('Content-Type', 'application/json');
 
+    // Checking if a session has been initialised
     if (req.session.user) {
         return res.status(200).json({
             success: true,

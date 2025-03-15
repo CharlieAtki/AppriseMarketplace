@@ -4,7 +4,7 @@ import {
     bookingCreation, bookingDateAvailabilityCheck,
     businessLogout, fetchAggregatedBookingData, fetchBookings,
     fetchListings,
-    listingCreation
+    listingCreation, listingRecommendation
 } from "../controllers/businessController.js";
 
 const router = express.Router();
@@ -26,5 +26,7 @@ router.get('/fetch-bookings', fetchBookings)
 
 // Routes for managing listing analyticsCharts
 router.get('/fetch-aggregate-booking-data', fetchAggregatedBookingData)
+
+router.post('/listing-recommendation', listingRecommendation)
 
 export default router;

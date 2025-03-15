@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import OpenAI from "openai";
 import User from "../models/User.js";
 import Listing from "../models/Listing.js";
 import Booking from "../models/Booking.js";
@@ -488,6 +489,159 @@ export const fetchAggregatedBookingData = async (req, res) => {
 
     } catch (error) {
         console.error("Aggregation Error:", error); // Log error to debug
+        return res.status(500).json({
+            success: false,
+            message: "Server error: " + error.message,
+        });
+    }
+};
+
+export const listingRecommendation = async (req, res) => {
+    try {
+        // Extracting the API key from the env file
+        const openai = new OpenAI({
+            apiKey: `${process.env.OPENAI}`,
+        });
+
+        // Extract data from request body
+        const { prompt, currentFilters, availableListings } = req.body;
+
+        // Initialize query object
+        let query = {};
+
+        // Apply available listings filter if provided
+        if (availableListings && Array.isArray(availableListings) && availableListings.length > 0) {
+            query = { _id: { $in: availableListings } };
+        }
+
+        // Apply dynamic filtering based on provided user preferences
+        if (currentFilters) {
+            // Price filter (only if provided)
+            if (currentFilters.price && (currentFilters.price.min || currentFilters.price.max)) {
+                query.price = {};
+                if (currentFilters.price.min) query.price.$gte = Number(currentFilters.price.min);
+                if (currentFilters.price.max) query.price.$lte = Number(currentFilters.price.max);
+            }
+
+            // Currency filter (only if provided)
+            if (currentFilters.currency) {
+                query.currency = currentFilters.currency;
+            }
+
+            // Max guests filter (accommodating flexible number of guests)
+            if (currentFilters.maxGuests) {
+                query.max_guests = { $gte: Number(currentFilters.maxGuests) };
+            }
+
+            // Country filter (only if provided)
+            if (currentFilters.countries && currentFilters.countries.length > 0) {
+                query["location.country"] = { $in: currentFilters.countries };
+            }
+
+            // City filter (only if provided)
+            if (currentFilters.cities && currentFilters.cities.length > 0) {
+                query["location.city"] = { $in: currentFilters.cities };
+            }
+
+            // Highlights filter (for sightseeing or specific activities)
+            if (currentFilters.highlights && currentFilters.highlights.length > 0) {
+                query.highlights = { $in: currentFilters.highlights };
+            }
+
+            // Services offered filter (if specific services are mentioned)
+            if (currentFilters.servicesOffered && currentFilters.servicesOffered.length > 0) {
+                query.services_offered = { $in: currentFilters.servicesOffered };
+            }
+
+            // If no specific filters, allow for more flexibility (for flexible budget, etc.)
+            if (!currentFilters.price && !currentFilters.maxGuests && !currentFilters.countries && !currentFilters.cities) {
+                // Allow listings to be considered without a strict filter
+            }
+        }
+
+        // Fetch filtered listings
+        const filteredListings = await Listing.find(query);
+
+        if (!filteredListings || filteredListings.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No matching listings found"
+            });
+        }
+
+        // Format listings for the AI model
+        const formattedListings = filteredListings.map(listing => ({
+            id: listing._id.toString(),
+            name: listing.name,
+            description: listing.description,
+            price: listing.price,
+            currency: listing.currency || "GBP", // Default to GBP if currency is missing
+            location: {
+                country: listing.location?.country,
+                city: listing.location?.city
+            },
+            highlights: listing.highlights || [],
+            max_guests: listing.max_guests,
+            services_offered: listing.services_offered || []
+        }));
+
+        // Create system prompt for the AI
+        const systemPrompt = `
+            You are a travel recommendation system. Based on the user's preferences and the available listings,
+            recommend the top 3-5 most suitable listings. Return ONLY a JSON object with a single key "recommendations" 
+            containing an array of the recommended listing IDs in the following format: 
+            {"recommendations": ["id1", "id2", "id3"]}.
+            Do not include any explanations or additional text in your response, just the JSON object.
+            
+            Available listings:
+            ${JSON.stringify(formattedListings, null, 2)}
+        `;
+
+        // User prompt from frontend
+        const userPrompt = `Based on my preferences: ${prompt}, which listings would you recommend?`;
+
+        // Get AI recommendations
+        const response = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo",
+            messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: userPrompt }
+            ],
+            response_format: { type: "json_object" },
+            max_tokens: 500
+        });
+
+        // Parse the AI response
+        let recommendedListingIds = [];
+        try {
+            const responseContent = response.choices[0].message.content;
+            console.log("Raw AI response:", responseContent);
+            const parsedResponse = JSON.parse(responseContent);
+
+            if (parsedResponse && parsedResponse.recommendations && Array.isArray(parsedResponse.recommendations)) {
+                recommendedListingIds = parsedResponse.recommendations;
+            }
+        } catch (error) {
+            console.error("Error parsing AI response:", error);
+        }
+
+        // Validate recommendations to ensure they are in the filtered listings
+        const validRecommendations = recommendedListingIds.filter(id => {
+            const isValid = filteredListings.some(listing => listing._id.toString() === id);
+            if (!isValid) {
+                console.log(`ID ${id} not found in filtered listings`);
+            }
+            return isValid;
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Recommendations generated successfully",
+            recommendations: validRecommendations
+        });
+
+    } catch (error) {
+        console.error("Recommendation error:", error);
         return res.status(500).json({
             success: false,
             message: "Server error: " + error.message,
