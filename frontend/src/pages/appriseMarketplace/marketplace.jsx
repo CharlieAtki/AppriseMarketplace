@@ -1,4 +1,4 @@
-import { ArrowRight, Search, Filter, X, ChevronDown, Calendar } from "lucide-react";
+import { ArrowRight, Search, Filter, X } from "lucide-react";
 import MarketplaceNavigationBar from "../../components/appriseMarketplace/marketplaceNavigationBar";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -45,9 +45,9 @@ const Shop = () => {
     const [aiRecommendations, setAiRecommendations] = useState([]);
     const [showPromptForm, setShowPromptForm] = useState(false);
 
-    // Scroll user-feedback
+    // Scroll user-feedback - Not used as currently, I want the AI prompt always accessible
     const [scrollProgress, setScrollProgress] = useState(0);
-    const [scrollVisible, setScrollVisible] = useState(false);
+    const [scrollVisible, setScrollVisible] = useState(true); // recommender always visible
 
     useEffect(() => {
         const checkLoginStatus = async () => {
@@ -122,11 +122,16 @@ const Shop = () => {
                 setDestinations(formattedDestinations);
 
                 // Extract filter options from destinations
+                // This dynamically adds the attributes of the listings to the filter options.
+                // Set automatically removes duplicate values.
+                // flatMap is used to flatten arrays before applying Set to remove duplicates in nested arrays (like highlights or servicesOffered). - Making 2D arrays into 1D
+                // The final result is an array of unique values for each of the filter categories (countries, cities, highlights, and services).
                 const countries = [...new Set(formattedDestinations.map(d => d.country))];
                 const cities = [...new Set(formattedDestinations.map(d => d.city))];
                 const highlights = [...new Set(formattedDestinations.flatMap(d => d.highlights))];
                 const services = [...new Set(formattedDestinations.flatMap(d => d.servicesOffered))];
 
+                // Filter options attributes
                 setFilterOptions({
                     countries,
                     cities,
@@ -134,6 +139,7 @@ const Shop = () => {
                     servicesOffered: services
                 });
 
+                // Error handling
             } catch (error) {
                 console.error("Error fetching destinations data:", error);
             } finally {
@@ -144,14 +150,14 @@ const Shop = () => {
         fetchDestinations();
     }, [backendUrl]);
 
-    // Handle scroll progress and button visibility
+    // Handle scroll progress and button visibility - Currently redundant
     useEffect(() => {
         const handleScroll = () => {
             const winScroll = document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (winScroll / height) * 100;
             setScrollProgress(scrolled);
-            setScrollVisible(winScroll >= 0);
+            setScrollVisible(true); // always visible for now.
         };
 
         window.addEventListener('scroll', handleScroll);
@@ -159,6 +165,8 @@ const Shop = () => {
     }, []);
 
     // Handle filter changes
+    // The .includes() method in JavaScript is used to check if a certain element or value is present in an array or string.
+    // It returns a boolean: True if the element is found & False if the element is not found.
     const handleFilterChange = (category, value) => {
         if (category === 'price') {
             setFilters(prev => ({
@@ -231,13 +239,12 @@ const Shop = () => {
                 },
                 body: JSON.stringify({
                     prompt,
-                    currentFilters: filtersApplied ? filters : null,
-                    availableListings: destinations.map(d => d._id)
+                    currentFilters: filtersApplied ? filters : null, // Ternary operator for listings
+                    availableListings: destinations.map(d => d._id) // Passing the ObjectId of the listing - No other attributes
                 })
             });
 
-            const result = await response.json();
-            console.log("AI Recommendation Result:", result);
+            const result = await response.json(); // Recommended listing ObjectIds
 
             if (result.success && result.recommendations) {
                 // Map recommendation IDs to full listing objects
@@ -285,6 +292,8 @@ const Shop = () => {
                     filters.cities.includes(dest.city);
 
                 // Highlights filter (any match)
+                // The .some() method in JavaScript is used to check if at least one element in an array satisfies a given condition.
+                // It returns a boolean value: True if at least one element satisfies the condition, False if no element satisfies the conditions.
                 const highlightsMatch = filters.highlights.length === 0 ||
                     filters.highlights.some(h => dest.highlights.includes(h));
 
@@ -300,6 +309,8 @@ const Shop = () => {
         // If AI recommendations exist, prioritize them
         if (aiRecommendations.length > 0) {
             // Get IDs for O(1) lookup
+            // This code snippet creates a Set from an array of AI-generated recommendations to ensure that each _id value is unique.
+            // This is useful when working with a collection of items where duplicates need to be removed, or for faster lookups of recommended items.
             const recommendedIds = new Set(aiRecommendations.map(r => r._id));
 
             // Sort results to have recommendations first

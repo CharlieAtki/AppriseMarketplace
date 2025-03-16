@@ -515,6 +515,7 @@ export const listingRecommendation = async (req, res) => {
         }
 
         // Apply dynamic filtering based on provided user preferences
+        // Applies the users current filters if existent.
         if (currentFilters) {
             // Price filter (only if provided)
             if (currentFilters.price && (currentFilters.price.min || currentFilters.price.max)) {
@@ -545,7 +546,7 @@ export const listingRecommendation = async (req, res) => {
 
             // Highlights filter (for sightseeing or specific activities)
             if (currentFilters.highlights && currentFilters.highlights.length > 0) {
-                query.highlights = { $in: currentFilters.highlights };
+                query.highlights = { $in: currentFilters.highlights }; //
             }
 
             // Services offered filter (if specific services are mentioned)
@@ -559,7 +560,7 @@ export const listingRecommendation = async (req, res) => {
             }
         }
 
-        // Fetch filtered listings
+        // Fetch filtered listings - Using the
         const filteredListings = await Listing.find(query);
 
         if (!filteredListings || filteredListings.length === 0) {
@@ -588,7 +589,7 @@ export const listingRecommendation = async (req, res) => {
         // Create system prompt for the AI
         const systemPrompt = `
             You are a travel recommendation system. Based on the user's preferences and the available listings,
-            recommend the top 3-5 most suitable listings. Return ONLY a JSON object with a single key "recommendations" 
+            recommend the top 1-3 most suitable listings. Return ONLY a JSON object with a single key "recommendations" 
             containing an array of the recommended listing IDs in the following format: 
             {"recommendations": ["id1", "id2", "id3"]}.
             Do not include any explanations or additional text in your response, just the JSON object.
@@ -602,10 +603,10 @@ export const listingRecommendation = async (req, res) => {
 
         // Get AI recommendations
         const response = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
+            model: "gpt-4o-mini",
             messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: userPrompt }
+                { role: "system", content: systemPrompt }, // Used to inform the model how to respond
+                { role: "user", content: userPrompt } // Used to provide the model context about the listings
             ],
             response_format: { type: "json_object" },
             max_tokens: 500
